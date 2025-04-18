@@ -1,0 +1,68 @@
+cmake_minimum_required(VERSION 3.10)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+project(Ignite VERSION 1.0)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Add executable target
+add_executable(${PROJECT_NAME} 
+    src/main.cpp
+
+    #core
+    src/core/logger.cpp
+)
+
+target_include_directories(${PROJECT_NAME} 
+    PRIVATE 
+        ${PROJECT_SOURCE_DIR}/include
+)
+
+
+# Dependencies
+include(FetchContent)
+
+set(GLFW_VERSION 3.4)
+FetchContent_Declare(
+  glfw
+  URL https://github.com/glfw/glfw/archive/refs/tags/${GLFW_VERSION}.tar.gz
+  FIND_PACKAGE_ARGS ${GLFW_VERSION} EXACT
+)
+# set(BUILD_EXAMPLES OFF CACHE INTERNAL "")
+FetchContent_MakeAvailable(glfw)
+target_link_libraries(${PROJECT_NAME}
+    glfw
+    ${GLFW_LIBRARIES} # Include any GLFW-specific libs
+    "-framework OpenGL" # Add the OpenGL framework for macOS
+)
+
+
+# set(SKIA_VERSION 3.4)
+# FetchContent_Declare(
+#   skia
+#   URL https://github.com/skia/skia/archive/refs/tags/${SKIA_VERSION}.tar.gz
+#   FIND_PACKAGE_ARGS ${SKIA_VERSION} EXACT
+# )
+# # set(BUILD_EXAMPLES OFF CACHE INTERNAL "")
+# FetchContent_MakeAvailable(skia)
+# target_link_libraries(${PROJECT_NAME} skia)
+
+
+# Optional: Add compiler warnings
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+# Optional: Create installation rules
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
+# Optional: Enable testing
+option(BUILD_TESTS "Build the tests" OFF)
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
