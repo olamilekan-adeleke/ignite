@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(
+  CMAKE_TOOLCHAIN_FILE
+  "$ENV{HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  CACHE PATH
+  "Path to vcpkg toolchain file"
+)
+
 project(Ignite VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -28,25 +35,34 @@ FetchContent_Declare(
   glfw
   URL https://github.com/glfw/glfw/archive/refs/tags/${GLFW_VERSION}.tar.gz
   FIND_PACKAGE_ARGS ${GLFW_VERSION} EXACT
+  DOWNLOAD_EXTRACT_TIMESTAMP true
 )
 # set(BUILD_EXAMPLES OFF CACHE INTERNAL "")
 FetchContent_MakeAvailable(glfw)
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
     glfw
     ${GLFW_LIBRARIES} # Include any GLFW-specific libs
     "-framework OpenGL" # Add the OpenGL framework for macOS
 )
 
+# --- Skia Integration using fetched source ---
+# vcpkg/installed/arm64-osx/share/unofficial-skia/
+set(
+  unofficial-skia_DIR
+  "$ENV{HOME}/vcpkg/installed/arm64-osx/share/unofficial-skia"
+  CACHE PATH "Where to find unofficial-skiaConfig.cmake"
+)
+find_package(unofficial-skia CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::skia::skia)
 
-# set(SKIA_VERSION 3.4)
-# FetchContent_Declare(
-#   skia
-#   URL https://github.com/skia/skia/archive/refs/tags/${SKIA_VERSION}.tar.gz
-#   FIND_PACKAGE_ARGS ${SKIA_VERSION} EXACT
-# )
-# # set(BUILD_EXAMPLES OFF CACHE INTERNAL "")
-# FetchContent_MakeAvailable(skia)
-# target_link_libraries(${PROJECT_NAME} skia)
+if(APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE "-framework OpenGL")
+else()
+    find_package(OpenGL REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
+endif()
+
+
 
 
 # Optional: Add compiler warnings
