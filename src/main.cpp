@@ -1,120 +1,56 @@
-#include "GLFW/glfw3.h"
-#define SK_GANESH
-#define SK_GL
-#include <stdio.h>
-#include <stdlib.h>
 
-#include "include/core/SkCanvas.h"
-#include "include/core/SkColorSpace.h"
-#include "include/core/SkGraphics.h"
-#include "include/core/SkSurface.h"
-#include "include/gpu/GrBackendSurface.h"
-#include "include/gpu/GrDirectContext.h"
-#include "include/gpu/ganesh/SkSurfaceGanesh.h"
-#include "include/gpu/ganesh/gl/GrGLBackendSurface.h"
-#include "include/gpu/ganesh/gl/GrGLDirectContext.h"
-#include "include/gpu/gl/GrGLAssembleInterface.h"
-#include "include/gpu/gl/GrGLInterface.h"
+#include <fmt/base.h>
 
-// uncomment the two lines below to enable correct color spaces
-// #define GL_FRAMEBUFFER_SRGB 0x8DB9
-// #define GL_SRGB8_ALPHA8 0x8C43
+#include <iostream>
 
-GrDirectContext* sContext = nullptr;
-SkSurface* sSurface = nullptr;
+#include "lib/user.hpp"
+#include "logger.hpp"
+#include "skia/SkiaRenderer.hpp"
+#include "window/GLFWWindowManager.hpp"
 
-void error_callback(int error, const char* description) { fputs(description, stderr); }
+int main() {
+  GLFWWindowManager windowManager;
+  SkiaRenderer skiaRenderer;
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
-void init_skia(int w, int h) {
-  auto interface = GrGLMakeNativeInterface();
-  if (interface == nullptr) {
-    // backup plan. see
-    // https://gist.github.com/ad8e/dd150b775ae6aa4d5cf1a092e4713add?permalink_comment_id=4680136#gistcomment-4680136
-    interface = GrGLMakeAssembledInterface(
-        nullptr, (GrGLGetProc) * [](void*, const char* p) -> void* { return (void*)glfwGetProcAddress(p); });
-  }
-  sContext = GrDirectContexts::MakeGL(interface).release();
-
-  GrGLFramebufferInfo framebufferInfo;
-  framebufferInfo.fFBOID = 0;  // assume default framebuffer
-  // We are always using OpenGL and we use RGBA8 internal format for both RGBA and BGRA configs in OpenGL.
-  //(replace line below with this one to enable correct color spaces) framebufferInfo.fFormat = GL_SRGB8_ALPHA8;
-  framebufferInfo.fFormat = GL_RGBA8;
-
-  SkColorType colorType = kRGBA_8888_SkColorType;
-  GrBackendRenderTarget backendRenderTarget = GrBackendRenderTargets::MakeGL(w, h,
-                                                                             0,  // sample count
-                                                                             0,  // stencil bits
-                                                                             framebufferInfo);
-
-  //(replace line below with this one to enable correct color spaces) sSurface =
-  //SkSurfaces::WrapBackendRenderTarget(sContext, backendRenderTarget, kBottomLeft_GrSurfaceOrigin, colorType,
-  //SkColorSpace::MakeSRGB(), nullptr).release();
-  sSurface = SkSurfaces::WrapBackendRenderTarget(sContext, backendRenderTarget, kBottomLeft_GrSurfaceOrigin, colorType,
-                                                 nullptr, nullptr)
-                 .release();
-  if (sSurface == nullptr) abort();
-}
-
-void cleanup_skia() {
-  delete sSurface;
-  delete sContext;
-}
-
-const int kWidth = 960;
-const int kHeight = 640;
-
-int main(void) {
-  GLFWwindow* window;
-  glfwSetErrorCallback(error_callback);
-  if (!glfwInit()) {
-    exit(EXIT_FAILURE);
+  // Initialize window
+  if (!windowManager.initialize(800, 600, "Hello World - GLFW + Skia")) {
+    std::cerr << "Failed to initialize window" << std::endl;
+    return -1;
   }
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  //(uncomment to enable correct color spaces) glfwWindowHint(GLFW_SRGB_CAPABLE, GL_TRUE);
-  glfwWindowHint(GLFW_STENCIL_BITS, 0);
-  // glfwWindowHint(GLFW_ALPHA_BITS, 0);
-  glfwWindowHint(GLFW_DEPTH_BITS, 0);
-
-  window = glfwCreateWindow(kWidth, kHeight, "Simple example", NULL, NULL);
-  if (!window) {
-    glfwTerminate();
-    exit(EXIT_FAILURE);
-  }
-  glfwMakeContextCurrent(window);
-  //(uncomment to enable correct color spaces) glEnable(GL_FRAMEBUFFER_SRGB);
-
-  init_skia(kWidth, kHeight);
-
-  glfwSwapInterval(1);
-  glfwSetKeyCallback(window, key_callback);
-
-  // Draw to the surface via its SkCanvas.
-  SkCanvas* canvas = sSurface->getCanvas();  // We don't manage this pointer's lifetime.
-
-  while (!glfwWindowShouldClose(window)) {
-    glfwWaitEvents();
-    SkPaint paint;
-    paint.setColor(SK_ColorWHITE);
-    canvas->drawPaint(paint);
-    paint.setColor(SK_ColorBLUE);
-    canvas->drawRect({100, 200, 300, 500}, paint);
-    sContext->flush();
-
-    glfwSwapBuffers(window);
+  // Initialize Skia renderer
+  int width, height;
+  windowManager.getFramebufferSize(width, height);
+  if (!skiaRenderer.initialize(width, height)) {
+    std::cerr << "Failed to initialize Skia renderer" << std::endl;
+    return -1;
   }
 
-  cleanup_skia();
+  // Create user page
+  UserPage userPage(&skiaRenderer);
 
-  glfwDestroyWindow(window);
-  glfwTerminate();
-  exit(EXIT_SUCCESS);
+  // Set render callback
+  windowManager.setRenderCallback([&]() {
+    int currentWidth, currentHeight;
+    windowManager.getFramebufferSize(currentWidth, currentHeight);
+
+    fmt::println("Window size: {}x{}", currentWidth, currentHeight);
+    if (currentWidth != width || currentHeight != height) {
+      width = currentWidth;
+      height = currentHeight;
+      skiaRenderer.resize(width, height);
+    }
+
+    // Render frame
+    skiaRenderer.beginFrame();
+    userPage.draw();
+    skiaRenderer.endFrame();
+
+    Logger::log("End render callback");
+  });
+
+  // Run main loop
+  windowManager.run();
+
+  return 0;
 }
