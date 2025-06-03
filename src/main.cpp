@@ -1,7 +1,9 @@
 
 #include <fmt/base.h>
 
+#include <chrono>
 #include <iostream>
+#include <thread>
 
 #include "logger.hpp"
 #include "skia/SkiaRenderer.hpp"
@@ -13,7 +15,7 @@ int main() {
   SkiaRenderer skiaRenderer;
 
   // Initialize window
-  if (!windowManager.initialize(800, 600, "Hello World - GLFW + Skia")) {
+  if (!windowManager.initialize(800, 600, "Skia Playground")) {
     std::cerr << "Failed to initialize window" << std::endl;
     return -1;
   }
@@ -26,24 +28,37 @@ int main() {
     return -1;
   }
 
-  // Texting
-  Text text = Text("Hello There", 40.0f, Color::Red());
+  Text text = Text("Hello There", Color::Red(), 40.0f, FontWeight::Bold);
 
-  // Set render callback
+  bool needsResize = false;
+  bool needsLayout = true;
+
+  // Set resize callback - handle resize logic separately from rendering
+  windowManager.setResizeCallback([&](int newWidth, int newHeight) {
+    fmt::println("Resize callback: {}x{}", newWidth, newHeight);
+    width = newWidth;
+    height = newHeight;
+    needsResize = true;
+    needsLayout = true;
+  });
+
   windowManager.setRenderCallback([&]() {
-    int currentWidth, currentHeight;
-    windowManager.getFramebufferSize(currentWidth, currentHeight);
-
-    fmt::println("Window size: {}x{}", currentWidth, currentHeight);
-    if (currentWidth != width || currentHeight != height) {
-      width = currentWidth;
-      height = currentHeight;
+    if (needsResize) {
       skiaRenderer.resize(width, height);
+      needsResize = false;
+      fmt::println("Skia resized to: {}x{}", width, height);
     }
 
-    skiaRenderer.beginFrame();
+    if (needsLayout) {
+      text.layout(width, height);
+      needsLayout = false;
+    }
 
+    // Render frame
+    skiaRenderer.beginFrame();
     auto canvas = skiaRenderer.getCanvas();
+
+    // Just draw - no layout calculations here
     text.draw(canvas);
 
     skiaRenderer.endFrame();

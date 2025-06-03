@@ -41,11 +41,13 @@ void Text::layout(float parentWidth, float parentHeight) {
   SkRect textBounds;
   font.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, &textBounds);
 
+  font_ = font;
+
   bounds_.width = textBounds.width();
   bounds_.height = textBounds.height();
 }
 
 void Text::draw(SkCanvas* canvas) {
-  canvas->drawSimpleText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, bounds_.x, bounds_.y + fontSize_,
-                         UIManager::instance().defaultFont(), paint_);
+  canvas->drawSimpleText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, bounds_.x, bounds_.y + fontSize_, font_,
+                         paint_);
 }

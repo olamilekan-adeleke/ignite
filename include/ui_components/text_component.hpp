@@ -1,5 +1,6 @@
 #pragma once
 
+#include <include/core/SkFont.h>
 #include <include/core/SkPaint.h>
 
 #include "color.hpp"
@@ -53,6 +54,7 @@ class Text : public UIComponent {
   bool italic_;
 
   SkPaint paint_;
+  SkFont font_;
 };
 
 // TODO: Will have to Implement TextStyle Class
