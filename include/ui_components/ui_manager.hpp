@@ -12,6 +12,7 @@ class UIManager {
 
   const SkFont& defaultFont() const;
   const sk_sp<SkTypeface>& typeface() const;
+  const sk_sp<SkFontMgr>& fontManager() const;
 
  private:
   sk_sp<SkFontMgr> fontMgr_;

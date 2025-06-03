@@ -27,7 +27,7 @@ int main() {
   }
 
   // Texting
-  Text text = Text("Hello There");
+  Text text = Text("Hello There", 40.0f, Color::Red());
 
   // Set render callback
   windowManager.setRenderCallback([&]() {

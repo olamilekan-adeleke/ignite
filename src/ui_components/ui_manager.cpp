@@ -46,3 +46,5 @@ UIManager::UIManager() {
 const SkFont& UIManager::defaultFont() const { return font_; }
 
 const sk_sp<SkTypeface>& UIManager::typeface() const { return defaultTypeface_; }
+
+const sk_sp<SkFontMgr>& UIManager::fontManager() const { return fontMgr_; }
