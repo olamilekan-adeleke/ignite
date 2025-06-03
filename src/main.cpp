@@ -62,6 +62,8 @@ int main() {
     text.draw(canvas);
 
     skiaRenderer.endFrame();
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(16));
   });
 
   // Run main loop
