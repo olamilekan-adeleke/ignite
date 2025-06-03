@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "window/GLFWWindowManager.hpp"
+
 GLFWWindowManager::GLFWWindowManager() : window(nullptr) {}
 
 GLFWWindowManager::~GLFWWindowManager() { cleanup(); }
@@ -16,6 +18,11 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string& tit
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+// Enable continuous refresh during resize (Windows specific)
+#ifdef _WIN32
+  glfwWindowHint(GLFW_WIN32_KEYBOARD_MENU, GLFW_FALSE);
+#endif
+
   window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
   if (!window) {
     std::cerr << "Failed to create GLFW window" << std::endl;
@@ -25,12 +32,21 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string& tit
 
   glfwMakeContextCurrent(window);
   glfwSetWindowUserPointer(window, this);
+
+  // Set up callbacks for real-time resizing
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+  glfwSetWindowSizeCallback(window, windowSizeCallback);
+  glfwSetWindowRefreshCallback(window, windowRefreshCallback);
+
+  // Enable vsync for smoother rendering
+  glfwSwapInterval(1);
 
   return true;
 }
 
 void GLFWWindowManager::setRenderCallback(std::function<void()> callback) { renderCallback = callback; }
+
+void GLFWWindowManager::setResizeCallback(std::function<void(int, int)> callback) { resizeCallback = callback; }
 
 void GLFWWindowManager::run() {
   while (!glfwWindowShouldClose(window)) {
@@ -56,6 +72,41 @@ void GLFWWindowManager::cleanup() {
   glfwTerminate();
 }
 
+// Static callback functions
 void GLFWWindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+  // Update OpenGL viewport immediately
   glViewport(0, 0, width, height);
+
+  // Get the window manager instance and trigger custom resize logic
+  GLFWWindowManager* manager = static_cast<GLFWWindowManager*>(glfwGetWindowUserPointer(window));
+  if (manager && manager->resizeCallback) {
+    manager->resizeCallback(width, height);
+  }
+
+  // Force a render during resize for real-time updates
+  if (manager && manager->renderCallback) {
+    manager->renderCallback();
+    glfwSwapBuffers(window);
+  }
+}
+
+void GLFWWindowManager::windowSizeCallback(GLFWwindow* window, int width, int height) {
+  // This callback is called when the window content area is resized
+  GLFWWindowManager* manager = static_cast<GLFWWindowManager*>(glfwGetWindowUserPointer(window));
+
+  // Immediately render during resize
+  if (manager && manager->renderCallback) {
+    manager->renderCallback();
+    glfwSwapBuffers(window);
+  }
+}
+
+void GLFWWindowManager::windowRefreshCallback(GLFWwindow* window) {
+  // This callback is called when the window needs to be redrawn
+  GLFWWindowManager* manager = static_cast<GLFWWindowManager*>(glfwGetWindowUserPointer(window));
+
+  if (manager && manager->renderCallback) {
+    manager->renderCallback();
+    glfwSwapBuffers(window);
+  }
 }
