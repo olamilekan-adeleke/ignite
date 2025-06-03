@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "lib/user.hpp"
 #include "logger.hpp"
 #include "skia/SkiaRenderer.hpp"
+#include "ui_components/text_component.hpp"
 #include "window/GLFWWindowManager.hpp"
 
 int main() {
@@ -26,8 +26,8 @@ int main() {
     return -1;
   }
 
-  // Create user page
-  UserPage userPage(&skiaRenderer);
+  // Texting
+  Text text = Text("Hello There");
 
   // Set render callback
   windowManager.setRenderCallback([&]() {
@@ -41,12 +41,12 @@ int main() {
       skiaRenderer.resize(width, height);
     }
 
-    // Render frame
     skiaRenderer.beginFrame();
-    userPage.draw();
-    skiaRenderer.endFrame();
 
-    Logger::log("End render callback");
+    auto canvas = skiaRenderer.getCanvas();
+    text.draw(canvas);
+
+    skiaRenderer.endFrame();
   });
 
   // Run main loop
