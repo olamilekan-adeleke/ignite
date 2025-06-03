@@ -5,7 +5,6 @@
 #include <iostream>
 #include <thread>
 
-#include "logger.hpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/text_component.hpp"
 #include "window/GLFWWindowManager.hpp"
@@ -28,7 +27,7 @@ int main() {
     return -1;
   }
 
-  Text text = Text("Hello There", Color::Red(), 40.0f, FontWeight::Bold);
+  auto text = TextComponent("Hello There", Color::Red(), 40.0f, FontWeight::Bold);
 
   bool needsResize = false;
   bool needsLayout = true;

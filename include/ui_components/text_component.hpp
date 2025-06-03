@@ -26,20 +26,17 @@ enum class FontWeight { Normal, Bold, Light };
  * - Text("Hello World", Color::Red())         // custom color
  * - Text("Hello World", Color::Blue(), 20.0f) // custom color & font size
  */
-class Text : public UIComponent {
+class TextComponent : public UIComponent {
  public:
-  Text(const std::string& text, Color color = Color::Black(), float fontSize = 16.0f,
-       FontWeight weight = FontWeight::Normal, bool underline = false, bool italic = false);
+  TextComponent(const std::string& text, Color color = Color::Black(), float fontSize = 16.0f,
+                FontWeight weight = FontWeight::Normal, bool underline = false, bool italic = false);
 
-  Text(const std::string& text, float fontSize);
-
-  Text(const std::string& text, float fontSize, FontWeight weight);
-
-  Text(const std::string& text, Color color);
-
-  Text(const std::string& text, float fontSize, FontWeight weight, bool underline = false, bool italic = false);
-
-  Text(const std::string& text, float fontSize, Color color);
+  TextComponent(const std::string& text, float fontSize);
+  TextComponent(const std::string& text, Color color);
+  TextComponent(const std::string& text, float fontSize, Color color);
+  TextComponent(const std::string& text, float fontSize, FontWeight weight);
+  TextComponent(const std::string& text, float fontSize, FontWeight weight, bool underline = false,
+                bool italic = false);
 
   void layout(float parentWidth, float parentHeight) override;
 
@@ -56,5 +53,3 @@ class Text : public UIComponent {
   SkPaint paint_;
   SkFont font_;
 };
-
-// TODO: Will have to Implement TextStyle Class
