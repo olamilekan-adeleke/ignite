@@ -6,6 +6,7 @@
 #include <thread>
 
 #include "skia/SkiaRenderer.hpp"
+#include "ui.hpp"
 #include "ui_components/text_component.hpp"
 #include "window/GLFWWindowManager.hpp"
 
@@ -27,7 +28,19 @@ int main() {
     return -1;
   }
 
-  auto text = TextComponent("Hello There", Color::Red(), 40.0f, FontWeight::Bold);
+  // auto text = TextComponent("Hello There", Color::Red(), 40.0f, FontWeight::Bold);
+  auto rootUI = UI::ColumnView({
+      UI::Text("Hello", 80.0f, Color::Red()),
+      UI::Text("World", 68.0f, Color::Blue()),
+
+      UI::Text("", 68.0f, Color::Blue()),
+      UI::ColumnView({
+          UI::Text("Second Body", 80.0f, Color::Cyan()),
+          UI::Text("Textetete", 68.0f, Color::Red()),
+      }),
+
+      UI::Text("Resize callback: {}x{}", 68.0f, Color::Blue()),
+  });
 
   bool needsResize = false;
   bool needsLayout = true;
@@ -49,7 +62,7 @@ int main() {
     }
 
     if (needsLayout) {
-      text.layout(width, height);
+      rootUI->layout(width, height);
       needsLayout = false;
     }
 
@@ -58,7 +71,7 @@ int main() {
     auto canvas = skiaRenderer.getCanvas();
 
     // Just draw - no layout calculations here
-    text.draw(canvas);
+    rootUI->draw(canvas);
 
     skiaRenderer.endFrame();
 
