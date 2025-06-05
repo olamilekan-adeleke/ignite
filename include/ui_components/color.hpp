@@ -3,6 +3,7 @@
 #include <include/core/SkColor.h>
 
 #include <cstdint>
+#include <random>
 
 // Custon Color class to wrap SKColor (I Love doing things my way, hopefully i do not regret this)
 struct Color {
@@ -34,6 +35,8 @@ struct Color {
   static Color Gray();
   static Color LightGray();
   static Color DarkGray();
+
+  static Color Random();
 
  private:
   SkColor value;

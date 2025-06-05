@@ -33,3 +33,13 @@ Color Color::Magenta() { return Color(SK_ColorMAGENTA); }
 Color Color::Gray() { return Color(SK_ColorGRAY); }
 Color Color::LightGray() { return Color(SK_ColorLTGRAY); }
 Color Color::DarkGray() { return Color(SK_ColorDKGRAY); }
+
+Color Color::Random() {
+  static std::mt19937_64 rng{std::random_device{}()};
+  static std::uniform_int_distribution<uint8_t> dist(0, 255);
+
+  uint8_t rr = dist(rng);
+  uint8_t gg = dist(rng);
+  uint8_t bb = dist(rng);
+  return Color(rr, gg, bb, 255);
+}
