@@ -11,7 +11,7 @@ class UIComponent {
   virtual void layout(float parentWidth, float parentHeight) = 0;
 
   // Draw method: this will draw the UI element, what ever it ends up been, to the cnvas
-  virtual void draw(SkCanvas* canvas) = 0;
+  virtual void draw(SkCanvas* canvas);
 
   UIRect getBounds() const { return bounds_; }
 
@@ -27,4 +27,9 @@ class UIComponent {
 
  protected:
   UIRect bounds_;
+
+  static SkPaint debug_border_paint_;
+  static bool debug_paint_initialized_;
+
+  void initializeDebugPaint();
 };

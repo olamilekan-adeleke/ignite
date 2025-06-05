@@ -40,4 +40,5 @@ void Row::draw(SkCanvas* canvas) {
   }
 
   canvas->restore();
+  // UIComponent::draw(canvas);
 }

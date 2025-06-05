@@ -4,6 +4,10 @@
 #include <include/core/SkFontMgr.h>
 #include <include/core/SkTypeface.h>
 
+namespace Debug {
+inline bool ui_debug_mode = true;
+}
+
 // just to maanger some UI Shit
 class UIManager {
  public:

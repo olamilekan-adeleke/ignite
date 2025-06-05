@@ -6,12 +6,27 @@
 #include "color.hpp"
 #include "ui_component.hpp"
 
+struct TextMetrics {
+  float ascent = 0.0f;     // Distance from baseline to top of glyphs (positive value)
+  float descent = 0.0f;    // Distance from baseline to bottom of glyphs (positive value)
+  float leading = 0.0f;    // Recommended line spacing
+  float x_advance = 0.0f;  // Total width of the text string
+};
+
 /**
  * @brief The FontWeight enum represents the font weight of a Text element.
  *
  * e.g. FontWeight::Normal, FontWeight::Bold, FontWeight::Light
  */
 enum class FontWeight { Normal, Bold, Light };
+
+struct TextStyle {
+  Color color = Color::Black();
+  float fontSize = 16.0f;
+  FontWeight weight = FontWeight::Normal;
+  bool underline = false;
+  bool italic = false;
+};
 
 /**
  * @brief A basic text rendering UI component.
@@ -20,23 +35,10 @@ enum class FontWeight { Normal, Bold, Light };
  * with a string, font size, and color. It inherits from UIComponent and
  * overrides layout and draw methods.
  *
- * Supports flexible construction:
- * - Text("Hello World")                       // default color & font size
- * - Text("Hello World", 18.0f)                // custom font size
- * - Text("Hello World", Color::Red())         // custom color
- * - Text("Hello World", Color::Blue(), 20.0f) // custom color & font size
  */
 class TextComponent : public UIComponent {
  public:
-  TextComponent(const std::string& text, Color color = Color::Black(), float fontSize = 16.0f,
-                FontWeight weight = FontWeight::Normal, bool underline = false, bool italic = false);
-
-  TextComponent(const std::string& text, float fontSize);
-  TextComponent(const std::string& text, Color color);
-  TextComponent(const std::string& text, float fontSize, Color color);
-  TextComponent(const std::string& text, float fontSize, FontWeight weight);
-  TextComponent(const std::string& text, float fontSize, FontWeight weight, bool underline = false,
-                bool italic = false);
+  TextComponent(const std::string& text, const TextStyle& style = TextStyle());
 
   void layout(float parentWidth, float parentHeight) override;
 
@@ -44,12 +46,11 @@ class TextComponent : public UIComponent {
 
  private:
   std::string text_;
-  Color color_;
-  float fontSize_;
-  FontWeight weight_;
-  bool underline_;
-  bool italic_;
+  TextStyle style_;
 
   SkPaint paint_;
   SkFont font_;
+  TextMetrics text_metrics_;
+  float text_bounds_offset_x_;
+  float text_bounds_offset_y_;
 };

@@ -3,21 +3,25 @@
 
 #include "ui_components/ui_component.hpp"
 
+struct ColumnParams {
+  float spacing = 0.0f;
+  std::vector<std::shared_ptr<UIComponent>> children;
+};
+
 class Column : public UIComponent {
  public:
-  Column() = default;
+  Column(const ColumnParams& params = {});
 
   // Template magic
-  template <typename... Children>
-  Column(std::shared_ptr<UIComponent> first, Children... rest);
+  // template <typename... Children>
+  // Column(std::shared_ptr<UIComponent> first, Children... rest);
 
-  ~Column() override = default;
-  Column(const Column&) = delete;
-  Column& operator=(const Column&) = delete;
-  Column& addChild(std::shared_ptr<UIComponent> child);
+  void addChild(std::shared_ptr<UIComponent> child);
+
   void layout(float parentWidth, float parentHeight) override;
   void draw(SkCanvas* canvas) override;
 
  private:
+  float spacing_;
   std::vector<std::shared_ptr<UIComponent>> children_;
 };
