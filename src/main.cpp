@@ -29,17 +29,38 @@ int main() {
   }
 
   // auto text = TextComponent("Hello There", Color::Red(), 40.0f, FontWeight::Bold);
+  const bool isLoading = false;
   auto rootUI = UI::ColumnView({
-      UI::Text("Hello", 80.0f, Color::Red()),
-      UI::Text("World", 68.0f, Color::Blue()),
+      .spacing = 16.0f,
+      .children =
+          {
+              // UI::ColumnView({
+              //     .spacing = 50,
+              //     .children =
+              //         {
+              //             UI::Text("Child Sub One", {.fontSize = 20.0f}),
+              //             UI::Text("Child Sub Two", {.fontSize = 20.0f}),
+              //         },
+              // }),
 
-      UI::Text("", 68.0f, Color::Blue()),
-      UI::ColumnView({
-          UI::Text("Second Body", 80.0f, Color::Cyan()),
-          UI::Text("Textetete", 68.0f, Color::Red()),
-      }),
+              UI::Text("Hello", {.fontSize = 80.0f, .color = Color::Red()}),
+              UI::Text("Leading (fLeading) is extra spacing you’d add if you were stacking multiple lines. In "
+                       "practice, if ",
+                       {
+                           .color = Color::Blue(),
+                           .fontSize = 20.0f,
+                       }),
 
-      UI::Text("Resize callback: {}x{}", 68.0f, Color::Blue()),
+              UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 10.0f}),
+
+              // UI::RowView({
+              //     UI::Text("Second Body", {.fontSize = 80.0f}),
+              //     UI::Text("Textetete", {.fontSize = 68.0f}),
+              // }),
+
+              UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 30.0f}),
+              UI::Text("Resize callback: {}x{}", {.fontSize = 68.0f}),
+          },
   });
 
   bool needsResize = false;
@@ -66,6 +87,7 @@ int main() {
       needsLayout = false;
     }
 
+    // rootUI->layout(width, height);
     // Render frame
     skiaRenderer.beginFrame();
     auto canvas = skiaRenderer.getCanvas();

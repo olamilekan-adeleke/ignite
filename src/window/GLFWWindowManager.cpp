@@ -18,6 +18,9 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string& tit
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+  // // Make window non-resizable
+  // glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
 // Enable continuous refresh during resize (Windows specific)
 #ifdef _WIN32
   glfwWindowHint(GLFW_WIN32_KEYBOARD_MENU, GLFW_FALSE);
