@@ -4,22 +4,41 @@
 #include <include/core/SkFontMgr.h>
 #include <include/core/SkTypeface.h>
 
+#include <memory>
+
+#include "ui_component.hpp"
+
 namespace Debug {
 inline bool ui_debug_mode = true;
 }
 
 // just to maanger some UI Shit
 class UIManager {
- public:
+public:
   UIManager();
-  static UIManager& instance();
+  static UIManager &instance();
 
-  const SkFont& defaultFont() const;
-  const sk_sp<SkTypeface>& typeface() const;
-  const sk_sp<SkFontMgr>& fontManager() const;
+  void setTree(const std::shared_ptr<UIComponent> tree, float w, float h,
+               bool needsResize);
+  void diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
+                      const std::shared_ptr<UIComponent> &newNode, float w,
+                      float h, bool needsResize);
 
- private:
+  const SkFont &defaultFont() const;
+  const sk_sp<SkTypeface> &typeface() const;
+  const sk_sp<SkFontMgr> &fontManager() const;
+
+private:
   sk_sp<SkFontMgr> fontMgr_;
   sk_sp<SkTypeface> defaultTypeface_;
   SkFont font_;
+
+  std::shared_ptr<UIComponent> currentTreeRoot_ = nullptr;
+  std::shared_ptr<UIComponent> previousTreeRoot_ = nullptr;
+  float width_ = 0;
+  float height_ = 0;
+  bool dirty_ = false;
+
+  bool shouldRebuild(const std::shared_ptr<UIComponent> &oldNode,
+                     const std::shared_ptr<UIComponent> &newNode);
 };

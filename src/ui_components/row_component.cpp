@@ -4,7 +4,7 @@
 
 #include "ui_component.hpp"
 
-Row& Row::addChild(std::shared_ptr<UIComponent> child) {
+Row &Row::addChild(std::shared_ptr<UIComponent> child) {
   children_.push_back(std::move(child));
   return *this;
 }
@@ -22,20 +22,20 @@ void Row::layout(float parentWidth, float parentHeight) {
   bounds_.height = parentHeight;
 
   float currentX = 0.0f;
-  for (auto& child : children_) {
+  for (auto &child : children_) {
     child->layout(parentWidth, parentHeight);
-    child->setPosistion(currentX, 0);
+    child->setPosition(currentX, 0);
 
     currentX += child->getBounds().width;
     bounds_.width += child->getBounds().width;
   }
 }
 
-void Row::draw(SkCanvas* canvas) {
+void Row::draw(SkCanvas *canvas) {
   canvas->save();
   canvas->translate(bounds_.x, bounds_.y);
 
-  for (auto& child : children_) {
+  for (auto &child : children_) {
     child->draw(canvas);
   }
 

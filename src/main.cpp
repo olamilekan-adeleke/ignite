@@ -7,12 +7,13 @@
 
 #include "skia/SkiaRenderer.hpp"
 #include "ui.hpp"
-#include "ui_components/text_component.hpp"
+#include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
 
 int main() {
   GLFWWindowManager windowManager;
   SkiaRenderer skiaRenderer;
+  UIManager &uiManager = UIManager::instance();
 
   // Initialize window
   if (!windowManager.initialize(800, 600, "Skia Playground")) {
@@ -28,40 +29,58 @@ int main() {
     return -1;
   }
 
-  // auto text = TextComponent("Hello There", Color::Red(), 40.0f, FontWeight::Bold);
+  // auto text = TextComponent("Hello There", Color::Red(), 40.0f,
+  // FontWeight::Bold);
   const bool isLoading = false;
-  auto rootUI = UI::ColumnView({
-      .spacing = 16.0f,
-      .children =
-          {
-              // UI::ColumnView({
-              //     .spacing = 50,
-              //     .children =
-              //         {
-              //             UI::Text("Child Sub One", {.fontSize = 20.0f}),
-              //             UI::Text("Child Sub Two", {.fontSize = 20.0f}),
-              //         },
-              // }),
+  auto rootUI = UI::ColumnView(
+      {.spacing = 10.0f,
+       .children = {
+           // UI::ColumnView({
+           //     .spacing = 50,
+           //     .children =
+           //         {
+           //             UI::Text("Child Sub One", {.fontSize = 20.0f}),
+           //             UI::Text("Child Sub Two", {.fontSize = 20.0f}),
+           //         },
+           // }),
 
-              UI::Text("Hello", {.fontSize = 80.0f, .color = Color::Red()}),
-              UI::Text("Leading (fLeading) is extra spacing you’d add if you were stacking multiple lines. In "
-                       "practice, if ",
-                       {
-                           .color = Color::Blue(),
-                           .fontSize = 20.0f,
-                       }),
+           UI::UIView({
+               .insets = UIEdgeInsets({
+                   .top = 50,
+                   .left = 50,
+                   .bottom = 10,
+                   .right = 10,
+               }),
+               .backgroundColor = Color::Red(),
+               .child = UI::Text("Second Body", {.fontSize = 20.0f}),
+           }),
 
-              UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 10.0f}),
+           UI::Text("Line 1\nLine 2",
+                    {.fontSize = 12.0f, .color = Color::Cyan()}),
 
-              // UI::RowView({
-              //     UI::Text("Second Body", {.fontSize = 80.0f}),
-              //     UI::Text("Textetete", {.fontSize = 68.0f}),
-              // }),
+           UI::Text("First line\n\nThird line (with empty line above)",
+                    {.fontSize = 18.0f}),
 
-              UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 30.0f}),
-              UI::Text("Resize callback: {}x{}", {.fontSize = 68.0f}),
-          },
-  });
+           UI::Text("Hello", {.fontSize = 80.0f, .color = Color::Red()}),
+           UI::Text("Leading (fLeading) is extra spacing you’d "
+                    "add if you were "
+                    "stacking multiple lines. In "
+                    "practice, if ",
+                    {
+                        .color = Color::Blue(),
+                        .fontSize = 20.0f,
+                    }),
+
+           UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 10.0f}),
+
+           // UI::RowView({
+           //     UI::Text("Second Body", {.fontSize = 80.0f}),
+           //     UI::Text("Textetete", {.fontSize = 68.0f}),
+           // }),
+
+           UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 30.0f}),
+           UI::Text("Resize callback: {}x{}", {.fontSize = 68.0f}),
+       }});
 
   bool needsResize = false;
   bool needsLayout = true;
@@ -78,22 +97,25 @@ int main() {
   windowManager.setRenderCallback([&]() {
     if (needsResize) {
       skiaRenderer.resize(width, height);
-      needsResize = false;
       fmt::println("Skia resized to: {}x{}", width, height);
     }
 
-    if (needsLayout) {
-      rootUI->layout(width, height);
-      needsLayout = false;
-    }
-
+    // if (needsLayout) {
+    //   rootUI->layout(width, height);
+    //   needsLayout = false;
+    // }
     // rootUI->layout(width, height);
     // Render frame
     skiaRenderer.beginFrame();
     auto canvas = skiaRenderer.getCanvas();
 
     // Just draw - no layout calculations here
+    uiManager.setTree(rootUI, width, height, needsResize);
     rootUI->draw(canvas);
+
+    if (needsResize) {
+      needsResize = false;
+    }
 
     skiaRenderer.endFrame();
 
