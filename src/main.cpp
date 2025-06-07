@@ -51,47 +51,37 @@ int main() {
                    .bottom = 16,
                    .right = 20,
                }),
-               .backgroundColor = Color::Red(),
-               .borderRadius = 20,
-               .antiAlias = true,
                .margin = UIEdgeInsets({
                    .top = 10,
                    .left = 10,
                    .bottom = 10,
                    .right = 10,
                }),
+               .backgroundColor = Color::Red(),
+               .borderRadius = 20,
+               .antiAlias = true,
                .child = UI::ColumnView({
                    .spacing = 16,
-                   .children =
-                       {
-                           UI::Text("Child Sub One", {.fontSize = 20.0f}),
-                           UI::Text("Child Sub Two", {.fontSize = 20.0f}),
+                   .children ={
+                           UI::Text("Child In UIView Child Sub One", {.fontSize = 20.0f}),
+                           UI::Text("View Child Child Sub Two", {.fontSize = 20.0f}),
                        },
                }),
            }),
 
            UI::Text("Line 1\nLine 2",
                     {.fontSize = 12.0f, .color = Color::Cyan()}),
-
            UI::Text("First line\n\nThird line (with empty line above)",
                     {.fontSize = 18.0f}),
-
            UI::Text("Hello", {.fontSize = 80.0f, .color = Color::Red()}),
-           UI::Text("Leading (fLeading) is extra spacing you’d "
-                    "add if you were "
-                    "stacking multiple lines. In "
-                    "practice, if ",
-                    {
-                        .color = Color::Blue(),
-                        .fontSize = 20.0f,
-                    }),
-
            UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 10.0f}),
 
-           UI::RowView({
+           UI::RowView({ 
+            .spacing = 25,
+            .children = {
                UI::Text("First Row Body", {.fontSize = 30.0f}),
                UI::Text("Second Row Body", {.fontSize = 40.0f}),
-           }),
+           }}),
 
            UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 30.0f}),
            UI::Text("Resize callback: {}x{}", {.fontSize = 68.0f}),
