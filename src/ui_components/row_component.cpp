@@ -15,12 +15,11 @@ Row::Row(const RowParams &param) : spacing_(param.spacing) {
 }
 
 void Row::layout(float parentWidth, float parentHeight) {
-
   float currentX = 0.0f;
   float maxChildHeight = 0.0f;
   for (size_t index = 0; index < children_.size(); index++) {
     auto &child = children_[index];
-    child->layout(parentWidth, parentHeight);
+    child->layout(0, parentHeight);
     child->setPosition(currentX, 0);
 
     currentX += child->getBounds().width;
@@ -36,7 +35,7 @@ void Row::layout(float parentWidth, float parentHeight) {
   bounds_.height = maxChildHeight;
 }
 
-const std::vector<std::shared_ptr<UIComponent>> Row::children() {
+const std::vector<std::shared_ptr<UIComponent>> &Row::children() {
   return children_;
 }
 

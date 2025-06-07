@@ -49,6 +49,6 @@ void Column::draw(SkCanvas *canvas) {
   UIComponent::draw(canvas);
 }
 
-const std::vector<std::shared_ptr<UIComponent>> Column::children() {
+const std::vector<std::shared_ptr<UIComponent>> &Column::children() {
   return children_;
 }

@@ -9,7 +9,7 @@
 #include "ui_key.hpp"
 
 class UIComponent {
-public:
+ public:
   UIComponent() : key_(UIKey()) {
   }
 
@@ -42,11 +42,11 @@ public:
     return key_;
   }
 
-  virtual const std::vector<std::shared_ptr<UIComponent>> children() {
+  virtual const std::vector<std::shared_ptr<UIComponent>> &children() {
     return {};
   }
 
-protected:
+ protected:
   UIRect bounds_;
   UIKey key_;
 

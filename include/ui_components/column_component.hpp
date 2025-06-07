@@ -21,7 +21,7 @@ public:
   void layout(float parentWidth, float parentHeight) override;
   void draw(SkCanvas *canvas) override;
 
-  const std::vector<std::shared_ptr<UIComponent>> children() override;
+  const std::vector<std::shared_ptr<UIComponent>> &children() override;
 
 private:
   float spacing_;

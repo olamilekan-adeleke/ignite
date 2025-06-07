@@ -1,7 +1,7 @@
 # .clang-format
 ---
 Language:        Cpp
-BasedOnStyle:    LLVM
+BasedOnStyle:    Google
 
 IndentWidth:     2
 TabWidth:        2

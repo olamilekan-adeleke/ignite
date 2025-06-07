@@ -10,21 +10,17 @@ struct RowParams {
 };
 
 class Row : public UIComponent {
-public:
+ public:
   Row(const RowParams &param = {});
-
-  // Template magic
-  // template <typename... Children>
-  // Row(std::shared_ptr<UIComponent> first, Children... rest);
 
   void addChild(std::shared_ptr<UIComponent> child);
 
   void layout(float parentWidth, float parentHeight) override;
   void draw(SkCanvas *canvas) override;
 
-  const std::vector<std::shared_ptr<UIComponent>> children() override;
+  const std::vector<std::shared_ptr<UIComponent>> &children() override;
 
-private:
+ private:
   float spacing_;
   std::vector<std::shared_ptr<UIComponent>> children_;
 };
