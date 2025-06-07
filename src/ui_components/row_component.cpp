@@ -4,31 +4,39 @@
 
 #include "ui_component.hpp"
 
-Row &Row::addChild(std::shared_ptr<UIComponent> child) {
+void Row::addChild(std::shared_ptr<UIComponent> child) {
   children_.push_back(std::move(child));
-  return *this;
 }
 
-template <typename... Children>
-Row::Row(std::shared_ptr<UIComponent> first, Children... rest) {
-  children_.reserve(sizeof...(rest) + 1);
-
-  addChild(std::move(first));
-  (addChild(std::move(rest)), ...);
+Row::Row(const RowParams &param) : spacing_(param.spacing) {
+  for (const auto c : param.children) {
+    addChild(c);
+  }
 }
 
 void Row::layout(float parentWidth, float parentHeight) {
-  bounds_.width = parentWidth;
-  bounds_.height = parentHeight;
-
   float currentX = 0.0f;
-  for (auto &child : children_) {
-    child->layout(parentWidth, parentHeight);
+  float maxChildHeight = 0.0f;
+  for (size_t index = 0; index < children_.size(); index++) {
+    auto &child = children_[index];
+    child->layout(0, parentHeight);
     child->setPosition(currentX, 0);
 
     currentX += child->getBounds().width;
-    bounds_.width += child->getBounds().width;
+    maxChildHeight = std::fmax(maxChildHeight, child->getBounds().height);
+
+    if (spacing_ > 0 && index + 1 != children_.size()) {
+      currentX += spacing_;
+    }
   }
+
+  // TODO: Add check for overflow later sha
+  bounds_.width = currentX;
+  bounds_.height = maxChildHeight;
+}
+
+const std::vector<std::shared_ptr<UIComponent>> &Row::children() const {
+  return children_;
 }
 
 void Row::draw(SkCanvas *canvas) {
@@ -40,5 +48,5 @@ void Row::draw(SkCanvas *canvas) {
   }
 
   canvas->restore();
-  // UIComponent::draw(canvas);
+  UIComponent::draw(canvas);
 }

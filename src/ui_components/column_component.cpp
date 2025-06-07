@@ -10,7 +10,7 @@ void Column::addChild(std::shared_ptr<UIComponent> child) {
 }
 
 Column::Column(const ColumnParams &params) : spacing_(params.spacing) {
-  for (auto &c : params.children) {
+  for (const auto &c : params.children) {
     addChild(c);
   }
 }
@@ -49,6 +49,6 @@ void Column::draw(SkCanvas *canvas) {
   UIComponent::draw(canvas);
 }
 
-std::vector<std::shared_ptr<UIComponent>> Column::children() {
+const std::vector<std::shared_ptr<UIComponent>> &Column::children() const {
   return children_;
 }

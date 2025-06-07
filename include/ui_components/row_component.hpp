@@ -4,21 +4,23 @@
 
 #include "ui_components/ui_component.hpp"
 
+struct RowParams {
+  float spacing = 0.0f;
+  std::vector<std::shared_ptr<UIComponent>> children;
+};
+
 class Row : public UIComponent {
  public:
-  Row() = default;
+  Row(const RowParams &param = {});
 
-  // Template magic
-  template <typename... Children>
-  Row(std::shared_ptr<UIComponent> first, Children... rest);
+  void addChild(std::shared_ptr<UIComponent> child);
 
-  ~Row() override = default;
-  Row(const Row&) = delete;
-  Row& operator=(const Row&) = delete;
-  Row& addChild(std::shared_ptr<UIComponent> child);
   void layout(float parentWidth, float parentHeight) override;
-  void draw(SkCanvas* canvas) override;
+  void draw(SkCanvas *canvas) override;
+
+  const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
  private:
+  float spacing_;
   std::vector<std::shared_ptr<UIComponent>> children_;
 };
