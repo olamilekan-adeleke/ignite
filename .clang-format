@@ -8,7 +8,7 @@ TabWidth:        2
 UseTab:          Never
 
 # Keep “{” attached to the preceding “=” in designated‐initializer lists
-BreakBeforeBracedInitList:       Attach
+# BreakBeforeBracedInitList:       Attach
 
 # Don’t split “=” onto its own line
 BreakBeforeBinaryOperators:      None
@@ -18,9 +18,9 @@ BinPackArguments:               false
 BinPackParameters:              false
 
 # Keep braces “attached” rather than moving them to a new line
-BraceWrapping:
-  AfterOpeningBrace:             DontChange
-  BeforeClosingBrace:            DontChange
+# BraceWrapping:
+  # AfterOpeningBrace:             DontChange
+  # BeforeClosingBrace:            DontChange
 
 # Use C++11 braced‐list style
 Cpp11BracedListStyle:            true
