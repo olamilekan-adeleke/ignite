@@ -37,10 +37,17 @@
 # SortIncludes:                    false
 # ...
 
-
 BasedOnStyle: Google
 IndentWidth: 2
 UseTab: Never
-ColumnLimit: 120 # No column limit
-
-
+ColumnLimit: 120
+Cpp11BracedListStyle: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBraces: Attach
+IndentCaseLabels: true

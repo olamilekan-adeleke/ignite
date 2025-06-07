@@ -29,79 +29,74 @@ int main() {
     return -1;
   }
 
+  // UI::UIView({
+  //     .insets =
+  //         {
+  //             .top = 20,
+  //             .left = 20,
+  //             .bottom = 20,
+  //             .right = 20,
+  //         },
+  //     .backgroundColor = Color::Green(),
+  //     .borderRadius = 20,
+  //     .child =
+  //         UI::UIView({
+  //             .insets = UIEdgeInsets({
+  //                 .top = 16,
+  //                 .left = 20,
+  //                 .bottom = 16,
+  //                 .right = 20,
+  //             }),
+  //             .margin = UIEdgeInsets({
+  //                 .top = 10,
+  //                 .left = 10,
+  //                 .bottom = 10,
+  //                 .right = 10,
+  //             }),
+  //             .backgroundColor = Color::Red(),
+  //             .borderRadius = 20,
+  //             .antiAlias = true,
+  //             .child = UI::ColumnView({
+  //                 .spacing = 16,
+  //                 .children =
+  //                     {
+  //                         UI::Text("Child In UIView Child Sub One", {.fontSize = 20.0f}),
+  //                         UI::Text("View Child Child Sub Two", {.fontSize = 20.0f}),
+  //                     },
+  //             }),
+  //         }),
+  // }),
+
   // auto text = TextComponent("Hello There", Color::Red(), 40.0f,
   // FontWeight::Bold);
   const bool isLoading = false;
   auto rootUI = UI::ColumnView({
-    .spacing = 10.0f,
-    .children = {
+      .spacing = 10.0f,
+      .children =
+          {
 
+              UI::RowView({
+                  .spacing = 25,
+                  .children =
+                      {
+                          UI::Text("First Row Body", {.fontSize = 30.0f}),
+                          UI::Text("Second Row Body", {.fontSize = 40.0f}),
+                      },
+              }),
 
+              UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 30.0f}),
+              UI::Text("Resize callback: {}x{}", {.fontSize = 68.0f}),
 
-
-      UI::ColumnView({
-                   .spacing = 20,
-                   .children =
-                       {
-                           UI::Text("Child Sub One", {.fontSize = 20.0f}),
-                           UI::Text("Child Sub Two", {.fontSize = 20.0f}),
-                       },
-               }),
-
-               // UI::UIView({
-               //     .insets =
-               //         {
-               //             .top = 20,
-               //             .left = 20,
-               //             .bottom = 20,
-               //             .right = 20,
-               //         },
-               //     .backgroundColor = Color::Green(),
-               //     .borderRadius = 20,
-               //     .child =
-               //         UI::UIView({
-               //             .insets = UIEdgeInsets({
-               //                 .top = 16,
-               //                 .left = 20,
-               //                 .bottom = 16,
-               //                 .right = 20,
-               //             }),
-               //             .margin = UIEdgeInsets({
-               //                 .top = 10,
-               //                 .left = 10,
-               //                 .bottom = 10,
-               //                 .right = 10,
-               //             }),
-               //             .backgroundColor = Color::Red(),
-               //             .borderRadius = 20,
-               //             .antiAlias = true,
-               //             .child = UI::ColumnView({
-               //                 .spacing = 16,
-               //                 .children =
-               //                     {
-               //                         UI::Text("Child In UIView Child Sub One", {.fontSize = 20.0f}),
-               //                         UI::Text("View Child Child Sub Two", {.fontSize = 20.0f}),
-               //                     },
-               //             }),
-               //         }),
-               // }),
-
-               // UI::Text("Line 1\nLine 2", {.fontSize = 12.0f, .color = Color::Cyan()}),
-               // UI::Text("First line\n\nThird line (with empty line above)", {.fontSize = 18.0f}),
-               // UI::Text("Hello", {.fontSize = 80.0f, .color = Color::Red()}),
-               // UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 10.0f}),
-
-               UI::RowView(
-                   {.spacing = 25,
-                    .children =
-                        {
-                            UI::Text("First Row Body", {.fontSize = 30.0f}),
-                            UI::Text("Second Row Body", {.fontSize = 40.0f}),
-                        },}),
-
-               UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 30.0f}),
-               UI::Text("Resize callback: {}x{}", {.fontSize = 68.0f}),
-           }});
+                          UI::ColumnView({
+                              .spacing = 20,
+                              .children =
+                                  {
+                                      UI::Text("Child Sub One", {.fontSize = 20.0f}),
+                                      UI::Text("Child Sub Two", {.fontSize = 20.0f}),
+                                  },
+                          }),
+          },
+  });
 
   bool needsResize = false;
   bool needsLayout = true;
