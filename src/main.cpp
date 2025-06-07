@@ -28,6 +28,8 @@ int main() {
     return -1;
   }
 
+  // auto sizedBox =
+
   // auto text = TextComponent("Hello There", Color::Red(), 40.0f,
   // FontWeight::Bold);
   const bool isLoading = false;
@@ -38,8 +40,7 @@ int main() {
 				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
 				.backgroundColor = Color::Green(),
 				.borderRadius = 20,
-				.child =
-					UI::UIView({
+				.child = UI::UIView({
 					.insets = UIEdgeInsets({ .top = 16, .left = 20, .bottom = 16, .right = 20 }),
 					.margin = UIEdgeInsets({ .top = 10, .left  = 10, .bottom = 10, .right = 10 }),
 					.backgroundColor = Color::Red(),
@@ -70,6 +71,69 @@ int main() {
 					UI::Text("Second Row Body", { .fontSize = 40.0f }),
 				},
 			}),
+      
+      UI::RowView({
+        .spacing = 20,
+        .children = {
+          UI::SizedView({
+            .size = {200, 100},
+            .align = UIAlignment::TopLeft,
+            .child = UI::Text("Top left text", {.fontSize = 18}),
+          }),
+          UI::SizedView({
+            .size = {200, 100},
+            .align = UIAlignment::TopCenter,
+            .child = UI::Text("Top center text", {.fontSize = 18}),
+          }),
+          UI::SizedView({
+            .size = {200, 100},
+            .align = UIAlignment::TopRight,
+            .child = UI::Text("Top right text", {.fontSize = 18}),
+          }),
+        },
+      }),
+
+      UI::RowView({
+        .spacing = 20,
+        .children = {
+          UI::SizedView({
+            .size = {200, 100},
+            .align = UIAlignment::CenterLeft,
+            .child = UI::Text("Center left text", {.fontSize = 18}),
+          }),
+          UI::SizedView({
+            .size = {200, 100},
+            .align = UIAlignment::Center,
+            .child = UI::Text("Center text", {.fontSize = 18}),
+          }),
+          UI::SizedView({
+            .size = {200, 100},
+            .align = UIAlignment::CenterRigh,
+            .child = UI::Text("Center right text", {.fontSize = 18}),
+          }),
+        },
+      }),
+
+      UI::RowView({
+        .spacing = 20,
+        .children = {
+          UI::SizedView({
+            .size = {200, 100},
+            .align = UIAlignment::BottomLeft,
+            .child = UI::Text("Bottom left text", {.fontSize = 18}),
+          }),
+          UI::SizedView({
+            .size = {200, 100},
+            .align = UIAlignment::BottomCenter,
+            .child = UI::Text("Bottom Center text", {.fontSize = 18}),
+          }),
+          UI::SizedView({
+            .size = {200, 100},
+            .align = UIAlignment::BottomRight,
+            .child = UI::Text("Botton right text", {.fontSize = 18}),
+          }),
+        },
+      }),
 
 			UI::Text("Second Body Boy with Pen in the Bag", { .fontSize = 30.0f }),
 			UI::Text("Resize callback: {}x{}", { .fontSize = 68.0f }),
