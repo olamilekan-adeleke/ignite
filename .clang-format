@@ -1,53 +1,39 @@
 # .clang-format
-# ---
-# Language:        Cpp
-# BasedOnStyle:    LLVM
-#
-# IndentWidth:     2
-# TabWidth:        2
-# UseTab:          Never
-#
-# # Keep “{” attached to the preceding “=” in designated‐initializer lists
-# # BreakBeforeBracedInitList:       Attach
-#
-# # Don’t split “=” onto its own line
-# BreakBeforeBinaryOperators:      None
-#
-# # One element per line in argument‐ or initializer‐lists
-# BinPackArguments:               false
-# BinPackParameters:              false
-#
-# # Keep braces “attached” rather than moving them to a new line
-# # BraceWrapping:
-#   # AfterOpeningBrace:             DontChange
-#   # BeforeClosingBrace:            DontChange
-#
-# # Use C++11 braced‐list style
-# Cpp11BracedListStyle:            true
-#
-# # Increase column limit so initializer lists wrap only after 180 characters
-# ColumnLimit:                     180
-#
-# # Don’t collapse short blocks/statements onto a single line
-# AllowShortIfStatementsOnASingleLine: false
-# AllowShortLoopsOnASingleLine:     false
-# AllowShortBlocksOnASingleLine:    false
-# AllowShortFunctionsOnASingleLine: false
-#
-# SortIncludes:                    false
-# ...
+---
+Language:        Cpp
+BasedOnStyle:    LLVM
 
-BasedOnStyle: Google
-IndentWidth: 2
-UseTab: Never
-ColumnLimit: 120
-Cpp11BracedListStyle: true
-AllowShortBlocksOnASingleLine: Empty
-AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: Empty
-AllowShortIfStatementsOnASingleLine: Never
-AllowShortLoopsOnASingleLine: false
-BinPackArguments: false
-BinPackParameters: false
-BreakBeforeBraces: Attach
-IndentCaseLabels: true
+IndentWidth:     2
+TabWidth:        2
+UseTab:          Never
+
+# Keep “{” attached to the preceding “=” in designated‐initializer lists
+# BreakBeforeBracedInitList:       Attach
+
+# Don’t split “=” onto its own line
+BreakBeforeBinaryOperators:      None
+
+# One element per line in argument‐ or initializer‐lists
+BinPackArguments:               false
+BinPackParameters:              false
+
+# # Keep braces “attached” rather than moving them to a new line
+# BraceWrapping:
+#   AfterOpeningBrace:             DontChange
+#   BeforeClosingBrace:            DontChange
+
+# Use C++11 braced‐list style
+Cpp11BracedListStyle:            true
+
+# Increase column limit so initializer lists wrap only after 180 characters
+ColumnLimit:                     120
+
+# Don’t collapse short blocks/statements onto a single line
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine:     false
+AllowShortBlocksOnASingleLine:    false
+AllowShortFunctionsOnASingleLine: false
+
+SortIncludes:                    false
+...
+
