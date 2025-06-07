@@ -1,5 +1,6 @@
 #include "ui_components/column_component.hpp"
 
+#include <cmath>
 #include <memory>
 
 #include "ui_component.hpp"
@@ -16,9 +17,9 @@ Column::Column(const ColumnParams &params) : spacing_(params.spacing) {
 
 void Column::layout(float parentWidth, float parentHeight) {
   bounds_.width = parentWidth;
-  // bounds_.height = parentHeight;
 
   float currentY = 0.0f;
+  float maxChildWidth = 0.0f;
   for (size_t index = 0; index < children_.size(); index++) {
     auto &child = children_[index];
 
@@ -26,12 +27,14 @@ void Column::layout(float parentWidth, float parentHeight) {
     child->setPosition(0, currentY);
 
     currentY += child->getBounds().height;
+    maxChildWidth = std::fmax(maxChildWidth, child->getBounds().width);
     if (index + 1 != children_.size()) {
       currentY += spacing_;
     }
   }
 
   bounds_.height = currentY;
+  bounds_.width = maxChildWidth;
 }
 
 void Column::draw(SkCanvas *canvas) {
