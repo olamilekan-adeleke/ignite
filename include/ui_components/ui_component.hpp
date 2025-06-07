@@ -10,7 +10,8 @@
 
 class UIComponent {
 public:
-  UIComponent() : key_(UIKey()) {}
+  UIComponent() : key_(UIKey()) {
+  }
 
   virtual ~UIComponent() = default;
 
@@ -20,7 +21,9 @@ public:
   // the cnvas
   virtual void draw(SkCanvas *canvas);
 
-  UIRect getBounds() const { return bounds_; }
+  UIRect getBounds() const {
+    return bounds_;
+  }
 
   void setPosition(float x, float y) {
     bounds_.x = x;
@@ -32,10 +35,16 @@ public:
     bounds_.height = h;
   }
 
-  void setKey(UIKey key) { key_ = key; }
-  UIKey key() const { return key_; }
+  void setKey(UIKey key) {
+    key_ = key;
+  }
+  UIKey key() const {
+    return key_;
+  }
 
-  virtual std::vector<std::shared_ptr<UIComponent>> children() { return {}; }
+  virtual const std::vector<std::shared_ptr<UIComponent>> children() {
+    return {};
+  }
 
 protected:
   UIRect bounds_;

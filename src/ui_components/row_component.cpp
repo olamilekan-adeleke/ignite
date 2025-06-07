@@ -9,7 +9,7 @@ void Row::addChild(std::shared_ptr<UIComponent> child) {
 }
 
 Row::Row(const RowParams &param) : spacing_(param.spacing) {
-  for (auto c : param.children) {
+  for (const auto c : param.children) {
     addChild(c);
   }
 }
@@ -36,7 +36,7 @@ void Row::layout(float parentWidth, float parentHeight) {
   bounds_.height = maxChildHeight;
 }
 
-std::vector<std::shared_ptr<UIComponent>> Row::children() {
+const std::vector<std::shared_ptr<UIComponent>> Row::children() {
   return children_;
 }
 
