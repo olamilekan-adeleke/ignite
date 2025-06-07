@@ -42,8 +42,9 @@ class UIComponent {
     return key_;
   }
 
-  virtual const std::vector<std::shared_ptr<UIComponent>> &children() {
-    return {};
+  virtual const std::vector<std::shared_ptr<UIComponent>> &children() const {
+    static const std::vector<std::shared_ptr<UIComponent>> empty_children;
+    return empty_children;
   }
 
  protected:

@@ -9,7 +9,7 @@ struct ColumnParams {
 };
 
 class Column : public UIComponent {
-public:
+ public:
   Column(const ColumnParams &params = {});
 
   // Template magic
@@ -21,9 +21,9 @@ public:
   void layout(float parentWidth, float parentHeight) override;
   void draw(SkCanvas *canvas) override;
 
-  const std::vector<std::shared_ptr<UIComponent>> &children() override;
+  const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
-private:
+ private:
   float spacing_;
   std::vector<std::shared_ptr<UIComponent>> children_;
 };

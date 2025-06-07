@@ -35,7 +35,7 @@ void Row::layout(float parentWidth, float parentHeight) {
   bounds_.height = maxChildHeight;
 }
 
-const std::vector<std::shared_ptr<UIComponent>> &Row::children() {
+const std::vector<std::shared_ptr<UIComponent>> &Row::children() const {
   return children_;
 }
 
