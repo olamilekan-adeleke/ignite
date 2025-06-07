@@ -35,24 +35,39 @@ int main() {
   auto rootUI = UI::ColumnView(
       {.spacing = 10.0f,
        .children = {
-           // UI::ColumnView({
-           //     .spacing = 50,
-           //     .children =
-           //         {
-           //             UI::Text("Child Sub One", {.fontSize = 20.0f}),
-           //             UI::Text("Child Sub Two", {.fontSize = 20.0f}),
-           //         },
-           // }),
+           UI::ColumnView({
+               .spacing = 20,
+               .children =
+                   {
+                       UI::Text("Child Sub One", {.fontSize = 20.0f}),
+                       UI::Text("Child Sub Two", {.fontSize = 20.0f}),
+                   },
+           }),
 
            UI::UIView({
                .insets = UIEdgeInsets({
-                   .top = 50,
-                   .left = 50,
+                   .top = 16,
+                   .left = 20,
+                   .bottom = 16,
+                   .right = 20,
+               }),
+               .backgroundColor = Color::Red(),
+               .borderRadius = 20,
+               .antiAlias = true,
+               .margin = UIEdgeInsets({
+                   .top = 10,
+                   .left = 10,
                    .bottom = 10,
                    .right = 10,
                }),
-               .backgroundColor = Color::Red(),
-               .child = UI::Text("Second Body", {.fontSize = 20.0f}),
+               .child = UI::ColumnView({
+                   .spacing = 16,
+                   .children =
+                       {
+                           UI::Text("Child Sub One", {.fontSize = 20.0f}),
+                           UI::Text("Child Sub Two", {.fontSize = 20.0f}),
+                       },
+               }),
            }),
 
            UI::Text("Line 1\nLine 2",
@@ -73,10 +88,10 @@ int main() {
 
            UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 10.0f}),
 
-           // UI::RowView({
-           //     UI::Text("Second Body", {.fontSize = 80.0f}),
-           //     UI::Text("Textetete", {.fontSize = 68.0f}),
-           // }),
+           UI::RowView({
+               UI::Text("First Row Body", {.fontSize = 30.0f}),
+               UI::Text("Second Row Body", {.fontSize = 40.0f}),
+           }),
 
            UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 30.0f}),
            UI::Text("Resize callback: {}x{}", {.fontSize = 68.0f}),

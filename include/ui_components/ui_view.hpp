@@ -6,6 +6,7 @@
 
 struct ViewParams {
   UIEdgeInsets insets = {0.0f, 0.0f, 0.0f, 0.0f};
+  UIEdgeInsets margin = {0.0f, 0.0f, 0.0f, 0.0f};
   Color backgroundColor = Color::White();
   float borderRadius = 0.0f;
   bool antiAlias = false;
