@@ -12,8 +12,7 @@ void UIComponent::draw(SkCanvas *canvas) {
   if (Debug::ui_debug_mode) {
     initializeDebugPaint();
 
-    SkRect rect =
-        SkRect::MakeXYWH(bounds_.x, bounds_.y, bounds_.width, bounds_.height);
+    SkRect rect = SkRect::MakeXYWH(bounds_.x, bounds_.y, bounds_.width, bounds_.height);
     canvas->drawRect(rect, debug_border_paint_);
   }
 }

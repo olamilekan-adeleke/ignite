@@ -2,13 +2,14 @@
 
 #include <iostream>
 
+#include "tap_event.hpp"
 #include "window/GLFWWindowManager.hpp"
 
 GLFWWindowManager::GLFWWindowManager() : window(nullptr) {}
 
 GLFWWindowManager::~GLFWWindowManager() { cleanup(); }
 
-bool GLFWWindowManager::initialize(int width, int height, const std::string& title) {
+bool GLFWWindowManager::initialize(int width, int height, const std::string &title) {
   if (!glfwInit()) {
     std::cerr << "Failed to initialize GLFW" << std::endl;
     return false;
@@ -35,6 +36,14 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string& tit
 
   glfwMakeContextCurrent(window);
   glfwSetWindowUserPointer(window, this);
+
+  // Set up mouse callbacks
+  glfwSetMouseButtonCallback(window, mouseButtonCallback);
+  glfwSetCursorPosCallback(window, mouseMoveCallback);
+  glfwSetScrollCallback(window, scrollCallback);
+
+  // Enable cursor position events
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
   // Set up callbacks for real-time resizing
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
@@ -63,7 +72,7 @@ void GLFWWindowManager::run() {
   }
 }
 
-void GLFWWindowManager::getFramebufferSize(int& width, int& height) const {
+void GLFWWindowManager::getFramebufferSize(int &width, int &height) const {
   glfwGetFramebufferSize(window, &width, &height);
 }
 
@@ -76,12 +85,12 @@ void GLFWWindowManager::cleanup() {
 }
 
 // Static callback functions
-void GLFWWindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+void GLFWWindowManager::framebufferSizeCallback(GLFWwindow *window, int width, int height) {
   // Update OpenGL viewport immediately
   glViewport(0, 0, width, height);
 
   // Get the window manager instance and trigger custom resize logic
-  GLFWWindowManager* manager = static_cast<GLFWWindowManager*>(glfwGetWindowUserPointer(window));
+  GLFWWindowManager *manager = static_cast<GLFWWindowManager *>(glfwGetWindowUserPointer(window));
   if (manager && manager->resizeCallback) {
     manager->resizeCallback(width, height);
   }
@@ -93,9 +102,9 @@ void GLFWWindowManager::framebufferSizeCallback(GLFWwindow* window, int width, i
   }
 }
 
-void GLFWWindowManager::windowSizeCallback(GLFWwindow* window, int width, int height) {
+void GLFWWindowManager::windowSizeCallback(GLFWwindow *window, int width, int height) {
   // This callback is called when the window content area is resized
-  GLFWWindowManager* manager = static_cast<GLFWWindowManager*>(glfwGetWindowUserPointer(window));
+  GLFWWindowManager *manager = static_cast<GLFWWindowManager *>(glfwGetWindowUserPointer(window));
 
   // Immediately render during resize
   if (manager && manager->renderCallback) {
@@ -104,9 +113,9 @@ void GLFWWindowManager::windowSizeCallback(GLFWwindow* window, int width, int he
   }
 }
 
-void GLFWWindowManager::windowRefreshCallback(GLFWwindow* window) {
+void GLFWWindowManager::windowRefreshCallback(GLFWwindow *window) {
   // This callback is called when the window needs to be redrawn
-  GLFWWindowManager* manager = static_cast<GLFWWindowManager*>(glfwGetWindowUserPointer(window));
+  GLFWWindowManager *manager = static_cast<GLFWWindowManager *>(glfwGetWindowUserPointer(window));
 
   if (manager && manager->renderCallback) {
     manager->renderCallback();

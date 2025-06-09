@@ -9,10 +9,11 @@
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
 
+UIManager& uiManager = UIManager::instance();
+
 int main() {
   GLFWWindowManager windowManager;
   SkiaRenderer skiaRenderer;
-  UIManager &uiManager = UIManager::instance();
 
   // Initialize window
   if (!windowManager.initialize(800, 600, "Skia Playground")) {
@@ -54,6 +55,18 @@ int main() {
 						},
 					}),
 				}),
+			}),
+
+
+			UI::UIView({
+				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
+				.backgroundColor = Color::Green(),
+				.borderRadius = 20,
+        .tappable = true,
+        .onTap = []( const UITapEvent& event) {
+          fmt::println("Text tapped at local coordinates: ({}, {})", event.x, event.y);
+        },
+        .child = UI::Text("Tappable Text here", { .fontSize = 20.0f }),
 			}),
 
 			UI::RowView({
@@ -145,7 +158,7 @@ int main() {
 					UI::Text("Child Sub Two", { .fontSize = 20.0f }),
 				},
 			}),
-		}};
+	}};
 
   auto rootUI = UI::ColumnView(placeholder);
 
@@ -167,21 +180,15 @@ int main() {
       fmt::println("Skia resized to: {}x{}", width, height);
     }
 
-    // if (needsLayout) {
-    //   rootUI->layout(width, height);
-    //   needsLayout = false;
-    // }
-    // rootUI->layout(width, height);
-    // Render frame
     skiaRenderer.beginFrame();
     auto canvas = skiaRenderer.getCanvas();
 
-    // Just draw - no layout calculations here
     uiManager.setTree(rootUI, width, height, needsResize);
     rootUI->draw(canvas);
 
-    if (needsResize)
+    if (needsResize) {
       needsResize = false;
+    }
 
     skiaRenderer.endFrame();
 

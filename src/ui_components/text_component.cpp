@@ -10,8 +10,7 @@
 
 #include "ui_components/ui_manager.hpp"
 
-TextComponent::TextComponent(const std::string &text, const TextStyle &style)
-    : text_(text), style_(style) {
+TextComponent::TextComponent(const std::string &text, const TextStyle &style) : text_(text), style_(style) {
   paint_.setColor(style_.color);
   paint_.setAntiAlias(true);
 }
@@ -24,20 +23,16 @@ void TextComponent::layout(float parentWidth, float parentHeight) {
     skWeight = SkFontStyle::kLight_Weight;
   }
 
-  int slant =
-      style_.italic ? SkFontStyle::kItalic_Slant : SkFontStyle::kUpright_Slant;
-  SkFontStyle style(skWeight, SkFontStyle::kNormal_Width,
-                    (SkFontStyle::Slant)slant);
+  int slant = style_.italic ? SkFontStyle::kItalic_Slant : SkFontStyle::kUpright_Slant;
+  SkFontStyle style(skWeight, SkFontStyle::kNormal_Width, (SkFontStyle::Slant)slant);
 
   SkFont font = UIManager::instance().defaultFont();
-  sk_sp<SkTypeface> typeface =
-      UIManager::instance().fontManager()->matchFamilyStyle(nullptr, style);
+  sk_sp<SkTypeface> typeface = UIManager::instance().fontManager()->matchFamilyStyle(nullptr, style);
   font.setTypeface(typeface ? std::move(typeface) : SkTypeface::MakeEmpty());
   font.setSize(style_.fontSize);
 
   SkRect textBounds;
-  font.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8,
-                   &textBounds);
+  font.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, &textBounds);
   font_ = font;
 
   SkFontMetrics fontMetrics;
@@ -49,22 +44,19 @@ void TextComponent::layout(float parentWidth, float parentHeight) {
   text_metrics_.x_advance = textBounds.fRight - textBounds.fLeft;
 
   bounds_.width = text_metrics_.x_advance;
-  bounds_.height = std::max(0.0f, -textBounds.fTop) +
-                   std::max(0.0f, textBounds.fBottom - text_metrics_.descent) +
+  bounds_.height = std::max(0.0f, -textBounds.fTop) + std::max(0.0f, textBounds.fBottom - text_metrics_.descent) +
                    fontMetrics.fDescent;
 
   text_bounds_offset_x_ = textBounds.fLeft;
   text_bounds_offset_y_ = textBounds.fTop;
 
-  fmt::println("Text parentWidth: {} X parentHeight: {}", parentWidth,
-               parentWidth);
+  fmt::println("Text parentWidth: {} X parentHeight: {}", parentWidth, parentWidth);
 }
 
 void TextComponent::draw(SkCanvas *canvas) {
   float drawX = bounds_.x - text_bounds_offset_x_;
   float drawY = bounds_.y - text_bounds_offset_y_;
 
-  canvas->drawSimpleText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8,
-                         drawX, drawY, font_, paint_);
+  canvas->drawSimpleText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, drawX, drawY, font_, paint_);
   UIComponent::draw(canvas);
 }
