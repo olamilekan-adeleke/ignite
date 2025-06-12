@@ -19,7 +19,7 @@ void Opacity::layout(float parentWidth, float parentHeight) {
 
 void Opacity::draw(SkCanvas* canvas) {
   // TODO: Recheck this design decision later
-  // if (!param_.child) return;
+  if (!param_.child) return;
 
   float opacity = param_.opacity;
   if (opacity < 0.0f) opacity = 0.0f;

@@ -78,6 +78,32 @@ int main() {
         .child = UI::Text("Tappable Text here", { .fontSize = 20.0f }),
 			}),
 
+      UI::UIView({
+				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
+        .margin = {.left = 50},
+				.backgroundColor = Color::Green(),
+        .child = UI::UIImageView({
+          .path = "assets/trash.png",
+          .width = 80,
+          .height = 80,
+        }),
+      }),
+
+      UI::UIView({
+        .margin = {.left = 50},
+        .child = UI::UIImageView({
+          .path = "/assets/trash.png",
+          .height = 30,
+          .opacity = 0.2f,
+        }),
+      }),
+
+      UI::UIImageView({
+          .path = "/assets/test_one.jpeg",
+          .width = 350,
+          .height = 350,
+      }),
+
 			// UI::RowView({
 			// 	.spacing = 25,
 			// 	.children = {

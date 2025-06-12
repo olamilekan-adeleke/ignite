@@ -9,6 +9,7 @@
 #include "text_component.hpp"
 #include "ui_view.hpp"
 #include "opacity.hpp"
+#include "image.hpp"
 
 namespace UI {
 
@@ -26,5 +27,9 @@ inline std::shared_ptr<Sized> SizedView(const SizedParam &params = {}) { return 
 
 inline std::shared_ptr<Opacity> OpacityView(const OpacityParams &params = {}) {
   return std::make_shared<Opacity>(params);
+}
+
+inline std::shared_ptr<UIImage> UIImageView(const ImageParams &params = {}) {
+  return std::make_shared<UIImage>(params);
 }
 }  // namespace UI
