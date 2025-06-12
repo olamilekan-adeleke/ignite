@@ -57,6 +57,15 @@ int main() {
 				}),
 			}),
 
+      UI::OpacityView({
+        .opacity = 0.2f,
+        .child = UI::UIView({
+				  .insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
+				  .backgroundColor = Color::Green(),
+				  .borderRadius = 20,
+          .child = UI::Text("Tappable Text here", { .fontSize = 20.0f }),
+        }),
+      }),
 
 			UI::UIView({
 				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
@@ -69,95 +78,95 @@ int main() {
         .child = UI::Text("Tappable Text here", { .fontSize = 20.0f }),
 			}),
 
-			UI::RowView({
-				.spacing = 25,
-				.children = {
-					UI::Text("First Row Body", { .fontSize = 30.0f }),
-					UI::Text("Second Row Body", { .fontSize = 40.0f }),
-				},
-			}),
-
-			UI::RowView({
-				.spacing = 25,
-				.children = {
-					UI::Text("First Row Body", { .fontSize = 30.0f }),
-					UI::Text("Second Row Body", { .fontSize = 40.0f }),
-				},
-			}),
-      
-      UI::RowView({
-        .spacing = 20,
-        .children = {
-          UI::SizedView({
-            .size = {200, 100},
-            .align = UIAlignment::TopLeft,
-            .child = UI::Text("Top left text", {.fontSize = 18}),
-          }),
-          UI::SizedView({
-            .size = {200, 100},
-            .align = UIAlignment::TopCenter,
-            .child = UI::Text("Top center text", {.fontSize = 18}),
-          }),
-          UI::SizedView({
-            .size = {200, 100},
-            .align = UIAlignment::TopRight,
-            .child = UI::Text("Top right text", {.fontSize = 18}),
-          }),
-        },
-      }),
-
-      UI::RowView({
-        .spacing = 20,
-        .children = {
-          UI::SizedView({
-            .size = {200, 100},
-            .align = UIAlignment::CenterLeft,
-            .child = UI::Text("Center left text", {.fontSize = 18}),
-          }),
-          UI::SizedView({
-            .size = {200, 100},
-            .align = UIAlignment::Center,
-            .child = UI::Text("Center text", {.fontSize = 18}),
-          }),
-          UI::SizedView({
-            .size = {200, 100},
-            .align = UIAlignment::CenterRigh,
-            .child = UI::Text("Center right text", {.fontSize = 18}),
-          }),
-        },
-      }),
-
-      UI::RowView({
-        .spacing = 20,
-        .children = {
-          UI::SizedView({
-            .size = {200, 100},
-            .align = UIAlignment::BottomLeft,
-            .child = UI::Text("Bottom left text", {.fontSize = 18}),
-          }),
-          UI::SizedView({
-            .size = {200, 100},
-            .align = UIAlignment::BottomCenter,
-            .child = UI::Text("Bottom Center text", {.fontSize = 18}),
-          }),
-          UI::SizedView({
-            .size = {200, 100},
-            .align = UIAlignment::BottomRight,
-            .child = UI::Text("Botton right text", {.fontSize = 18}),
-          }),
-        },
-      }),
-
-			UI::Text("Second Body Boy with Pen in the Bag", { .fontSize = 30.0f }),
-			UI::Text("Resize callback: {}x{}", { .fontSize = 68.0f }),
-
-			UI::ColumnView({
-				.spacing = 20,
-				.children = {
-					UI::Text("Child Sub One", { .fontSize = 20.0f }),
-					UI::Text("Child Sub Two", { .fontSize = 20.0f }),
-				},
-			}),
+			// UI::RowView({
+			// 	.spacing = 25,
+			// 	.children = {
+			// 		UI::Text("First Row Body", { .fontSize = 30.0f }),
+			// 		UI::Text("Second Row Body", { .fontSize = 40.0f }),
+			// 	},
+			// }),
+			//
+			// UI::RowView({
+			// 	.spacing = 25,
+			// 	.children = {
+			// 		UI::Text("First Row Body", { .fontSize = 30.0f }),
+			// 		UI::Text("Second Row Body", { .fontSize = 40.0f }),
+			// 	},
+			// }),
+   //    
+   //    UI::RowView({
+   //      .spacing = 20,
+   //      .children = {
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::TopLeft,
+   //          .child = UI::Text("Top left text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::TopCenter,
+   //          .child = UI::Text("Top center text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::TopRight,
+   //          .child = UI::Text("Top right text", {.fontSize = 18}),
+   //        }),
+   //      },
+   //    }),
+			//
+   //    UI::RowView({
+   //      .spacing = 20,
+   //      .children = {
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::CenterLeft,
+   //          .child = UI::Text("Center left text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::Center,
+   //          .child = UI::Text("Center text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::CenterRigh,
+   //          .child = UI::Text("Center right text", {.fontSize = 18}),
+   //        }),
+   //      },
+   //    }),
+			//
+   //    UI::RowView({
+   //      .spacing = 20,
+   //      .children = {
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::BottomLeft,
+   //          .child = UI::Text("Bottom left text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::BottomCenter,
+   //          .child = UI::Text("Bottom Center text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::BottomRight,
+   //          .child = UI::Text("Botton right text", {.fontSize = 18}),
+   //        }),
+   //      },
+   //    }),
+			//
+			// UI::Text("Second Body Boy with Pen in the Bag", { .fontSize = 30.0f }),
+			// UI::Text("Resize callback: {}x{}", { .fontSize = 68.0f }),
+			//
+			// UI::ColumnView({
+			// 	.spacing = 20,
+			// 	.children = {
+			// 		UI::Text("Child Sub One", { .fontSize = 20.0f }),
+			// 		UI::Text("Child Sub Two", { .fontSize = 20.0f }),
+			// 	},
+			// }),
 	}};
 
   auto rootUI = UI::ColumnView(placeholder);

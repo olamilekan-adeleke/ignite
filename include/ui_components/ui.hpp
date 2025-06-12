@@ -8,6 +8,7 @@
 #include "row_component.hpp"
 #include "text_component.hpp"
 #include "ui_view.hpp"
+#include "opacity.hpp"
 
 namespace UI {
 
@@ -15,19 +16,15 @@ inline std::shared_ptr<TextComponent> Text(const std::string &str, const TextSty
   return std::make_shared<TextComponent>(str, style);
 }
 
-inline std::shared_ptr<Column> ColumnView(const ColumnParams &props = {}) {
-  return std::make_shared<Column>(props);
-}
+inline std::shared_ptr<Column> ColumnView(const ColumnParams &props = {}) { return std::make_shared<Column>(props); }
 
-inline std::shared_ptr<Row> RowView(const RowParams &props = {}) {
-  return std::make_shared<Row>(props);
-}
+inline std::shared_ptr<Row> RowView(const RowParams &props = {}) { return std::make_shared<Row>(props); }
 
-inline std::shared_ptr<View> UIView(const ViewParams &params = {}) {
-  return std::make_shared<View>(params);
-}
+inline std::shared_ptr<View> UIView(const ViewParams &params = {}) { return std::make_shared<View>(params); }
 
-inline std::shared_ptr<Sized> SizedView(const SizedParam &params = {}) {
-  return std::make_shared<Sized>(params);
+inline std::shared_ptr<Sized> SizedView(const SizedParam &params = {}) { return std::make_shared<Sized>(params); }
+
+inline std::shared_ptr<Opacity> OpacityView(const OpacityParams &params = {}) {
+  return std::make_shared<Opacity>(params);
 }
-} // namespace UI
+}  // namespace UI
