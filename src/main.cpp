@@ -98,6 +98,12 @@ int main() {
         }),
       }),
 
+      UI::UITextFieldView({
+        .placeholder = "Enter name",
+        .initialText = "Default",
+        .width = 200
+      }),
+
       UI::UIImageView({
           .path = "/assets/test_one.jpeg",
           .width = 350,

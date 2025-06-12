@@ -7,6 +7,7 @@
 #include "ui_sized.hpp"
 #include "row_component.hpp"
 #include "text_component.hpp"
+#include "ui_text_field.hpp"
 #include "ui_view.hpp"
 #include "opacity.hpp"
 #include "image.hpp"
@@ -31,5 +32,9 @@ inline std::shared_ptr<Opacity> OpacityView(const OpacityParams &params = {}) {
 
 inline std::shared_ptr<UIImage> UIImageView(const ImageParams &params = {}) {
   return std::make_shared<UIImage>(params);
+}
+
+inline std::shared_ptr<UITextField> UITextFieldView(const UITextFieldParams &params = {}) {
+  return std::make_shared<UITextField>(params);
 }
 }  // namespace UI
