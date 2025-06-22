@@ -75,6 +75,7 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   previousTreeRoot_ = currentTreeRoot_;
 }
 
+// TODO: implement better diffing
 void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
                                const std::shared_ptr<UIComponent> &newNode,
                                float w,
