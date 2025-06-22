@@ -2,7 +2,6 @@
 
 #include <string>
 #include <cstring>  // Added for strncpy
-#include <imgui.h>
 #include "ui_component.hpp"
 
 struct UITextFieldParams {
@@ -27,17 +26,17 @@ class UITextField : public UIComponent {
   }
 
   void draw(SkCanvas* canvas) override {
-    ImGui::SetNextItemWidth(bounds_.width);
-
-    // Use placeholder text as label, or generate unique ID
-    std::string label = params_.placeholder.empty() ? "##textfield" : params_.placeholder;
-
-    if (ImGui::InputText(label.c_str(), buffer_, IM_ARRAYSIZE(buffer_))) {
-      // Optional: handle text change events here
-    }
-
-    // Call parent draw method
-    UIComponent::draw(canvas);
+    // ImGui::SetNextItemWidth(bounds_.width);
+    //
+    // // Use placeholder text as label, or generate unique ID
+    // std::string label = params_.placeholder.empty() ? "##textfield" : params_.placeholder;
+    //
+    // if (ImGui::InputText(label.c_str(), buffer_, IM_ARRAYSIZE(buffer_))) {
+    //   // Optional: handle text change events here
+    // }
+    //
+    // // Call parent draw method
+    // UIComponent::draw(canvas);
   }
 
   std::string text() const { return std::string(buffer_); }

@@ -11,7 +11,3 @@ struct UIEdgeInsets {
 
   float vertical() { return top + bottom; }
 };
-
-enum class MainAxisAlignment { START };
-
-enum class CrossAxisAlignment { START, CENTER, END };

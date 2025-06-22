@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "ui_components/ui_component.hpp"
-#include "ui_edge_insets.hpp"
 
 struct ColumnParams {
   float spacing = 0.0f;

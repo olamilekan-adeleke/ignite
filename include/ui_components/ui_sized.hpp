@@ -1,7 +1,7 @@
+#pragma once
 
 #include "ui_component.hpp"
 #include "size.hpp"
-#include "ui_alignment.hpp"
 #include <memory>
 
 struct SizedParam {
@@ -11,13 +11,13 @@ struct SizedParam {
 };
 
 class Sized : public UIComponent {
-public:
+ public:
   Sized(const SizedParam &param = {});
 
   void layout(float parentWidth, float parentHeight);
   void draw(SkCanvas *canvas);
 
-private:
+ private:
   UISize size_;
   UIAlignment align_;
   std::shared_ptr<UIComponent> child_;

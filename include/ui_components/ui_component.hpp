@@ -10,6 +10,7 @@
 #include "rect.hpp"
 #include "tap_event.hpp"
 #include "ui_key.hpp"
+#include "ui_alignment.hpp"
 
 using TapListener = std::function<void(const UITapEvent &event)>;
 
