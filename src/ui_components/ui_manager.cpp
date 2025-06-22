@@ -66,6 +66,16 @@ void UIManager::sendTapEvent(const UITapEvent &event) {
   }
 }
 
+/**
+ * @brief Sets the current UI component tree and updates its layout.
+ *
+ * Replaces the existing UI tree root with a new one, updates the UI dimensions, and triggers a diff and rebuild process to update the UI layout as needed.
+ *
+ * @param tree The new root UI component tree.
+ * @param w The width for the UI layout.
+ * @param h The height for the UI layout.
+ * @param needsResize Indicates whether a resize operation is required.
+ */
 void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float h, bool needsResize) {
   currentTreeRoot_ = tree;
   width_ = w;
@@ -75,7 +85,17 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   previousTreeRoot_ = currentTreeRoot_;
 }
 
-// TODO: implement better diffing
+/**
+ * @brief Recursively updates the UI component tree by comparing old and new nodes.
+ *
+ * If a node requires rebuilding or resizing, its layout is recalculated. The method then recursively processes all child components, ensuring the UI tree reflects the latest structure and dimensions.
+ *
+ * @param oldNode The previous UI component node, or nullptr if none exists.
+ * @param newNode The updated UI component node.
+ * @param w The width to use for layout calculations.
+ * @param h The height to use for layout calculations.
+ * @param needsResize Indicates whether a resize operation is required.
+ */
 void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
                                const std::shared_ptr<UIComponent> &newNode,
                                float w,
