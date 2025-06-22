@@ -6,8 +6,8 @@
 
 #include "skia/SkiaRenderer.hpp"
 #include "ui.hpp"
+#include "ui_component.hpp"
 #include "ui_components/ui_manager.hpp"
-#include "ui_edge_insets.hpp"
 #include "window/GLFWWindowManager.hpp"
 
 UIManager& uiManager = UIManager::instance();
@@ -102,95 +102,18 @@ int main() {
           .height = 350,
       }),
 
-			// UI::RowView({
-			// 	.spacing = 25,
-			// 	.children = {
-			// 		UI::Text("First Row Body", { .fontSize = 30.0f }),
-			// 		UI::Text("Second Row Body", { .fontSize = 40.0f }),
-			// 	},
-			// }),
-			//
-			// UI::RowView({
-			// 	.spacing = 25,
-			// 	.children = {
-			// 		UI::Text("First Row Body", { .fontSize = 30.0f }),
-			// 		UI::Text("Second Row Body", { .fontSize = 40.0f }),
-			// 	},
-			// }),
-   //    
-   //    UI::RowView({
-   //      .spacing = 20,
-   //      .children = {
-   //        UI::SizedView({
-   //          .size = {200, 100},
-   //          .align = UIAlignment::TopLeft,
-   //          .child = UI::Text("Top left text", {.fontSize = 18}),
-   //        }),
-   //        UI::SizedView({
-   //          .size = {200, 100},
-   //          .align = UIAlignment::TopCenter,
-   //          .child = UI::Text("Top center text", {.fontSize = 18}),
-   //        }),
-   //        UI::SizedView({
-   //          .size = {200, 100},
-   //          .align = UIAlignment::TopRight,
-   //          .child = UI::Text("Top right text", {.fontSize = 18}),
-   //        }),
-   //      },
-   //    }),
-			//
-   //    UI::RowView({
-   //      .spacing = 20,
-   //      .children = {
-   //        UI::SizedView({
-   //          .size = {200, 100},
-   //          .align = UIAlignment::CenterLeft,
-   //          .child = UI::Text("Center left text", {.fontSize = 18}),
-   //        }),
-   //        UI::SizedView({
-   //          .size = {200, 100},
-   //          .align = UIAlignment::Center,
-   //          .child = UI::Text("Center text", {.fontSize = 18}),
-   //        }),
-   //        UI::SizedView({
-   //          .size = {200, 100},
-   //          .align = UIAlignment::CenterRigh,
-   //          .child = UI::Text("Center right text", {.fontSize = 18}),
-   //        }),
-   //      },
-   //    }),
-			//
-   //    UI::RowView({
-   //      .spacing = 20,
-   //      .children = {
-   //        UI::SizedView({
-   //          .size = {200, 100},
-   //          .align = UIAlignment::BottomLeft,
-   //          .child = UI::Text("Bottom left text", {.fontSize = 18}),
-   //        }),
-   //        UI::SizedView({
-   //          .size = {200, 100},
-   //          .align = UIAlignment::BottomCenter,
-   //          .child = UI::Text("Bottom Center text", {.fontSize = 18}),
-   //        }),
-   //        UI::SizedView({
-   //          .size = {200, 100},
-   //          .align = UIAlignment::BottomRight,
-   //          .child = UI::Text("Botton right text", {.fontSize = 18}),
-   //        }),
-   //      },
-   //    }),
-			//
-			// UI::Text("Second Body Boy with Pen in the Bag", { .fontSize = 30.0f }),
-			// UI::Text("Resize callback: {}x{}", { .fontSize = 68.0f }),
-			//
-			// UI::ColumnView({
-			// 	.spacing = 20,
-			// 	.children = {
-			// 		UI::Text("Child Sub One", { .fontSize = 20.0f }),
-			// 		UI::Text("Child Sub Two", { .fontSize = 20.0f }),
-			// 	},
-			// }),
+			UI::RowView({
+				.spacing = 25,
+        .mainAxisAlignment = MainAxisAlignment::START,
+        .crossAxisAlignment = CrossAxisAlignment::END,
+				.children = {
+					UI::Text("First Row Body     dgdggdgdgd", { .fontSize = 30.0f }),
+					UI::Text("First Text", { .fontSize = 10.0f }),
+					UI::Text("Second Row Body", { .fontSize = 50.0f }),
+				},
+			}),
+
+      UI::SizedView({.size = {.height= 50}}),
 	}};
 
   auto rootUI = UI::ColumnView(placeholder);

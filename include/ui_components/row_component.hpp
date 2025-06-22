@@ -1,3 +1,4 @@
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -6,6 +7,8 @@
 
 struct RowParams {
   float spacing = 0.0f;
+  MainAxisAlignment mainAxisAlignment = MainAxisAlignment::START;
+  CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment::START;
   std::vector<std::shared_ptr<UIComponent>> children;
 };
 
@@ -30,5 +33,7 @@ class Row : public UIComponent {
 
  private:
   float spacing_;
+  MainAxisAlignment mainAxisAlignment_;
+  CrossAxisAlignment crossAxisAlignment_;
   std::vector<std::shared_ptr<UIComponent>> children_;
 };

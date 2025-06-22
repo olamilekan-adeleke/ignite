@@ -1,12 +1,10 @@
 #include "ui_components/column_component.hpp"
 
-#include <chrono>
 #include <cmath>
 #include <memory>
 #include <utility>
 
 #include "ui_component.hpp"
-#include "ui_edge_insets.hpp"
 
 void Column::addChild(std::shared_ptr<UIComponent> child) { children_.push_back(std::move(child)); }
 
@@ -33,22 +31,22 @@ inline float getXPosition(CrossAxisAlignment axis, float parentWidth, float chil
 void Column::layout(float parentWidth, float parentHeight) {
   bounds_.width = parentWidth;
 
+  // first calculate the parent Width by using the child max width
   float maxChildWidth = 0.0f;
   for (size_t index = 0; index < children_.size(); index++) {
     auto &child = children_[index];
 
     child->layout(parentWidth, 0);
-
     maxChildWidth = std::fmax(maxChildWidth, child->getBounds().width);
   }
-
   bounds_.width = maxChildWidth;
 
+  // layout all child and position them base on their Cross Axis Alignment
   float currentY = 0.0f;
   for (size_t index = 0; index < children_.size(); index++) {
     auto &child = children_[index];
-    float crossAxisPosistion = getXPosition(cross_axis_alignment_, bounds_.width, child->getBounds().width);
-    child->setPosition(crossAxisPosistion, currentY);
+    float crossAxisPosition = getXPosition(cross_axis_alignment_, bounds_.width, child->getBounds().width);
+    child->setPosition(crossAxisPosition, currentY);
 
     currentY += child->getBounds().height;
     if (index + 1 != children_.size()) {
@@ -56,8 +54,6 @@ void Column::layout(float parentWidth, float parentHeight) {
     }
   }
   bounds_.height = currentY;
-
-  // bounds_.width = parentWidth;
 }
 
 void Column::draw(SkCanvas *canvas) {
