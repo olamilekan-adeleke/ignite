@@ -7,6 +7,7 @@
 #include "skia/SkiaRenderer.hpp"
 #include "ui.hpp"
 #include "ui_components/ui_manager.hpp"
+#include "ui_edge_insets.hpp"
 #include "window/GLFWWindowManager.hpp"
 
 UIManager& uiManager = UIManager::instance();
@@ -29,13 +30,10 @@ int main() {
     return -1;
   }
 
-  // auto sizedBox =
-
-  // auto text = TextComponent("Hello There", Color::Red(), 40.0f,
-  // FontWeight::Bold);
   const bool isLoading = false;
   ColumnParams placeholder = {
 		.spacing = 10.0f,
+    .crossAxisAlignment = CrossAxisAlignment::CENTER,
 		.children = {
 			UI::UIView({
 				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
@@ -80,7 +78,7 @@ int main() {
 
       UI::UIView({
 				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
-        .margin = {.left = 50},
+        // .margin = {.left = 50},
 				.backgroundColor = Color::Green(),
         .child = UI::UIImageView({
           .path = "assets/trash.png",
@@ -90,18 +88,12 @@ int main() {
       }),
 
       UI::UIView({
-        .margin = {.left = 50},
+        // .margin = {.left = 50},
         .child = UI::UIImageView({
           .path = "/assets/trash.png",
           .height = 30,
           .opacity = 0.2f,
         }),
-      }),
-
-      UI::UITextFieldView({
-        .placeholder = "Enter name",
-        .initialText = "Default",
-        .width = 200
       }),
 
       UI::UIImageView({

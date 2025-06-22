@@ -1,10 +1,15 @@
+#pragma once
+
 #include <memory>
 #include <vector>
 
 #include "ui_components/ui_component.hpp"
+#include "ui_edge_insets.hpp"
 
 struct ColumnParams {
   float spacing = 0.0f;
+  MainAxisAlignment mainAxisAlignment = MainAxisAlignment::START;
+  CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment::START;
   std::vector<std::shared_ptr<UIComponent>> children;
 };
 
@@ -29,5 +34,7 @@ class Column : public UIComponent {
 
  private:
   float spacing_;
+  CrossAxisAlignment cross_axis_alignment_;
+  MainAxisAlignment main_axis_alignment_;
   std::vector<std::shared_ptr<UIComponent>> children_;
 };
