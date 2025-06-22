@@ -9,7 +9,12 @@ struct UIEdgeInsets {
   // TODO: add setters
   float horizonal() { return left + right; }
 
-  float vertical() { return top + bottom; }
+  /**
+ * @brief Calculates the total vertical inset.
+ *
+ * @return float Sum of the top and bottom insets.
+ */
+float vertical() { return top + bottom; }
 };
 
 enum class MainAxisAlignment { START };

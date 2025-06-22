@@ -12,6 +12,13 @@
 
 UIManager& uiManager = UIManager::instance();
 
+/**
+ * @brief Entry point for the Skia Playground graphical application.
+ *
+ * Initializes the window and Skia renderer, constructs the root UI layout, and enters the main event loop. Handles window resizing and rendering updates, and manages the UI tree and drawing operations for each frame.
+ *
+ * @return int Returns 0 on successful exit, or -1 if initialization fails.
+ */
 int main() {
   GLFWWindowManager windowManager;
   SkiaRenderer skiaRenderer;
