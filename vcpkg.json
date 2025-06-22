@@ -2,7 +2,8 @@
   "dependencies": [
     "fmt",
     "glfw3",
+    "opengl",
     "skia",
-    "opengl"
+    "imgui"
   ]
 }

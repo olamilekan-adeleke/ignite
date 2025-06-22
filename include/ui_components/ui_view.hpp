@@ -10,11 +10,13 @@ struct ViewParams {
   Color backgroundColor = Color::White();
   float borderRadius = 0.0f;
   bool antiAlias = false;
+  bool tappable = true;
+  TapListener onTap = nullptr;
   std::shared_ptr<UIComponent> child = nullptr;
 };
 
 class View : public UIComponent {
-public:
+ public:
   View(const ViewParams &params = ViewParams());
 
   View(const View &) = delete;
@@ -23,6 +25,6 @@ public:
   void layout(float parentWidth, float parentHeight) override;
   void draw(SkCanvas *canvas) override;
 
-protected:
+ protected:
   ViewParams params_;
 };

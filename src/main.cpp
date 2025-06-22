@@ -1,4 +1,3 @@
-
 #include <fmt/base.h>
 
 #include <chrono>
@@ -10,10 +9,11 @@
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
 
+UIManager& uiManager = UIManager::instance();
+
 int main() {
   GLFWWindowManager windowManager;
   SkiaRenderer skiaRenderer;
-  UIManager &uiManager = UIManager::instance();
 
   // Initialize window
   if (!windowManager.initialize(800, 600, "Skia Playground")) {
@@ -29,63 +29,179 @@ int main() {
     return -1;
   }
 
+  // auto sizedBox =
+
   // auto text = TextComponent("Hello There", Color::Red(), 40.0f,
   // FontWeight::Bold);
   const bool isLoading = false;
-  auto rootUI = UI::ColumnView(
-      {.spacing = 10.0f,
-       .children = {
-           UI::ColumnView({
-               .spacing = 20,
-               .children =
-                   {
-                       UI::Text("Child Sub One", {.fontSize = 20.0f}),
-                       UI::Text("Child Sub Two", {.fontSize = 20.0f}),
-                   },
-           }),
+  ColumnParams placeholder = {
+		.spacing = 10.0f,
+		.children = {
+			UI::UIView({
+				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
+				.backgroundColor = Color::Green(),
+				.borderRadius = 20,
+				.child = UI::UIView({
+					.insets = UIEdgeInsets({ .top = 16, .left = 20, .bottom = 16, .right = 20 }),
+					.margin = UIEdgeInsets({ .top = 10, .left  = 10, .bottom = 10, .right = 10 }),
+					.backgroundColor = Color::Red(),
+					.borderRadius = 20,
+					.antiAlias = true,
+					.child = UI::ColumnView({
+						.spacing = 16,
+						.children = {
+							UI::Text("Child In UIView Child Sub One", { .fontSize = 20.0f }),
+							UI::Text("View Child Child Sub Two", { .fontSize = 20.0f }),
+						},
+					}),
+				}),
+			}),
 
-           UI::UIView({
-               .insets = UIEdgeInsets({
-                   .top = 16,
-                   .left = 20,
-                   .bottom = 16,
-                   .right = 20,
-               }),
-               .margin = UIEdgeInsets({
-                   .top = 10,
-                   .left = 10,
-                   .bottom = 10,
-                   .right = 10,
-               }),
-               .backgroundColor = Color::Red(),
-               .borderRadius = 20,
-               .antiAlias = true,
-               .child = UI::ColumnView({
-                   .spacing = 16,
-                   .children ={
-                           UI::Text("Child In UIView Child Sub One", {.fontSize = 20.0f}),
-                           UI::Text("View Child Child Sub Two", {.fontSize = 20.0f}),
-                       },
-               }),
-           }),
+      UI::OpacityView({
+        .opacity = 0.2f,
+        .child = UI::UIView({
+				  .insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
+				  .backgroundColor = Color::Green(),
+				  .borderRadius = 20,
+          .child = UI::Text("Tappable Text here", { .fontSize = 20.0f }),
+        }),
+      }),
 
-           UI::Text("Line 1\nLine 2",
-                    {.fontSize = 12.0f, .color = Color::Cyan()}),
-           UI::Text("First line\n\nThird line (with empty line above)",
-                    {.fontSize = 18.0f}),
-           UI::Text("Hello", {.fontSize = 80.0f, .color = Color::Red()}),
-           UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 10.0f}),
+			UI::UIView({
+				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
+				.backgroundColor = Color::Green(),
+				.borderRadius = 20,
+        .tappable = true,
+        .onTap = []( const UITapEvent& event) {
+          fmt::println("Text tapped at local coordinates: ({}, {})", event.x, event.y);
+        },
+        .child = UI::Text("Tappable Text here", { .fontSize = 20.0f }),
+			}),
 
-           UI::RowView({ 
-            .spacing = 25,
-            .children = {
-               UI::Text("First Row Body", {.fontSize = 30.0f}),
-               UI::Text("Second Row Body", {.fontSize = 40.0f}),
-           }}),
+      UI::UIView({
+				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
+        .margin = {.left = 50},
+				.backgroundColor = Color::Green(),
+        .child = UI::UIImageView({
+          .path = "assets/trash.png",
+          .width = 80,
+          .height = 80,
+        }),
+      }),
 
-           UI::Text("Second Body Boy with Pen in the Bag", {.fontSize = 30.0f}),
-           UI::Text("Resize callback: {}x{}", {.fontSize = 68.0f}),
-       }});
+      UI::UIView({
+        .margin = {.left = 50},
+        .child = UI::UIImageView({
+          .path = "/assets/trash.png",
+          .height = 30,
+          .opacity = 0.2f,
+        }),
+      }),
+
+      UI::UITextFieldView({
+        .placeholder = "Enter name",
+        .initialText = "Default",
+        .width = 200
+      }),
+
+      UI::UIImageView({
+          .path = "/assets/test_one.jpeg",
+          .width = 350,
+          .height = 350,
+      }),
+
+			// UI::RowView({
+			// 	.spacing = 25,
+			// 	.children = {
+			// 		UI::Text("First Row Body", { .fontSize = 30.0f }),
+			// 		UI::Text("Second Row Body", { .fontSize = 40.0f }),
+			// 	},
+			// }),
+			//
+			// UI::RowView({
+			// 	.spacing = 25,
+			// 	.children = {
+			// 		UI::Text("First Row Body", { .fontSize = 30.0f }),
+			// 		UI::Text("Second Row Body", { .fontSize = 40.0f }),
+			// 	},
+			// }),
+   //    
+   //    UI::RowView({
+   //      .spacing = 20,
+   //      .children = {
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::TopLeft,
+   //          .child = UI::Text("Top left text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::TopCenter,
+   //          .child = UI::Text("Top center text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::TopRight,
+   //          .child = UI::Text("Top right text", {.fontSize = 18}),
+   //        }),
+   //      },
+   //    }),
+			//
+   //    UI::RowView({
+   //      .spacing = 20,
+   //      .children = {
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::CenterLeft,
+   //          .child = UI::Text("Center left text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::Center,
+   //          .child = UI::Text("Center text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::CenterRigh,
+   //          .child = UI::Text("Center right text", {.fontSize = 18}),
+   //        }),
+   //      },
+   //    }),
+			//
+   //    UI::RowView({
+   //      .spacing = 20,
+   //      .children = {
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::BottomLeft,
+   //          .child = UI::Text("Bottom left text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::BottomCenter,
+   //          .child = UI::Text("Bottom Center text", {.fontSize = 18}),
+   //        }),
+   //        UI::SizedView({
+   //          .size = {200, 100},
+   //          .align = UIAlignment::BottomRight,
+   //          .child = UI::Text("Botton right text", {.fontSize = 18}),
+   //        }),
+   //      },
+   //    }),
+			//
+			// UI::Text("Second Body Boy with Pen in the Bag", { .fontSize = 30.0f }),
+			// UI::Text("Resize callback: {}x{}", { .fontSize = 68.0f }),
+			//
+			// UI::ColumnView({
+			// 	.spacing = 20,
+			// 	.children = {
+			// 		UI::Text("Child Sub One", { .fontSize = 20.0f }),
+			// 		UI::Text("Child Sub Two", { .fontSize = 20.0f }),
+			// 	},
+			// }),
+	}};
+
+  auto rootUI = UI::ColumnView(placeholder);
 
   bool needsResize = false;
   bool needsLayout = true;
@@ -105,16 +221,9 @@ int main() {
       fmt::println("Skia resized to: {}x{}", width, height);
     }
 
-    // if (needsLayout) {
-    //   rootUI->layout(width, height);
-    //   needsLayout = false;
-    // }
-    // rootUI->layout(width, height);
-    // Render frame
     skiaRenderer.beginFrame();
     auto canvas = skiaRenderer.getCanvas();
 
-    // Just draw - no layout calculations here
     uiManager.setTree(rootUI, width, height, needsResize);
     rootUI->draw(canvas);
 

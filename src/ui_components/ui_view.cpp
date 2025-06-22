@@ -4,27 +4,26 @@
 #include <include/core/SkPaint.h>
 #include <include/core/SkRRect.h>
 #include <include/core/SkRect.h>
+#include "ui_component.hpp"
 
-View::View(const ViewParams &params) : params_(params) {}
+View::View(const ViewParams &params) : params_(params) {
+  setTapListener(params_.onTap);
+  setTapEnabled(params_.tappable);
+}
 
 void View::layout(float parentWidth, float parentHeight) {
   if (params_.child) {
     float availableWidth = parentWidth - params_.margin.horizonal();
     float availableHeight = parentHeight - params_.margin.vertical();
 
-    float availableChildWidth =
-        std::fmax(availableHeight - params_.insets.horizonal(), 0);
-    float availableChildHeight =
-        std::fmax(availableHeight - params_.insets.vertical(), 0);
+    float availableChildWidth = std::fmax(availableHeight - params_.insets.horizonal(), 0);
+    float availableChildHeight = std::fmax(availableHeight - params_.insets.vertical(), 0);
 
     params_.child->layout(availableChildWidth, availableChildHeight);
-    params_.child->setPosition(params_.margin.left + params_.insets.left,
-                               params_.margin.top + params_.insets.top);
+    params_.child->setPosition(params_.margin.left + params_.insets.left, params_.margin.top + params_.insets.top);
 
-    bounds_.width = params_.child->getBounds().width +
-                    (params_.insets.horizonal() + params_.margin.horizonal());
-    bounds_.height = params_.child->getBounds().height +
-                     (params_.insets.vertical() + params_.margin.vertical());
+    bounds_.width = params_.child->getBounds().width + (params_.insets.horizonal() + params_.margin.horizonal());
+    bounds_.height = params_.child->getBounds().height + (params_.insets.vertical() + params_.margin.vertical());
 
   } else {
     bounds_.width = params_.insets.horizonal() + params_.margin.horizonal();
@@ -46,8 +45,7 @@ void View::draw(SkCanvas *canvas) {
     float backgroundWidth = bounds_.width - params_.margin.horizonal();
     float backgroundHeight = bounds_.height - params_.margin.vertical();
 
-    SkRect rect = SkRect::MakeXYWH(backgroundX, backgroundY, backgroundWidth,
-                                   backgroundHeight);
+    SkRect rect = SkRect::MakeXYWH(backgroundX, backgroundY, backgroundWidth, backgroundHeight);
     if (params_.borderRadius > 0) {
       SkRRect rrect;
       rrect.setRectXY(rect, params_.borderRadius, params_.borderRadius);
@@ -74,8 +72,7 @@ void View::draw(SkCanvas *canvas) {
       float backgroundWidth = params_.insets.horizonal();
       float backgroundHeight = params_.insets.vertical();
 
-      SkRect rect = SkRect::MakeXYWH(backgroundX, backgroundY, backgroundWidth,
-                                     backgroundHeight);
+      SkRect rect = SkRect::MakeXYWH(backgroundX, backgroundY, backgroundWidth, backgroundHeight);
 
       if (params_.borderRadius > 0) {
         SkRRect rrect;

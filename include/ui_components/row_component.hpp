@@ -20,6 +20,14 @@ class Row : public UIComponent {
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
+ protected:
+  virtual bool processChildTaps(const UITapEvent &event) override {
+    for (auto it = children_.rbegin(); it != children_.rend(); ++it) {
+      if ((*it)->processTap(event)) return true;
+    }
+    return false;
+  }
+
  private:
   float spacing_;
   std::vector<std::shared_ptr<UIComponent>> children_;

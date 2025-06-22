@@ -12,16 +12,20 @@ class Column : public UIComponent {
  public:
   Column(const ColumnParams &params = {});
 
-  // Template magic
-  // template <typename... Children>
-  // Column(std::shared_ptr<UIComponent> first, Children... rest);
-
   void addChild(std::shared_ptr<UIComponent> child);
 
   void layout(float parentWidth, float parentHeight) override;
   void draw(SkCanvas *canvas) override;
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
+
+ protected:
+  virtual bool processChildTaps(const UITapEvent &event) override {
+    for (auto it = children_.rbegin(); it != children_.rend(); ++it) {
+      if ((*it)->processTap(event)) return true;
+    }
+    return false;
+  }
 
  private:
   float spacing_;

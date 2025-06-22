@@ -6,6 +6,7 @@
 
 #include <memory>
 
+#include "tap_event.hpp"
 #include "ui_component.hpp"
 
 namespace Debug {
@@ -14,21 +15,24 @@ inline bool ui_debug_mode = true;
 
 // just to maanger some UI Shit
 class UIManager {
-public:
+ public:
   UIManager();
   static UIManager &instance();
 
-  void setTree(const std::shared_ptr<UIComponent> tree, float w, float h,
-               bool needsResize);
+  void setTree(const std::shared_ptr<UIComponent> tree, float w, float h, bool needsResize);
   void diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
-                      const std::shared_ptr<UIComponent> &newNode, float w,
-                      float h, bool needsResize);
+                      const std::shared_ptr<UIComponent> &newNode,
+                      float w,
+                      float h,
+                      bool needsResize);
 
   const SkFont &defaultFont() const;
   const sk_sp<SkTypeface> &typeface() const;
   const sk_sp<SkFontMgr> &fontManager() const;
 
-private:
+  void sendTapEvent(const UITapEvent &event);
+
+ private:
   sk_sp<SkFontMgr> fontMgr_;
   sk_sp<SkTypeface> defaultTypeface_;
   SkFont font_;
@@ -39,6 +43,5 @@ private:
   float height_ = 0;
   bool dirty_ = false;
 
-  bool shouldRebuild(const std::shared_ptr<UIComponent> &oldNode,
-                     const std::shared_ptr<UIComponent> &newNode);
+  bool shouldRebuild(const std::shared_ptr<UIComponent> &oldNode, const std::shared_ptr<UIComponent> &newNode);
 };
