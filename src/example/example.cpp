@@ -118,7 +118,7 @@ inline auto bodyTodoListItems() {
     .children = {
       UI::UIView({
         .onTap = [](const UITapEvent& event){
-           fmt::println("Tap itene at item {}");
+           fmt::println("Tap item at item {}");
         },
         .child = UI::Text("Tasks to do - " + std::to_string(children.size()), {
         .color = Color::White(),

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <utility>
 
 enum class MainAxisAlignment { START, SPACE_BETWEEN };
@@ -60,6 +61,8 @@ inline std::pair<float, float> computeAlignedPosition(
       x = parentWidth - childWidth;
       y = parentHeight - childHeight;
       break;
+    default:
+      assert(false);
   }
 
   return {x, y};

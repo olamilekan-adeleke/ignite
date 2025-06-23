@@ -20,7 +20,7 @@ struct TextMetrics {
  */
 enum class FontWeight { Normal, Bold, Light };
 
-enum class TextDecoration { underline, strickThrought, none };
+enum class TextDecoration { underline, strikethrough, none };
 
 struct TextStyle {
   Color color = Color::Black();
