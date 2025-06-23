@@ -1,4 +1,4 @@
-
+#pragma once
 
 struct UISize {
   float width = 0.0f;

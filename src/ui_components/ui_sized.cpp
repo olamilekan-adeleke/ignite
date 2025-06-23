@@ -1,12 +1,11 @@
 #include "ui_sized.hpp"
 #include <fmt/base.h>
 
-Sized::Sized(const SizedParam &param) : size_(param.size), align_(param.align), child_(param.child) {
-}
+Sized::Sized(const SizedParam &param) : size_(param.size), align_(param.align), child_(param.child) {}
 
 void Sized::layout(float parentWidth, float parentHeight) {
-  float width = size_.width > 0 ? size_.width : parentWidth;
-  float height = size_.height > 0 ? size_.height : parentHeight;
+  float width = size_.width >= 0 ? size_.width : parentWidth;
+  float height = size_.height >= 0 ? size_.height : parentHeight;
 
   if (child_) {
     child_->layout(width, height);

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ui_component.hpp"
 
 struct OpacityParams {

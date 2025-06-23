@@ -4,6 +4,7 @@
 #include <string>
 
 #include "column_component.hpp"
+#include "ui_component.hpp"
 #include "ui_sized.hpp"
 #include "row_component.hpp"
 #include "text_component.hpp"
@@ -24,13 +25,13 @@ inline std::shared_ptr<Row> RowView(const RowParams &props = {}) { return std::m
 
 inline std::shared_ptr<View> UIView(const ViewParams &params = {}) { return std::make_shared<View>(params); }
 
-inline std::shared_ptr<Sized> SizedView(const SizedParam &params = {}) { return std::make_shared<Sized>(params); }
+inline std::shared_ptr<UIComponent> SizedView(const SizedParam &params = {}) { return std::make_shared<Sized>(params); }
 
 inline std::shared_ptr<Opacity> OpacityView(const OpacityParams &params = {}) {
   return std::make_shared<Opacity>(params);
 }
 
-inline std::shared_ptr<UIImage> UIImageView(const ImageParams &params = {}) {
+inline std::shared_ptr<UIComponent> UIImageView(const ImageParams &params = {}) {
   return std::make_shared<UIImage>(params);
 }
 

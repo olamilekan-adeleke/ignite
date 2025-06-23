@@ -1,7 +1,9 @@
+#pragma once
+
 #include <string>
 
 class UIKey {
-public:
+ public:
   UIKey();
   explicit UIKey(const std::string value) : value_(value) {};
 
@@ -10,7 +12,7 @@ public:
   bool operator==(const UIKey &other) const;
   bool operator!=(const UIKey &other) const;
 
-private:
+ private:
   std::string value_;
 
   std::string gererateRandomKey();

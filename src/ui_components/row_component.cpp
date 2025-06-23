@@ -1,8 +1,6 @@
 #include "ui_components/row_component.hpp"
-#include <fmt/base.h>
-
 #include <memory>
-
+#include "ui_alignment.hpp"
 #include "ui_component.hpp"
 
 void Row::addChild(std::shared_ptr<UIComponent> child) { children_.push_back(std::move(child)); }
@@ -25,33 +23,61 @@ inline float getYPosition(CrossAxisAlignment axis, float height, float childH) {
     case CrossAxisAlignment::END:
       return height - childH;
   }
-
-  return 0.0f;
 }
 
 void Row::layout(float parentWidth, float parentHeight) {
   float maxChildHeight = 0.0f;
+  float totalChildWidth = 0.0f;
+
+  // First pass: layout children and calculate dimensions
   for (size_t index = 0; index < children_.size(); index++) {
     auto &child = children_[index];
     child->layout(0, parentHeight);
     maxChildHeight = std::fmax(maxChildHeight, child->getBounds().height);
+    totalChildWidth += child->getBounds().width;
   }
+
   bounds_.height = maxChildHeight;
 
+  // Calculate spacing based on main axis alignment
   float currentX = 0.0f;
+  float spaceBetween = 0.0f;
+
+  switch (mainAxisAlignment_) {
+    case MainAxisAlignment::START:
+      currentX = 0.0f;
+      break;
+    case MainAxisAlignment::SPACE_BETWEEN:
+      if (children_.size() > 1) {
+        spaceBetween = (parentWidth - totalChildWidth) / (children_.size() - 1);
+      }
+      currentX = 0.0f;
+      break;
+  }
+
+  // Second pass: position children
   for (size_t index = 0; index < children_.size(); index++) {
     auto &child = children_[index];
-
     auto childH = child->getBounds().height;
     auto crossAxisPosition = getYPosition(crossAxisAlignment_, bounds_.height, childH);
-    child->setPosition(currentX, crossAxisPosition);
 
+    child->setPosition(currentX, crossAxisPosition);
     currentX += child->getBounds().width;
-    if (spacing_ > 0 && index + 1 != children_.size()) {
+
+    // Add spacing
+    if (mainAxisAlignment_ == MainAxisAlignment::START && spacing_ > 0 && index + 1 != children_.size()) {
       currentX += spacing_;
+    } else if (mainAxisAlignment_ == MainAxisAlignment::SPACE_BETWEEN && index + 1 != children_.size()) {
+      currentX += spaceBetween;
     }
   }
-  bounds_.width = currentX;
+
+  // Set final width based on alignment
+  if (mainAxisAlignment_ == MainAxisAlignment::SPACE_BETWEEN && !children_.empty()) {
+    bounds_.width = parentWidth;
+  } else {
+    bounds_.width = currentX;
+  }
 }
 
 const std::vector<std::shared_ptr<UIComponent>> &Row::children() const { return children_; }

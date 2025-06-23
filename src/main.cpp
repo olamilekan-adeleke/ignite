@@ -5,10 +5,9 @@
 #include <thread>
 
 #include "skia/SkiaRenderer.hpp"
-#include "ui.hpp"
-#include "ui_component.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
+#include "example/example.cpp"
 
 UIManager& uiManager = UIManager::instance();
 
@@ -31,92 +30,7 @@ int main() {
   }
 
   const bool isLoading = false;
-  ColumnParams placeholder = {
-		.spacing = 10.0f,
-    .crossAxisAlignment = CrossAxisAlignment::CENTER,
-		.children = {
-			UI::UIView({
-				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
-				.backgroundColor = Color::Green(),
-				.borderRadius = 20,
-				.child = UI::UIView({
-					.insets = UIEdgeInsets({ .top = 16, .left = 20, .bottom = 16, .right = 20 }),
-					.margin = UIEdgeInsets({ .top = 10, .left  = 10, .bottom = 10, .right = 10 }),
-					.backgroundColor = Color::Red(),
-					.borderRadius = 20,
-					.antiAlias = true,
-					.child = UI::ColumnView({
-						.spacing = 16,
-						.children = {
-							UI::Text("Child In UIView Child Sub One", { .fontSize = 20.0f }),
-							UI::Text("View Child Child Sub Two", { .fontSize = 20.0f }),
-						},
-					}),
-				}),
-			}),
-
-      UI::OpacityView({
-        .opacity = 0.2f,
-        .child = UI::UIView({
-				  .insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
-				  .backgroundColor = Color::Green(),
-				  .borderRadius = 20,
-          .child = UI::Text("Tappable Text here", { .fontSize = 20.0f }),
-        }),
-      }),
-
-			UI::UIView({
-				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
-				.backgroundColor = Color::Green(),
-				.borderRadius = 20,
-        .tappable = true,
-        .onTap = []( const UITapEvent& event) {
-          fmt::println("Text tapped at local coordinates: ({}, {})", event.x, event.y);
-        },
-        .child = UI::Text("Tappable Text here", { .fontSize = 20.0f }),
-			}),
-
-      UI::UIView({
-				.insets = { .top = 20, .left = 20, .bottom = 20, .right = 20 },
-        // .margin = {.left = 50},
-				.backgroundColor = Color::Green(),
-        .child = UI::UIImageView({
-          .path = "assets/trash.png",
-          .width = 80,
-          .height = 80,
-        }),
-      }),
-
-      UI::UIView({
-        // .margin = {.left = 50},
-        .child = UI::UIImageView({
-          .path = "/assets/trash.png",
-          .height = 30,
-          .opacity = 0.2f,
-        }),
-      }),
-
-      UI::UIImageView({
-          .path = "/assets/test_one.jpeg",
-          .width = 350,
-          .height = 350,
-      }),
-
-			UI::RowView({
-				.spacing = 25,
-        .mainAxisAlignment = MainAxisAlignment::START,
-        .crossAxisAlignment = CrossAxisAlignment::END,
-				.children = {
-					UI::Text("First Row Body     dgdggdgdgd", { .fontSize = 30.0f }),
-					UI::Text("First Text", { .fontSize = 10.0f }),
-					UI::Text("Second Row Body", { .fontSize = 50.0f }),
-				},
-			}),
-
-      UI::SizedView({.size = {.height= 50}}),
-	}};
-
-  auto rootUI = UI::ColumnView(placeholder);
+  std::shared_ptr<UIComponent> rootUI = rootApp;
 
   bool needsResize = false;
   bool needsLayout = true;

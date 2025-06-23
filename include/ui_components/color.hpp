@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <random>
 
-// Custon Color class to wrap SKColor (I Love doing things my way, hopefully i do not regret this)
+// Custom Color class to wrap SKColor (I Love doing things my way, hopefully i do not regret this)
 struct Color {
   Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 
@@ -35,6 +35,7 @@ struct Color {
   static Color Gray();
   static Color LightGray();
   static Color DarkGray();
+  static Color Clear();
 
   static Color Random();
 
