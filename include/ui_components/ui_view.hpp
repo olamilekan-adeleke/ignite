@@ -1,3 +1,4 @@
+#pragma once
 
 #include "color.hpp"
 #include "ui_component.hpp"
@@ -7,7 +8,7 @@
 struct ViewParams {
   UIEdgeInsets insets = {0.0f, 0.0f, 0.0f, 0.0f};
   UIEdgeInsets margin = {0.0f, 0.0f, 0.0f, 0.0f};
-  Color backgroundColor = Color::White();
+  Color backgroundColor = Color::Clear();
   float borderRadius = 0.0f;
   bool antiAlias = false;
   bool tappable = true;
@@ -26,5 +27,12 @@ class View : public UIComponent {
   void draw(SkCanvas *canvas) override;
 
  protected:
+  bool processChildTaps(const UITapEvent &event) override {
+    if (params_.child) {
+      return params_.child->processTap(event);
+    }
+    return false;
+  }
+
   ViewParams params_;
 };

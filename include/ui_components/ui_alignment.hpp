@@ -1,6 +1,9 @@
+#pragma once
+
+#include <cassert>
 #include <utility>
 
-enum class MainAxisAlignment { START };
+enum class MainAxisAlignment { START, SPACE_BETWEEN };
 
 enum class CrossAxisAlignment { START, CENTER, END };
 
@@ -10,7 +13,7 @@ enum class UIAlignment : int {
   TopRight,
   CenterLeft,
   Center,
-  CenterRigh,
+  CenterRight,
   BottomLeft,
   BottomCenter,
   BottomRight,
@@ -42,7 +45,7 @@ inline std::pair<float, float> computeAlignedPosition(
       x = (parentWidth - childWidth) / 2.0f;
       y = (parentHeight - childHeight) / 2.0f;
       break;
-    case UIAlignment::CenterRigh:
+    case UIAlignment::CenterRight:
       x = parentWidth - childWidth;
       y = (parentHeight - childHeight) / 2.0f;
       break;
@@ -58,6 +61,8 @@ inline std::pair<float, float> computeAlignedPosition(
       x = parentWidth - childWidth;
       y = parentHeight - childHeight;
       break;
+    default:
+      assert(false);
   }
 
   return {x, y};

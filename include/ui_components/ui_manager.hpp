@@ -10,7 +10,7 @@
 #include "ui_component.hpp"
 
 namespace Debug {
-inline bool ui_debug_mode = true;
+inline bool ui_debug_mode = false;
 }
 
 // just to maanger some UI Shit

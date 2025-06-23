@@ -1,3 +1,5 @@
+#pragma once
+
 #include <include/core/SkImage.h>
 #include <string>
 #include "ui_component.hpp"

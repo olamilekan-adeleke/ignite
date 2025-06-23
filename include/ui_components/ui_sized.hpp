@@ -5,8 +5,8 @@
 #include <memory>
 
 struct SizedParam {
-  UISize size = {-1, -1};
-  UIAlignment align = UIAlignment::TopLeft;
+  UISize size = {0, 0};
+  UIAlignment align = UIAlignment::Center;
   std::shared_ptr<UIComponent> child = nullptr;
 };
 

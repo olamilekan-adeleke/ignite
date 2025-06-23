@@ -16,7 +16,7 @@ void View::layout(float parentWidth, float parentHeight) {
     float availableWidth = parentWidth - params_.margin.horizonal();
     float availableHeight = parentHeight - params_.margin.vertical();
 
-    float availableChildWidth = std::fmax(availableHeight - params_.insets.horizonal(), 0);
+    float availableChildWidth = std::fmax(availableWidth - params_.insets.horizonal(), 0);
     float availableChildHeight = std::fmax(availableHeight - params_.insets.vertical(), 0);
 
     params_.child->layout(availableChildWidth, availableChildHeight);
@@ -24,7 +24,6 @@ void View::layout(float parentWidth, float parentHeight) {
 
     bounds_.width = params_.child->getBounds().width + (params_.insets.horizonal() + params_.margin.horizonal());
     bounds_.height = params_.child->getBounds().height + (params_.insets.vertical() + params_.margin.vertical());
-
   } else {
     bounds_.width = params_.insets.horizonal() + params_.margin.horizonal();
     bounds_.height = params_.insets.vertical() + params_.margin.vertical();

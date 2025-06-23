@@ -20,11 +20,13 @@ struct TextMetrics {
  */
 enum class FontWeight { Normal, Bold, Light };
 
+enum class TextDecoration { underline, strikethrough, none };
+
 struct TextStyle {
   Color color = Color::Black();
   float fontSize = 16.0f;
   FontWeight weight = FontWeight::Normal;
-  bool underline = false;
+  TextDecoration decoration = TextDecoration::none;
   bool italic = false;
 };
 

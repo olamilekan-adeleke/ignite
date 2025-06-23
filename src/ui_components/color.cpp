@@ -33,6 +33,7 @@ Color Color::Magenta() { return Color(SK_ColorMAGENTA); }
 Color Color::Gray() { return Color(SK_ColorGRAY); }
 Color Color::LightGray() { return Color(SK_ColorLTGRAY); }
 Color Color::DarkGray() { return Color(SK_ColorDKGRAY); }
+Color Color::Clear() { return Color(SkColorSetARGB(0, 0, 0, 0)); }
 
 Color Color::Random() {
   static std::mt19937_64 rng{std::random_device{}()};
