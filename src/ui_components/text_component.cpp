@@ -49,8 +49,6 @@ void TextComponent::layout(float parentWidth, float parentHeight) {
 
   text_bounds_offset_x_ = textBounds.fLeft;
   text_bounds_offset_y_ = textBounds.fTop;
-
-  fmt::println("Text parentWidth: {} X parentHeight: {}", parentWidth, parentWidth);
 }
 
 void TextComponent::draw(SkCanvas *canvas) {

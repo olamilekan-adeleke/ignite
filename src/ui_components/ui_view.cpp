@@ -4,6 +4,7 @@
 #include <include/core/SkPaint.h>
 #include <include/core/SkRRect.h>
 #include <include/core/SkRect.h>
+#include "logger.hpp"
 #include "ui_component.hpp"
 
 View::View(const ViewParams &params) : params_(params) {
@@ -82,4 +83,6 @@ void View::draw(SkCanvas *canvas) {
       }
     }
   }
+
+  UIComponent::draw(canvas);
 }

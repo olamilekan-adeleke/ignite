@@ -8,6 +8,7 @@
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
 #include "example/example.cpp"
+#include "example/counnter_app.cpp"
 
 UIManager& uiManager = UIManager::instance();
 
@@ -30,10 +31,13 @@ int main() {
   }
 
   const bool isLoading = false;
-  std::shared_ptr<UIComponent> rootUI = rootApp;
+  // std::shared_ptr<UIComponent> rootUI = rootApp;
 
   bool needsResize = false;
   bool needsLayout = true;
+
+  auto counter_example = std::make_shared<CounterComponent>();
+  std::shared_ptr<UIComponent> rootUI = counter_example;
 
   // Set resize callback - handle resize logic separately from rendering
   windowManager.setResizeCallback([&](int newWidth, int newHeight) {
@@ -62,7 +66,7 @@ int main() {
 
     skiaRenderer.endFrame();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(16));
   });
 
   // Run main loop
