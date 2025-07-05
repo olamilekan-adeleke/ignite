@@ -30,9 +30,6 @@ int main() {
     return -1;
   }
 
-  const bool isLoading = false;
-  // std::shared_ptr<UIComponent> rootUI = rootApp;
-
   bool needsResize = false;
   bool needsLayout = true;
 

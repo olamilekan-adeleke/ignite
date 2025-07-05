@@ -26,6 +26,22 @@ class View : public UIComponent {
   void layout(float parentWidth, float parentHeight) override;
   void draw(SkCanvas *canvas) override;
 
+  bool wantsToFillMainAxis() const override {
+    if (params_.child) {
+      return params_.child->wantsToFillMainAxis();
+    } else {
+      return UIComponent::wantsToFillMainAxis();
+    }
+  }
+
+  bool wantsToFillCrossAxis() const override {
+    if (params_.child) {
+      return params_.child->wantsToFillCrossAxis();
+    } else {
+      return UIComponent::wantsToFillCrossAxis();
+    }
+  }
+
  protected:
   bool processChildTaps(const UITapEvent &event) override {
     if (params_.child) {

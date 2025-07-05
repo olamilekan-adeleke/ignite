@@ -1,7 +1,12 @@
 #pragma once
 
 #include <cassert>
+#include <cstdint>
 #include <utility>
+
+enum class CrossAxisSize : std::uint8_t { FIT, FILL };
+
+enum class MainAxisSize : std::uint8_t { FIT, FILL };
 
 enum class MainAxisAlignment : std::uint8_t { START, SPACE_BETWEEN };
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ui_alignment.hpp"
 #include "ui_component.hpp"
 #include "size.hpp"
 #include <memory>

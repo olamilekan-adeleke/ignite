@@ -10,7 +10,6 @@
 #include "rect.hpp"
 #include "tap_event.hpp"
 #include "ui_key.hpp"
-#include "ui_alignment.hpp"
 
 using TapListener = std::function<void(const UITapEvent &event)>;
 
@@ -57,8 +56,6 @@ class UIComponent {
   }
 
   virtual bool tapWithBounds(float x, float y) const {
-    // so x have to be withing the view how x area, which is like x-pos plus the width (that is the horizontal area)
-    // same for y too
     // TODO: come back to see if i can improve this
     return x >= bounds_.x && x < bounds_.x + bounds_.width && y >= bounds_.y && y < bounds_.y + bounds_.height;
   }
@@ -75,6 +72,10 @@ class UIComponent {
     }
     return false;
   }
+
+  virtual bool wantsToFillMainAxis() const { return false; }
+
+  virtual bool wantsToFillCrossAxis() const { return false; }
 
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }

@@ -3,12 +3,15 @@
 #include <memory>
 #include <vector>
 
+#include "ui_alignment.hpp"
 #include "ui_components/ui_component.hpp"
 
 struct ColumnParams {
   float spacing = 0.0f;
   MainAxisAlignment mainAxisAlignment = MainAxisAlignment::START;
   CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment::START;
+  CrossAxisSize crossAxisSize = CrossAxisSize::FIT;
+  MainAxisSize mainAxisSize = MainAxisSize::FIT;
   std::vector<std::shared_ptr<UIComponent>> children;
 };
 
@@ -23,6 +26,10 @@ class Column : public UIComponent {
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
+  bool wantsToFillMainAxis() const override;
+
+  bool wantsToFillCrossAxis() const override;
+
  protected:
   virtual bool processChildTaps(const UITapEvent &event) override {
     for (auto it = children_.rbegin(); it != children_.rend(); ++it) {
@@ -33,7 +40,9 @@ class Column : public UIComponent {
 
  private:
   float spacing_;
-  CrossAxisAlignment cross_axis_alignment_;
-  MainAxisAlignment main_axis_alignment_;
+  CrossAxisAlignment crossAxisAlignment_;
+  MainAxisAlignment mainAxisAlignment_;
+  CrossAxisSize crossAxisSize_;
+  MainAxisSize mainAxisSize_;
   std::vector<std::shared_ptr<UIComponent>> children_;
 };

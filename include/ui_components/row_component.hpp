@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "ui_alignment.hpp"
 #include "ui_components/ui_component.hpp"
 
 struct RowParams {
