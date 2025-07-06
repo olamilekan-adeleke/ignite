@@ -39,6 +39,58 @@ class Column : public UIComponent {
   }
 
  private:
+  inline float getXPosition(CrossAxisAlignment axis, float parentWidth, float childWidth) {
+    switch (axis) {
+      case CrossAxisAlignment::START:
+        return 0;
+      case CrossAxisAlignment::CENTER:
+        return (parentWidth - childWidth) / 2.0f;
+      case CrossAxisAlignment::END:
+        return parentWidth - childWidth;
+    }
+    return 0.0f;
+  }
+
+  inline float getMainAxisStartPosition(MainAxisAlignment axis,
+                                        float availableSpace,
+                                        float totalContentHeight,
+                                        size_t childCount) {
+    switch (axis) {
+      case MainAxisAlignment::START:
+        return 0;
+      case MainAxisAlignment::CENTER:
+        return availableSpace / 2.0f;
+      case MainAxisAlignment::END:
+        return availableSpace;
+      case MainAxisAlignment::SPACE_BETWEEN:
+        return 0;
+      case MainAxisAlignment::SPACE_AROUND:
+        return availableSpace / (2.0f * childCount);
+      case MainAxisAlignment::SPACE_EVENLY:
+        return availableSpace / (childCount + 1);
+    }
+    return 0;
+  }
+
+  inline float getSpaceBetweenChildren(MainAxisAlignment axis,
+                                       float availableSpace,
+                                       size_t childCount,
+                                       float originalSpacing) {
+    switch (axis) {
+      case MainAxisAlignment::START:
+      case MainAxisAlignment::CENTER:
+      case MainAxisAlignment::END:
+        return originalSpacing;
+      case MainAxisAlignment::SPACE_BETWEEN:
+        return childCount > 1 ? availableSpace / (childCount - 1) : 0;
+      case MainAxisAlignment::SPACE_AROUND:
+        return availableSpace / childCount;
+      case MainAxisAlignment::SPACE_EVENLY:
+        return availableSpace / (childCount + 1);
+    }
+    return originalSpacing;
+  }
+
   float spacing_;
   CrossAxisAlignment crossAxisAlignment_;
   MainAxisAlignment mainAxisAlignment_;

@@ -11,8 +11,9 @@ class CounterComponent : public StatefulComponent {
   std::shared_ptr<UIComponent> body() override {
 
     auto firstColum = UI::ColumnView({
-      .spacing = 10,
-      .crossAxisAlignment = CrossAxisAlignment::START,
+      // .spacing = 10,
+      .mainAxisAlignment = MainAxisAlignment::SPACE_EVENLY,
+      .crossAxisAlignment = CrossAxisAlignment::CENTER,
       .crossAxisSize = CrossAxisSize::FILL,
       .mainAxisSize = MainAxisSize::FILL,
       .children = {
@@ -88,7 +89,7 @@ class CounterComponent : public StatefulComponent {
 
     return UI::UIView({ 
     // .margin = {.left = 40},
-    .backgroundColor = Color::Gray(),
+    // .backgroundColor = Color::Gray(),
     .child = UI::ColumnView({
         .spacing = 10,
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
