@@ -3,6 +3,7 @@
 #include <functional>
 #include <fmt/base.h>
 #include <include/core/SkCanvas.h>
+#include <sstream>
 
 #include <memory>
 #include <vector>
@@ -24,15 +25,9 @@ class UIComponent {
 
   UIRect getBounds() const { return bounds_; }
 
-  void setPosition(float x, float y) {
-    bounds_.x = x;
-    bounds_.y = y;
-  }
+  void setPosition(float x, float y) { bounds_.x = x, bounds_.y = y; }
 
-  void setSize(float w, float h) {
-    bounds_.width = w;
-    bounds_.height = h;
-  }
+  void setSize(float w, float h) { bounds_.width = w, bounds_.height = h; }
 
   void setKey(UIKey key) { key_ = std::move(key); }
   UIKey key() const { return key_; }
@@ -51,14 +46,10 @@ class UIComponent {
   virtual bool processTap(const UITapEvent &event) {
     if (event.consumed) return false;
     if (processChildTaps(event)) return true;
-
     return onTap(event);
   }
 
-  virtual bool tapWithBounds(float x, float y) const {
-    // TODO: come back to see if i can improve this
-    return x >= bounds_.x && x < bounds_.x + bounds_.width && y >= bounds_.y && y < bounds_.y + bounds_.height;
-  }
+  virtual bool tapWithBounds(float x, float y) const { return bounds_.contains(x, y); }
 
   virtual bool onTap(const UITapEvent &event) const {
     const bool inBounds = tapWithBounds(event.x, event.y);
@@ -80,6 +71,8 @@ class UIComponent {
 
   virtual bool wantsToFillCrossAxis() const { return false; }
 
+  std::string toString(int indent = 0) const;
+
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }
 
@@ -92,4 +85,6 @@ class UIComponent {
   static bool debug_paint_initialized_;
 
   void initializeDebugPaint();
+
+  virtual void debugFillProperties(std::ostringstream &os, int indent) const;
 };

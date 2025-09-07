@@ -12,6 +12,8 @@ class UIKey {
   bool operator==(const UIKey &other) const;
   bool operator!=(const UIKey &other) const;
 
+  std::string toString() const;
+
  private:
   std::string value_;
 
