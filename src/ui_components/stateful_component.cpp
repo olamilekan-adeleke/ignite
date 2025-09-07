@@ -57,3 +57,22 @@ bool StatefulComponent::processChildTaps(const UITapEvent &event) {
   }
   return false;
 }
+
+std::string StatefulComponent::toString(int indent) const {
+  std::ostringstream os;
+  std::string pad(indent, ' ');
+
+  os << pad << typeid(*this).name() << " {\n";
+  debugFillProperties(os, indent);
+
+  if (!children().empty()) {
+    os << pad << "  children: [\n";
+    for (auto &child : children()) {
+      os << child->toString(indent + 4) << "\n";
+    }
+    os << pad << "  ]\n";
+  }
+
+  os << pad << "}";
+  return os.str();
+}

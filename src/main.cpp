@@ -1,9 +1,11 @@
 #include <fmt/base.h>
 
 #include <chrono>
+#include <cstdlib>
 #include <iostream>
 #include <thread>
 
+#include "logger.hpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
@@ -35,6 +37,7 @@ int main() {
 
   auto counter_example = std::make_shared<CounterComponent>();
   std::shared_ptr<UIComponent> rootUI = counter_example;
+  // std::shared_ptr<UIComponent> rootUI = rootApp;
 
   // Set resize callback - handle resize logic separately from rendering
   windowManager.setResizeCallback([&](int newWidth, int newHeight) {
@@ -63,6 +66,7 @@ int main() {
 
     skiaRenderer.endFrame();
 
+    Logger::logToFile(rootUI->toString(0));
     // std::this_thread::sleep_for(std::chrono::milliseconds(16));
   });
 

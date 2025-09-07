@@ -19,6 +19,8 @@ class StatefulComponent : public UIComponent {
 
   virtual const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
+  std::string toString(int indent = 0) const;
+
  protected:
   void markDirty();
 
