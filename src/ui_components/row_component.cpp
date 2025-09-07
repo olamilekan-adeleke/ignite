@@ -1,6 +1,5 @@
-#include "ui_components/row_component.hpp"
+#include "row_component.hpp"
 #include <memory>
-#include "ui_alignment.hpp"
 #include "ui_component.hpp"
 
 void Row::addChild(std::shared_ptr<UIComponent> child) { children_.push_back(std::move(child)); }
@@ -25,14 +24,14 @@ inline float getYPosition(CrossAxisAlignment axis, float height, float childH) {
   }
 }
 
-void Row::layout(float parentWidth, float parentHeight) {
+void Row::layout(UISize size) {
   float maxChildHeight = 0.0f;
   float totalChildWidth = 0.0f;
 
   // First pass: layout children and calculate dimensions
   for (size_t index = 0; index < children_.size(); index++) {
     auto &child = children_[index];
-    child->layout(0, parentHeight);
+    child->layout({0, size.height});
     maxChildHeight = std::fmax(maxChildHeight, child->getBounds().height);
     totalChildWidth += child->getBounds().width;
   }
@@ -49,7 +48,7 @@ void Row::layout(float parentWidth, float parentHeight) {
       break;
     case MainAxisAlignment::SPACE_BETWEEN:
       if (children_.size() > 1) {
-        spaceBetween = (parentWidth - totalChildWidth) / (children_.size() - 1);
+        spaceBetween = (size.width - totalChildWidth) / (children_.size() - 1);
       }
       currentX = 0.0f;
       break;
@@ -74,7 +73,7 @@ void Row::layout(float parentWidth, float parentHeight) {
 
   // Set final width based on alignment
   if (mainAxisAlignment_ == MainAxisAlignment::SPACE_BETWEEN && !children_.empty()) {
-    bounds_.width = parentWidth;
+    bounds_.width = size.width;
   } else {
     bounds_.width = currentX;
   }

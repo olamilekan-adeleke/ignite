@@ -1,4 +1,4 @@
-#include "ui_components/ui_manager.hpp"
+#include "ui_manager.hpp"
 
 #include <fmt/base.h>
 #include <algorithm>
@@ -90,7 +90,7 @@ void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
     // } else {
     //   fmt::println("Checking for rebuild: {} == <null oldNode>", newNode->key().value());
     // }
-    newNode->layout(w, h);
+    newNode->layout({w, h});
   }
 
   auto oldChildren = oldNode ? oldNode->children() : std::vector<std::shared_ptr<UIComponent>>{};

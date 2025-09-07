@@ -41,9 +41,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::skia::skia)
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
 
-find_package(imgui CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
-
 # Optional: Install and testing
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 

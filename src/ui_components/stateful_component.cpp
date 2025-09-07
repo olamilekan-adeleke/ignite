@@ -1,14 +1,12 @@
-#include "stateful_component.hpp"
 #include <fmt/base.h>
 #include <memory>
-#include "logger.hpp"
-#include "tap_event.hpp"
-#include "ui_key.hpp"
+#include "size.hpp"
+#include "stateful_component.hpp"
 
-void StatefulComponent::layout(float parentWidth, float parentHeight) {
+void StatefulComponent::layout(UISize size) {
   const auto child = getChild();
   if (child) {
-    child->layout(parentWidth, parentHeight);
+    child->layout({size.width, size.height});
     bounds_ = child->getBounds();
   }
 }

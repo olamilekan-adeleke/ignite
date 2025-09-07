@@ -12,7 +12,7 @@ class CounterComponent : public StatefulComponent {
 
     auto firstColum = UI::ColumnView({
       // .spacing = 10,
-      .mainAxisAlignment = MainAxisAlignment::SPACE_EVENLY,
+      .mainAxisAlignment = MainAxisAlignment::CENTER,
       .crossAxisAlignment = CrossAxisAlignment::CENTER,
       .crossAxisSize = CrossAxisSize::FILL,
       .mainAxisSize = MainAxisSize::FILL,

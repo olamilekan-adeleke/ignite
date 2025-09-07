@@ -25,7 +25,7 @@ enum class UIAlignment : std::uint8_t {
 };
 
 inline std::pair<float, float> computeAlignedPosition(
-    UIAlignment alignment, float parentWidth, float parentHeight, float childWidth, float childHeight) {
+    UIAlignment alignment, float width, float height, float childWidth, float childHeight) {
   float x = 0.0F;
   float y = 0.0F;
   float divisor = 2.0F;
@@ -36,36 +36,36 @@ inline std::pair<float, float> computeAlignedPosition(
       y = 0;
       break;
     case UIAlignment::TopCenter:
-      x = (parentWidth - childWidth) / divisor;
+      x = (width - childWidth) / divisor;
       y = 0;
       break;
     case UIAlignment::TopRight:
-      x = parentWidth - childWidth;
+      x = width - childWidth;
       y = 0;
       break;
     case UIAlignment::CenterLeft:
       x = 0;
-      y = (parentHeight - childHeight) / divisor;
+      y = (height - childHeight) / divisor;
       break;
     case UIAlignment::Center:
-      x = (parentWidth - childWidth) / divisor;
-      y = (parentHeight - childHeight) / divisor;
+      x = (width - childWidth) / divisor;
+      y = (height - childHeight) / divisor;
       break;
     case UIAlignment::CenterRight:
-      x = parentWidth - childWidth;
-      y = (parentHeight - childHeight) / divisor;
+      x = width - childWidth;
+      y = (height - childHeight) / divisor;
       break;
     case UIAlignment::BottomLeft:
       x = 0;
-      y = parentHeight - childHeight;
+      y = height - childHeight;
       break;
     case UIAlignment::BottomCenter:
-      x = (parentWidth - childWidth) / divisor;
-      y = parentHeight - childHeight;
+      x = (width - childWidth) / divisor;
+      y = height - childHeight;
       break;
     case UIAlignment::BottomRight:
-      x = parentWidth - childWidth;
-      y = parentHeight - childHeight;
+      x = width - childWidth;
+      y = height - childHeight;
       break;
     default:
       assert(false);

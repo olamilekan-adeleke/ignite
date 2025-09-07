@@ -14,7 +14,7 @@ class Opacity : public UIComponent {
   Opacity(const Opacity&) = delete;
   Opacity& operator=(const Opacity&) = delete;
 
-  void layout(float parentWidth, float parentHeight) override;
+  void layout(UISize size) override;
   void draw(SkCanvas* canvas) override;
 
  protected:

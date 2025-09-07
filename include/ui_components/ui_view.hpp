@@ -23,7 +23,7 @@ class View : public UIComponent {
   View(const View &) = delete;
   View &operator=(const View &) = delete;
 
-  void layout(float parentWidth, float parentHeight) override;
+  void layout(UISize size) override;
   void draw(SkCanvas *canvas) override;
 
   bool wantsToFillMainAxis() const override {
@@ -41,6 +41,8 @@ class View : public UIComponent {
       return UIComponent::wantsToFillCrossAxis();
     }
   }
+
+  const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
  protected:
   bool processChildTaps(const UITapEvent &event) override {

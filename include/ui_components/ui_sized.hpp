@@ -1,9 +1,8 @@
 #pragma once
 
+#include <memory>
 #include "ui_alignment.hpp"
 #include "ui_component.hpp"
-#include "size.hpp"
-#include <memory>
 
 struct SizedParam {
   UISize size = {0, 0};
@@ -15,8 +14,8 @@ class Sized : public UIComponent {
  public:
   Sized(const SizedParam &param = {});
 
-  void layout(float parentWidth, float parentHeight);
-  void draw(SkCanvas *canvas);
+  void layout(UISize size) override;
+  void draw(SkCanvas *canvas) override;
 
  private:
   UISize size_;

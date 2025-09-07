@@ -1,26 +1,24 @@
-#include "ui_view.hpp"
-
 #include <fmt/base.h>
 #include <include/core/SkPaint.h>
 #include <include/core/SkRRect.h>
 #include <include/core/SkRect.h>
-#include "logger.hpp"
-#include "ui_component.hpp"
+
+#include "ui_view.hpp"
 
 View::View(const ViewParams &params) : params_(params) {
   setTapListener(params_.onTap);
   setTapEnabled(params_.tappable);
 }
 
-void View::layout(float parentWidth, float parentHeight) {
+void View::layout(UISize size) {
   if (params_.child) {
-    float availableWidth = parentWidth - params_.margin.horizonal();
-    float availableHeight = parentHeight - params_.margin.vertical();
+    float availableWidth = size.width - params_.margin.horizonal();
+    float availableHeight = size.height - params_.margin.vertical();
 
     float availableChildWidth = std::fmax(availableWidth - params_.insets.horizonal(), 0);
     float availableChildHeight = std::fmax(availableHeight - params_.insets.vertical(), 0);
 
-    params_.child->layout(availableChildWidth, availableChildHeight);
+    params_.child->layout({availableChildWidth, availableChildHeight});
     params_.child->setPosition(params_.margin.left + params_.insets.left, params_.margin.top + params_.insets.top);
 
     bounds_.width = params_.child->getBounds().width + (params_.insets.horizonal() + params_.margin.horizonal());
@@ -85,4 +83,11 @@ void View::draw(SkCanvas *canvas) {
   }
 
   UIComponent::draw(canvas);
+}
+
+const std::vector<std::shared_ptr<UIComponent>> &View::children() const {
+  static std::vector<std::shared_ptr<UIComponent>> cache;
+  cache.clear();
+  cache.push_back(params_.child);
+  return cache;
 }

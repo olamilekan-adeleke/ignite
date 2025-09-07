@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "ui_alignment.hpp"
-#include "ui_components/ui_component.hpp"
+#include "ui_component.hpp"
 
 struct ColumnParams {
   float spacing = 0.0f;
@@ -21,7 +21,7 @@ class Column : public UIComponent {
 
   void addChild(std::shared_ptr<UIComponent> child);
 
-  void layout(float parentWidth, float parentHeight) override;
+  void layout(UISize size) override;
   void draw(SkCanvas *canvas) override;
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
@@ -39,14 +39,14 @@ class Column : public UIComponent {
   }
 
  private:
-  inline float getXPosition(CrossAxisAlignment axis, float parentWidth, float childWidth) {
+  inline float getXPosition(CrossAxisAlignment axis, float width, float childWidth) {
     switch (axis) {
       case CrossAxisAlignment::START:
         return 0;
       case CrossAxisAlignment::CENTER:
-        return (parentWidth - childWidth) / 2.0f;
+        return (width - childWidth) / 2.0f;
       case CrossAxisAlignment::END:
-        return parentWidth - childWidth;
+        return width - childWidth;
     }
     return 0.0f;
   }

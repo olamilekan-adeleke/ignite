@@ -6,8 +6,8 @@
 
 #include <memory>
 #include <vector>
-
 #include "rect.hpp"
+#include "size.hpp"
 #include "tap_event.hpp"
 #include "ui_key.hpp"
 
@@ -15,12 +15,12 @@ using TapListener = std::function<void(const UITapEvent &event)>;
 
 class UIComponent {
  public:
-  UIComponent() : key_(UIKey()), tappable_(true) {}
+  UIComponent() : key_(UIKey()), tappable_(true), bounds_{0, 0, 0, 0} {}
 
   virtual ~UIComponent() = default;
 
-  virtual void layout(float parentWidth, float parentHeight) = 0;
-  virtual void draw(SkCanvas *canvas);
+  virtual void layout(UISize size) = 0;
+  virtual void draw(SkCanvas *canvas) = 0;
 
   UIRect getBounds() const { return bounds_; }
 
@@ -34,7 +34,7 @@ class UIComponent {
     bounds_.height = h;
   }
 
-  void setKey(UIKey key) { key_ = key; }
+  void setKey(UIKey key) { key_ = std::move(key); }
   UIKey key() const { return key_; }
 
   virtual const std::vector<std::shared_ptr<UIComponent>> &children() const {
@@ -73,6 +73,9 @@ class UIComponent {
     return false;
   }
 
+  // enum class SizingPolicy { Fixed, WrapContent, MatchParent };
+  // virtual SizingPolicy mainAxisSizing() const { return SizingPolicy::Fixed; }
+  // virtual SizingPolicy crossAxisSizing() const { return SizingPolicy::Fixed; }
   virtual bool wantsToFillMainAxis() const { return false; }
 
   virtual bool wantsToFillCrossAxis() const { return false; }

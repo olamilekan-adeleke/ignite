@@ -1,6 +1,6 @@
-#include "ui_components/column_component.hpp"
 #include <fmt/base.h>
 
+#include "column_component.hpp"
 #include <cmath>
 #include <memory>
 #include <utility>
@@ -25,7 +25,7 @@ bool Column::wantsToFillMainAxis() const { return mainAxisSize_ == MainAxisSize:
 
 bool Column::wantsToFillCrossAxis() const { return crossAxisSize_ == CrossAxisSize::FILL; }
 
-void Column::layout(float parentWidth, float parentHeight) {
+void Column::layout(UISize size) {
   if (children_.empty()) {
     bounds_.height = 0;
     bounds_.width = 0;
@@ -40,7 +40,7 @@ void Column::layout(float parentWidth, float parentHeight) {
   for (auto &child : children_) {
     bool childWantToExpand = child->wantsToFillMainAxis();
 
-    child->layout(parentWidth, 0);  // use 0 as height to just get the child width
+    child->layout({size.width, 0});  // use 0 as height to just get the child width
     maxChildWidth = std::fmax(maxChildWidth, child->getBounds().width);
 
     if (childWantToExpand) {
@@ -53,11 +53,11 @@ void Column::layout(float parentWidth, float parentHeight) {
   float totalSpacing = children_.size() > 1 ? spacing_ * (children_.size() - 1) : 0;
 
   float avaliableHeightSpaceLeftForFill =
-      std::fmax(0.0f, parentHeight - totalHeightOfChildrenWithFittedSize - totalSpacing);
+      std::fmax(0.0f, size.height - totalHeightOfChildrenWithFittedSize - totalSpacing);
   float heightPerFillChild = (fillChildrenCount > 0) ? avaliableHeightSpaceLeftForFill / fillChildrenCount : 0.0f;
 
   if (crossAxisSize_ == CrossAxisSize::FILL) {
-    bounds_.width = parentWidth;
+    bounds_.width = size.width;
   } else {
     bounds_.width = maxChildWidth;
   }
@@ -66,14 +66,14 @@ void Column::layout(float parentWidth, float parentHeight) {
   float totalContentHeight = totalHeightOfChildrenWithFittedSize + totalSpacing;
   for (auto &child : children_) {
     if (child->wantsToFillMainAxis()) {
-      child->layout(bounds_.width, heightPerFillChild);
+      child->layout({bounds_.width, heightPerFillChild});
       totalContentHeight += child->getBounds().height;
     }
   }
 
   // set the column height now since will know that
   if (mainAxisSize_ == MainAxisSize::FILL) {
-    bounds_.height = parentHeight;
+    bounds_.height = size.height;
   } else {
     bounds_.height = totalContentHeight;
   }

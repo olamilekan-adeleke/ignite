@@ -1,3 +1,5 @@
+#pragma once
+
 #include <memory>
 #include "ui_component.hpp"
 
@@ -12,7 +14,7 @@ class StatefulComponent : public UIComponent {
 
   std::shared_ptr<UIComponent> getChild();
 
-  void layout(float parentWidth, float parentHeight) override;
+  void layout(UISize size) override;
   void draw(SkCanvas *canvas) override;
 
   virtual const std::vector<std::shared_ptr<UIComponent>> &children() const override;
