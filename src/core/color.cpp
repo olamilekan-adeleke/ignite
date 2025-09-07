@@ -1,4 +1,4 @@
-#include "ui_components/color.hpp"
+#include "color.hpp"
 
 #include <include/core/SkColor.h>
 
