@@ -19,9 +19,9 @@ uint8_t Color::g() const { return SkColorGetG(value); }
 uint8_t Color::b() const { return SkColorGetB(value); }
 uint8_t Color::a() const { return SkColorGetA(value); }
 
-Color Color::withAlpha(uint8_t newAlpha) const { return Color(r(), g(), b(), newAlpha); }
+Color Color::withAlpha(uint8_t alpha) const { return Color(r(), g(), b(), alpha); }
 
-// Named constants for easy color, will expand this list later on ot as i need them
+// Named constants for easy color, will expand this list later on other as i need them
 Color Color::Black() { return Color(SK_ColorBLACK); }
 Color Color::White() { return Color(SK_ColorWHITE); }
 Color Color::Red() { return Color(SK_ColorRED); }

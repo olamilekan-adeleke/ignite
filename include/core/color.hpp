@@ -21,7 +21,7 @@ struct Color {
   uint8_t a() const;
 
   // Return a copy with new alpha
-  Color withAlpha(uint8_t newAlpha) const;
+  Color withAlpha(uint8_t alpha) const;
 
   // Named constants
   static Color Black();
