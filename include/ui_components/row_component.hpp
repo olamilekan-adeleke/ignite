@@ -2,8 +2,8 @@
 
 #include <memory>
 #include <vector>
-
-#include "ui_components/ui_component.hpp"
+#include "ui_alignment.hpp"
+#include "ui_component.hpp"
 
 struct RowParams {
   float spacing = 0.0f;
@@ -18,7 +18,7 @@ class Row : public UIComponent {
 
   void addChild(std::shared_ptr<UIComponent> child);
 
-  void layout(float parentWidth, float parentHeight) override;
+  void layout(UISize size) override;
   void draw(SkCanvas *canvas) override;
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;

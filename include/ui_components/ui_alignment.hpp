@@ -1,13 +1,18 @@
 #pragma once
 
 #include <cassert>
+#include <cstdint>
 #include <utility>
 
-enum class MainAxisAlignment { START, SPACE_BETWEEN };
+enum class CrossAxisSize : std::uint8_t { FIT, FILL };
 
-enum class CrossAxisAlignment { START, CENTER, END };
+enum class MainAxisSize : std::uint8_t { FIT, FILL };
 
-enum class UIAlignment : int {
+enum class MainAxisAlignment : std::uint8_t { START, CENTER, END, SPACE_BETWEEN, SPACE_AROUND, SPACE_EVENLY };
+
+enum class CrossAxisAlignment : std::uint8_t { START, CENTER, END };
+
+enum class UIAlignment : std::uint8_t {
   TopLeft,
   TopCenter,
   TopRight,
@@ -20,9 +25,10 @@ enum class UIAlignment : int {
 };
 
 inline std::pair<float, float> computeAlignedPosition(
-    UIAlignment alignment, float parentWidth, float parentHeight, float childWidth, float childHeight) {
-  float x = 0.0f;
-  float y = 0.0f;
+    UIAlignment alignment, float width, float height, float childWidth, float childHeight) {
+  float x = 0.0F;
+  float y = 0.0F;
+  float divisor = 2.0F;
 
   switch (alignment) {
     case UIAlignment::TopLeft:
@@ -30,36 +36,36 @@ inline std::pair<float, float> computeAlignedPosition(
       y = 0;
       break;
     case UIAlignment::TopCenter:
-      x = (parentWidth - childWidth) / 2.0f;
+      x = (width - childWidth) / divisor;
       y = 0;
       break;
     case UIAlignment::TopRight:
-      x = parentWidth - childWidth;
+      x = width - childWidth;
       y = 0;
       break;
     case UIAlignment::CenterLeft:
       x = 0;
-      y = (parentHeight - childHeight) / 2.0f;
+      y = (height - childHeight) / divisor;
       break;
     case UIAlignment::Center:
-      x = (parentWidth - childWidth) / 2.0f;
-      y = (parentHeight - childHeight) / 2.0f;
+      x = (width - childWidth) / divisor;
+      y = (height - childHeight) / divisor;
       break;
     case UIAlignment::CenterRight:
-      x = parentWidth - childWidth;
-      y = (parentHeight - childHeight) / 2.0f;
+      x = width - childWidth;
+      y = (height - childHeight) / divisor;
       break;
     case UIAlignment::BottomLeft:
       x = 0;
-      y = parentHeight - childHeight;
+      y = height - childHeight;
       break;
     case UIAlignment::BottomCenter:
-      x = (parentWidth - childWidth) / 2.0f;
-      y = parentHeight - childHeight;
+      x = (width - childWidth) / divisor;
+      y = height - childHeight;
       break;
     case UIAlignment::BottomRight:
-      x = parentWidth - childWidth;
-      y = parentHeight - childHeight;
+      x = width - childWidth;
+      y = height - childHeight;
       break;
     default:
       assert(false);

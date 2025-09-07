@@ -3,12 +3,12 @@
 
 Sized::Sized(const SizedParam &param) : size_(param.size), align_(param.align), child_(param.child) {}
 
-void Sized::layout(float parentWidth, float parentHeight) {
-  float width = size_.width >= 0 ? size_.width : parentWidth;
-  float height = size_.height >= 0 ? size_.height : parentHeight;
+void Sized::layout(UISize size) {
+  float width = size_.width >= 0 ? size_.width : size.width;
+  float height = size_.height >= 0 ? size_.height : size.height;
 
   if (child_) {
-    child_->layout(width, height);
+    child_->layout({width, height});
 
     auto [x, y] = computeAlignedPosition(align_, width, height, child_->getBounds().width, child_->getBounds().height);
     child_->setPosition(x, y);

@@ -7,10 +7,10 @@ Opacity::Opacity(const OpacityParams& param) : param_(param) {
   // if (param_.opacity > 1.0f) param_.opacity = 1.0f;
 }
 
-void Opacity::layout(float parentWidth, float parentHeight) {
+void Opacity::layout(UISize size) {
   if (param_.child) {
     // param_.child->setPosition(0, 0);
-    param_.child->layout(parentWidth, parentHeight);
+    param_.child->layout({size.width, size.height});
   }
 
   bounds_.width = param_.child->getBounds().width;

@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <filesystem>
 #include <string>
-#include "ui_component.hpp"
 
 UIImage::UIImage(const ImageParams& param) : params_(param) {
   // auto imageData = SkData::MakeFromFileName(params_.path.c_str());
@@ -43,7 +42,7 @@ UIImage::UIImage(const ImageParams& param) : params_(param) {
   imageData_ = SkImages::DeferredFromEncodedData(data);
 }
 
-void UIImage::layout(float parentWidth, float parentHeight) {
+void UIImage::layout(UISize size) {
   if (!imageData_) return;
   bounds_.width = params_.width > 0 ? params_.width : imageData_->width();
   bounds_.height = params_.height > 0 ? params_.height : imageData_->height();

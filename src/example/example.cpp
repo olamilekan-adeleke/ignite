@@ -20,32 +20,32 @@ struct TodoItem {
   static std::vector<TodoItem> todoItems() {
     std::vector<TodoItem> items;
     items.emplace_back("Learn C++ advanced concepts", false);
-    items.push_back({"Practice data structures", false});
-    items.push_back({"Finish project documentation", false});
-    items.push_back({"Buy groceries", true});
-    items.push_back({"Go for a run", false});
-    items.push_back({"Ligma my Balls", false});
+    items.emplace_back("Practice data structures", false);
+    items.emplace_back("Finish project documentation", false);
+    items.emplace_back("Buy groceries", true);
+    items.emplace_back("Go for a run", false);
+    items.emplace_back("Ligma my Balls", false);
 
     return items;
   }
 };
 
-inline std::vector<TodoItem> myTodoList = TodoItem::todoItems();
+inline const std::vector<TodoItem> myTodoList = TodoItem::todoItems();
 
 // clang-format off
-inline auto _headerView = UI::RowView({
+inline const auto headerView = UI::RowView({
   .spacing = 11,
   .crossAxisAlignment = CrossAxisAlignment::CENTER,
   .children = {
     UI::UIView({
       .backgroundColor = Color(0x9E78CF).withAlpha(255 * 0.2),
-      .borderRadius = 10.0f,
+      .borderRadius = 10.0F,
       .child = UI::SizedView({.size = {.width = 380, .height = 40}})
     }),
     UI::UIView({
       .insets = {.top = 6, .left = 6, .right = 6, .bottom = 6},
       .backgroundColor = Color(0x9E78CF).withAlpha(255),
-      .borderRadius = 10.0f,
+      .borderRadius = 10.0F,
       .antiAlias = true,
       .child = UI::UIImageView({
         .path = "assets/plus.png",
@@ -56,7 +56,7 @@ inline auto _headerView = UI::RowView({
   },
 });
 
-inline auto buildTodoItem(TodoItem item) {
+inline auto buildTodoItem(const TodoItem& item) {
 
   std::shared_ptr<UIComponent> checkBox = item.isDone  ?
     UI::SizedView({}) :  
@@ -65,7 +65,7 @@ inline auto buildTodoItem(TodoItem item) {
   return UI::UIView({
     .insets = {.top = 28, .left = 20, .bottom = 28, .right = 20},
     .backgroundColor = Color(0x15101C).withAlpha(255),
-    .borderRadius = 10,
+    .borderRadius = 10.0F,
     .antiAlias = false,
     .child = UI::SizedView({
       .size = {.width = 432},
@@ -91,8 +91,10 @@ inline auto buildTodoItem(TodoItem item) {
                     myTodoList.begin(), myTodoList.end(),
                     [item](const TodoItem& ti) { return ti.title == item.title;}
                   );
-                  myTodoList.erase(it);
-                  fmt::println("Deleted item {}", item.title.c_str());
+                  if (it != myTodoList.end()){
+                    // myTodoList.erase(it);
+                    fmt::println("Deleted item {}", item.title.c_str());
+                  }
                 },
                 .child = UI::UIImageView({ .path = "assets/trash.png" }),
               }),
@@ -109,8 +111,9 @@ inline auto bodyTodoListItems() {
 
   std::vector<std::shared_ptr<UIComponent>> children;
   for (const auto& item : myTodoList) {
-    if (item.isDone) continue;
-    children.push_back(buildTodoItem(item));
+    if (item.isDone) {
+      children.push_back(buildTodoItem(item));
+    }
   }
 
   return UI::ColumnView({
@@ -139,8 +142,9 @@ inline auto bodyTodoListItems() {
 inline auto bodySuccessListItems() {
   std::vector<std::shared_ptr<UIComponent>> children;
   for (const auto& item : myTodoList) {
-    if (!item.isDone) continue;
-    children.push_back(buildTodoItem(item));
+    if (!item.isDone) {
+      children.push_back(buildTodoItem(item));
+    };
   }
 
   return UI::ColumnView({
@@ -161,7 +165,7 @@ inline auto bodySuccessListItems() {
   });
 }
 
-inline auto rootApp = UI::UIView({
+inline const auto rootApp = UI::UIView({
   .backgroundColor = Color::Black(),
   .child = UI::UIView({
     .insets = {.top = 50, .left = 65, .right = 65, .bottom = 50},
@@ -171,7 +175,7 @@ inline auto rootApp = UI::UIView({
     .antiAlias = true,
     .child = UI::ColumnView({
       .children = {
-        _headerView,
+        headerView,
         UI::SizedView({.size = {.height = 50}}),
         bodyTodoListItems(),
         UI::SizedView({.size = {.height = 50}}),

@@ -44,7 +44,6 @@ bool SkiaRenderer::initialize(int w, int h) {
     return false;
   }
 
-  Logger::log("GoThroughSkia");
   createSurface();
   return canvas != nullptr;
 }
@@ -69,7 +68,8 @@ void SkiaRenderer::createSurface() {
   framebufferInfo.fFormat = GL_RGBA8;
   SkColorType colorType = kRGBA_8888_SkColorType;
 
-  GrBackendRenderTarget backendRenderTarget = GrBackendRenderTargets::MakeGL(width, height,
+  GrBackendRenderTarget backendRenderTarget = GrBackendRenderTargets::MakeGL(width,
+                                                                             height,
                                                                              0,  // sample count
                                                                              0,  // stencil bits
                                                                              framebufferInfo);
@@ -79,13 +79,16 @@ void SkiaRenderer::createSurface() {
     surface = nullptr;
   }
 
-  surface = SkSurfaces::WrapBackendRenderTarget(grContext.get(), backendRenderTarget, kBottomLeft_GrSurfaceOrigin,
-                                                colorType, SkColorSpace::MakeSRGB(), nullptr)
+  surface = SkSurfaces::WrapBackendRenderTarget(grContext.get(),
+                                                backendRenderTarget,
+                                                kBottomLeft_GrSurfaceOrigin,
+                                                colorType,
+                                                SkColorSpace::MakeSRGB(),
+                                                nullptr)
                 .release();
 
   if (surface) {
     canvas = surface->getCanvas();
-    Logger::log("Created Skia surface");
   } else {
     std::cerr << "Failed to create Skia surface" << std::endl;
     canvas = nullptr;
@@ -105,7 +108,6 @@ void SkiaRenderer::endFrame() {
 }
 
 void SkiaRenderer::cleanup() {
-  // surface->unref();
   grContext.reset();
   canvas = nullptr;
 }

@@ -1,5 +1,3 @@
-#include "ui_components/text_component.hpp"
-
 #include <fmt/base.h>
 #include <include/core/SkCanvas.h>
 #include <include/core/SkFont.h>
@@ -8,14 +6,15 @@
 #include <include/core/SkRect.h>
 #include <include/core/SkTextBlob.h>
 
-#include "ui_components/ui_manager.hpp"
+#include "text_component.hpp"
+#include "ui_manager.hpp"
 
 TextComponent::TextComponent(const std::string &text, const TextStyle &style) : text_(text), style_(style) {
   paint_.setColor(style_.color);
   paint_.setAntiAlias(true);
 }
 
-void TextComponent::layout(float parentWidth, float parentHeight) {
+void TextComponent::layout(UISize size) {
   int skWeight = SkFontStyle::kNormal_Weight;
   if (style_.weight == FontWeight::Bold) {
     skWeight = SkFontStyle::kBold_Weight;
@@ -49,8 +48,6 @@ void TextComponent::layout(float parentWidth, float parentHeight) {
 
   text_bounds_offset_x_ = textBounds.fLeft;
   text_bounds_offset_y_ = textBounds.fTop;
-
-  fmt::println("Text parentWidth: {} X parentHeight: {}", parentWidth, parentWidth);
 }
 
 void TextComponent::draw(SkCanvas *canvas) {

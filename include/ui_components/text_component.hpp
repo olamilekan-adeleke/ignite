@@ -1,9 +1,11 @@
 #pragma once
 
+#include <include/core/SkCanvas.h>
 #include <include/core/SkFont.h>
 #include <include/core/SkPaint.h>
 
-#include "color.hpp"
+#include "./color.hpp"
+#include "./size.hpp"
 #include "ui_component.hpp"
 
 struct TextMetrics {
@@ -42,7 +44,7 @@ class TextComponent : public UIComponent {
  public:
   TextComponent(const std::string& text, const TextStyle& style = TextStyle());
 
-  void layout(float parentWidth, float parentHeight) override;
+  void layout(UISize size) override;
 
   void draw(SkCanvas* canvas) override;
 

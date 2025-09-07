@@ -7,7 +7,7 @@ struct UIEdgeInsets {
   float right = 0.0f;
 
   // TODO: add setters
-  float horizonal() { return left + right; }
+  float horizonal() const { return left + right; }
 
-  float vertical() { return top + bottom; }
+  float vertical() const { return top + bottom; }
 };

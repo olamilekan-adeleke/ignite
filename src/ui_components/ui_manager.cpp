@@ -1,7 +1,9 @@
-#include "ui_components/ui_manager.hpp"
+#include "ui_manager.hpp"
 
 #include <fmt/base.h>
+#include <algorithm>
 #include <memory>
+#include <string>
 
 #include "core/logger.hpp"
 #include "tap_event.hpp"
@@ -81,9 +83,14 @@ void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
                                float w,
                                float h,
                                bool needsResize) {
-  bool rebuild = shouldRebuild(oldNode, newNode);
-  if (needsResize || rebuild) {
-    newNode->layout(w, h);
+  bool rebuild = true;  // shouldRebuild(oldNode, newNode);
+  if (rebuild || needsResize) {
+    // if (oldNode) {
+    //   fmt::println("Checking for rebuild: {} == {}", newNode->key().value(), oldNode->key().value());
+    // } else {
+    //   fmt::println("Checking for rebuild: {} == <null oldNode>", newNode->key().value());
+    // }
+    newNode->layout({w, h});
   }
 
   auto oldChildren = oldNode ? oldNode->children() : std::vector<std::shared_ptr<UIComponent>>{};

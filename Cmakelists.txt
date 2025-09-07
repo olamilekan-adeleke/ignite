@@ -8,6 +8,13 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+
+if(CLANG_TIDY_EXE)
+  message(STATUS "Found clang-tidy: ${CLANG_TIDY_EXE}")
+  set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+endif()
+
 # Automatically collect all source files
 file(GLOB_RECURSE PROJECT_SOURCES
     src/*.cpp
@@ -33,9 +40,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::skia::skia)
 
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
-
-find_package(imgui CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
 
 # Optional: Install and testing
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

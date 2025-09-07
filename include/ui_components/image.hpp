@@ -15,7 +15,7 @@ class UIImage : public UIComponent {
  public:
   UIImage(const ImageParams& params = {});
 
-  void layout(float parentWidth, float parentHeight) override;
+  void layout(UISize size) override;
   void draw(SkCanvas* canvas) override;
 
  protected:

@@ -6,22 +6,21 @@
 
 #include <memory>
 #include <vector>
-
 #include "rect.hpp"
+#include "size.hpp"
 #include "tap_event.hpp"
 #include "ui_key.hpp"
-#include "ui_alignment.hpp"
 
 using TapListener = std::function<void(const UITapEvent &event)>;
 
 class UIComponent {
  public:
-  UIComponent() : key_(UIKey()), tappable_(true) {}
+  UIComponent() : key_(UIKey()), tappable_(true), bounds_{0, 0, 0, 0} {}
 
   virtual ~UIComponent() = default;
 
-  virtual void layout(float parentWidth, float parentHeight) = 0;
-  virtual void draw(SkCanvas *canvas);
+  virtual void layout(UISize size) = 0;
+  virtual void draw(SkCanvas *canvas) = 0;
 
   UIRect getBounds() const { return bounds_; }
 
@@ -35,7 +34,7 @@ class UIComponent {
     bounds_.height = h;
   }
 
-  void setKey(UIKey key) { key_ = key; }
+  void setKey(UIKey key) { key_ = std::move(key); }
   UIKey key() const { return key_; }
 
   virtual const std::vector<std::shared_ptr<UIComponent>> &children() const {
@@ -57,8 +56,6 @@ class UIComponent {
   }
 
   virtual bool tapWithBounds(float x, float y) const {
-    // so x have to be withing the view how x area, which is like x-pos plus the width (that is the horizontal area)
-    // same for y too
     // TODO: come back to see if i can improve this
     return x >= bounds_.x && x < bounds_.x + bounds_.width && y >= bounds_.y && y < bounds_.y + bounds_.height;
   }
@@ -75,6 +72,13 @@ class UIComponent {
     }
     return false;
   }
+
+  // enum class SizingPolicy { Fixed, WrapContent, MatchParent };
+  // virtual SizingPolicy mainAxisSizing() const { return SizingPolicy::Fixed; }
+  // virtual SizingPolicy crossAxisSizing() const { return SizingPolicy::Fixed; }
+  virtual bool wantsToFillMainAxis() const { return false; }
+
+  virtual bool wantsToFillCrossAxis() const { return false; }
 
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }

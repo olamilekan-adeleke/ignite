@@ -20,7 +20,7 @@ class UITextField : public UIComponent {
     buffer_[copyLen] = '\0';
   }
 
-  void layout(float parentWidth, float parentHeight) override {
+  void layout(UISize size) override {
     bounds_.width = params_.width;
     bounds_.height = params_.height;
   }
