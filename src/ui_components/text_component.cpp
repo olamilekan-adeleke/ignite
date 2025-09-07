@@ -51,8 +51,17 @@ void TextComponent::layout(UISize size) {
 }
 
 void TextComponent::draw(SkCanvas *canvas) {
-  float drawX = bounds_.x - text_bounds_offset_x_;
-  float drawY = bounds_.y - text_bounds_offset_y_;
+  SkRect textBounds;
+  font_.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, &textBounds);
+
+  float centerX = bounds_.x + bounds_.width / 2.0f;
+  float centerY = bounds_.y + bounds_.height / 2.0f;
+
+  float drawX = centerX - textBounds.centerX();
+  float drawY = centerY - textBounds.centerY();
+
+  // float drawX = bounds_.x - text_bounds_offset_x_;
+  // float drawY = bounds_.y - text_bounds_offset_y_;
 
   canvas->drawSimpleText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, drawX, drawY, font_, paint_);
   UIComponent::draw(canvas);
