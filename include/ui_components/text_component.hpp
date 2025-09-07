@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fmt/format.h>
 #include <include/core/SkCanvas.h>
 #include <include/core/SkFont.h>
 #include <include/core/SkPaint.h>
@@ -22,7 +23,37 @@ struct TextMetrics {
  */
 enum class FontWeight { Normal, Bold, Light };
 
+inline std::ostream& operator<<(std::ostream& os, const FontWeight& weight) {
+  switch (weight) {
+    case FontWeight::Normal:
+      os << "Normal";
+      break;
+    case FontWeight::Bold:
+      os << "Bold";
+      break;
+    case FontWeight::Light:
+      os << "Light";
+      break;
+  }
+  return os;
+}
+
 enum class TextDecoration { underline, strikethrough, none };
+
+inline std::ostream& operator<<(std::ostream& os, const TextDecoration& decoration) {
+  switch (decoration) {
+    case TextDecoration::underline:
+      os << "underline";
+      break;
+    case TextDecoration::strikethrough:
+      os << "strikethrough";
+      break;
+    case TextDecoration::none:
+      os << "none";
+      break;
+  }
+  return os;
+}
 
 struct TextStyle {
   Color color = Color::Black();
@@ -30,6 +61,18 @@ struct TextStyle {
   FontWeight weight = FontWeight::Normal;
   TextDecoration decoration = TextDecoration::none;
   bool italic = false;
+
+  std::string toString() const {
+    std::ostringstream os;
+    os << "TextStyle { ";
+    os << "color: " << color.toString() << ", ";
+    os << "fontSize: " << fontSize << ", ";
+    os << "weight: " << weight << ", ";
+    os << "decoration: " << decoration << ", ";
+    os << "italic: " << italic;
+    os << "}";
+    return os.str();
+  }
 };
 
 /**
@@ -57,4 +100,7 @@ class TextComponent : public UIComponent {
   TextMetrics text_metrics_;
   float text_bounds_offset_x_;
   float text_bounds_offset_y_;
+
+ protected:
+  void debugFillProperties(std::ostringstream& os, int indent) const override;
 };

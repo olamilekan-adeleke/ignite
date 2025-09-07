@@ -39,6 +39,8 @@ struct Color {
 
   static Color Random();
 
+  std::string toString() const;
+
  private:
   SkColor value;
 };

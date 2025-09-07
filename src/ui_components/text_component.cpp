@@ -1,4 +1,5 @@
 #include <fmt/base.h>
+#include <fmt/format.h>
 #include <include/core/SkCanvas.h>
 #include <include/core/SkFont.h>
 #include <include/core/SkFontMetrics.h>
@@ -65,4 +66,11 @@ void TextComponent::draw(SkCanvas *canvas) {
 
   canvas->drawSimpleText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, drawX, drawY, font_, paint_);
   UIComponent::draw(canvas);
+}
+
+void TextComponent::debugFillProperties(std::ostringstream &os, int indent) const {
+  UIComponent::debugFillProperties(os, indent);
+  std::string pad(indent, ' ');
+  os << pad << "text: " << fmt::format("\"{}\"", text_) << "\n";
+  os << pad << "style: " << style_.toString() << "\n";
 }
