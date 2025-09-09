@@ -19,4 +19,4 @@ std::string UIKey::gererateRandomKey() {
   return ss.str();
 }
 
-std::string UIKey::toString() const { return value_; }
+std::string UIKey::toString() const noexcept { return value_; }

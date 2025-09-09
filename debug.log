@@ -28,7 +28,7 @@ tappable: true
                 size: { w:599, h: 1026 }
                 tappable: true
                   children: [
-                    13TextComponent {
+                    13TextRenderer {
                     key: b02b8ea62f97d908
                     offset: { x: 191.993, y: 462.376 }
                     size: { w:215.014, h: 49.499 }
@@ -42,7 +42,7 @@ tappable: true
                     size: { w:47, h: 51.7495 }
                     tappable: true
                       children: [
-                        13TextComponent {
+                        13TextRenderer {
                         key: c2d743de11407c98
                         offset: { x: 16, y: 16 }
                         size: { w:15, h: 19.7495 }

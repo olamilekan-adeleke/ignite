@@ -23,7 +23,7 @@ class UIComponent : public Diagnosable {
   virtual void layout(UISize size) = 0;
   virtual void draw(SkCanvas *canvas) = 0;
 
-  Rect getBounds() const { return bounds_; }
+  UIRect getBounds() const { return bounds_; }
 
   void setPosition(float x, float y) { bounds_.x = x, bounds_.y = y; }
 
@@ -76,7 +76,7 @@ class UIComponent : public Diagnosable {
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }
 
-  Rect bounds_;
+  UIRect bounds_;
   UIKey key_;
   TapListener tapListener_;
   bool tappable_;
