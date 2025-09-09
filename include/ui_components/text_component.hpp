@@ -4,6 +4,7 @@
 #include <include/core/SkCanvas.h>
 #include <include/core/SkFont.h>
 #include <include/core/SkPaint.h>
+#include <sstream>
 
 #include "./color.hpp"
 #include "./size.hpp"
@@ -100,6 +101,8 @@ class TextComponent : public UIComponent {
   TextMetrics text_metrics_;
   float text_bounds_offset_x_;
   float text_bounds_offset_y_;
+
+  SkRect text_bounds_;
 
  protected:
   void debugFillProperties(std::ostringstream& os, int indent) const override;

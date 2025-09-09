@@ -6,6 +6,7 @@
 #include <include/core/SkFontTypes.h>
 #include <include/core/SkRect.h>
 #include <include/core/SkTextBlob.h>
+#include <sstream>
 
 #include "text_component.hpp"
 #include "ui_manager.hpp"
@@ -34,6 +35,7 @@ void TextComponent::layout(UISize size) {
   SkRect textBounds;
   font.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, &textBounds);
   font_ = font;
+  text_bounds_ = textBounds;
 
   SkFontMetrics fontMetrics;
   font_.getMetrics(&fontMetrics);
@@ -52,8 +54,10 @@ void TextComponent::layout(UISize size) {
 }
 
 void TextComponent::draw(SkCanvas *canvas) {
-  SkRect textBounds;
-  font_.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, &textBounds);
+  // SkRect textBounds;
+  // font_.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, &textBounds);
+
+  const SkRect &textBounds = text_bounds_;
 
   float centerX = bounds_.x + bounds_.width / 2.0f;
   float centerY = bounds_.y + bounds_.height / 2.0f;
@@ -71,6 +75,6 @@ void TextComponent::draw(SkCanvas *canvas) {
 void TextComponent::debugFillProperties(std::ostringstream &os, int indent) const {
   UIComponent::debugFillProperties(os, indent);
   std::string pad(indent, ' ');
-  os << pad << "text: " << fmt::format("\"{}\"", text_) << "\n";
+  os << pad << "text: " << fmt::format("\"{:?}\"", text_) << "\n";
   os << pad << "style: " << style_.toString() << "\n";
 }

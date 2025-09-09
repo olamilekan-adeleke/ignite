@@ -35,9 +35,10 @@ std::string UIComponent::toString(int indent) const {
   os << pad << typeid(*this).name() << " {\n";
   debugFillProperties(os, indent);
 
-  if (!children().empty()) {
+  auto kids = children();
+  if (!kids.empty()) {
     os << pad << "  children: [\n";
-    for (auto& child : children()) {
+    for (const auto& child : kids) {
       os << child->toString(indent + 4) << "\n";
     }
     os << pad << "  ]\n";
@@ -49,7 +50,7 @@ std::string UIComponent::toString(int indent) const {
 
 void UIComponent::debugFillProperties(std::ostringstream& os, int indent) const {
   std::string pad(indent, ' ');
-  os << pad << "key: " << key_.toString().c_str() << "\n";
+  os << pad << "key: " << key_.toString() << "\n";
   os << pad << "offset: { x: " << bounds_.x << ", y: " << bounds_.y << " }\n";
   os << pad << "size: { w:" << bounds_.width << ", h: " << bounds_.height << " }\n";
   os << pad << "tappable: " << (tappable_ ? "true" : "false") << "\n";
