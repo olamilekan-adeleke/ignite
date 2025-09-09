@@ -84,9 +84,9 @@ struct TextStyle {
  * overrides layout and draw methods.
  *
  */
-class TextComponent : public UIComponent {
+class TextRenderer : public UIComponent {
  public:
-  TextComponent(const std::string& text, const TextStyle& style = TextStyle());
+  TextRenderer(const std::string& text, const TextStyle& style = TextStyle());
 
   void layout(UISize size) override;
 
