@@ -12,7 +12,7 @@ class UIKey {
   bool operator==(const UIKey &other) const;
   bool operator!=(const UIKey &other) const;
 
-  std::string toString() const;
+  [[nodiscard]] std::string toString() const noexcept;
 
  private:
   std::string value_;

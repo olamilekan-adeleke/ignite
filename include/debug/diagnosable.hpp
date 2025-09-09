@@ -17,7 +17,7 @@ class Diagnosable {
    * @param indent The current indentation level for formatting the output.
    * @return A string representing the objects state.
    */
-  std::string toString(int indent = 0) const;
+  virtual std::string toString(int indent = 0) const;
 
  protected:
   /**

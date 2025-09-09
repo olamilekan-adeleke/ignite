@@ -66,7 +66,12 @@ int main() {
 
     skiaRenderer.endFrame();
 
-    Logger::logToFile(rootUI->toString(0));
+    static std::string prev;
+    const std::string cur = rootUI->toString(0);
+    if (cur != prev) {
+      Logger::logToFile(cur);
+      prev = cur;
+    }
     // std::this_thread::sleep_for(std::chrono::milliseconds(16));
   });
 

@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <random>
+#include <string>
 
 // Custom Color class to wrap SKColor (I Love doing things my way, hopefully i do not regret this)
 struct Color {

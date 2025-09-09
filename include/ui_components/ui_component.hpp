@@ -23,7 +23,7 @@ class UIComponent : public Diagnosable {
   virtual void layout(UISize size) = 0;
   virtual void draw(SkCanvas *canvas) = 0;
 
-  UIRect getBounds() const { return bounds_; }
+  Rect getBounds() const { return bounds_; }
 
   void setPosition(float x, float y) { bounds_.x = x, bounds_.y = y; }
 
@@ -71,12 +71,12 @@ class UIComponent : public Diagnosable {
 
   virtual bool wantsToFillCrossAxis() const { return false; }
 
-  std::string toString(int indent = 0) const;
+  std::string toString(int indent = 0) const override;
 
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }
 
-  UIRect bounds_;
+  Rect bounds_;
   UIKey key_;
   TapListener tapListener_;
   bool tappable_;
@@ -86,5 +86,5 @@ class UIComponent : public Diagnosable {
 
   void initializeDebugPaint();
 
-  virtual void debugFillProperties(std::ostringstream &os, int indent) const;
+  void debugFillProperties(std::ostringstream &os, int indent) const override;
 };
