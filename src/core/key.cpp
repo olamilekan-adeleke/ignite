@@ -1,4 +1,4 @@
-#include "ui_key.hpp"
+#include "key.hpp"
 
 #include <random>
 #include <sstream>
@@ -18,3 +18,5 @@ std::string UIKey::gererateRandomKey() {
   for (int i = 0; i < 16; ++i) ss << std::hex << dis(gen);
   return ss.str();
 }
+
+std::string UIKey::toString() const { return value_; }

@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <random>
+#include <string>
 
 // Custom Color class to wrap SKColor (I Love doing things my way, hopefully i do not regret this)
 struct Color {
@@ -21,7 +22,7 @@ struct Color {
   uint8_t a() const;
 
   // Return a copy with new alpha
-  Color withAlpha(uint8_t newAlpha) const;
+  Color withAlpha(uint8_t alpha) const;
 
   // Named constants
   static Color Black();
@@ -38,6 +39,8 @@ struct Color {
   static Color Clear();
 
   static Color Random();
+
+  std::string toString() const;
 
  private:
   SkColor value;

@@ -17,7 +17,9 @@ class StatefulComponent : public UIComponent {
   void layout(UISize size) override;
   void draw(SkCanvas *canvas) override;
 
-  virtual const std::vector<std::shared_ptr<UIComponent>> &children() const override;
+  const std::vector<std::shared_ptr<UIComponent>> &children() const override;
+
+  std::string toString(int indent = 0) const override;
 
  protected:
   void markDirty();
@@ -28,4 +30,5 @@ class StatefulComponent : public UIComponent {
   bool isDirty_;
   bool needToRedraw_;
   std::shared_ptr<UIComponent> cachedBody_;
+  mutable std::vector<std::shared_ptr<UIComponent>> statefulChildren_;
 };

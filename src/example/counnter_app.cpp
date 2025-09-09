@@ -61,30 +61,30 @@ class CounterComponent : public StatefulComponent {
       }, 
     });
 
-    auto secondColum = UI::ColumnView({
-      .spacing = 10,
-      .crossAxisAlignment = CrossAxisAlignment::CENTER,
-      .crossAxisSize = CrossAxisSize::FIT,
-      .mainAxisSize = MainAxisSize::FILL,
-      .children = {
-        UI::Text("Count 2: " + std::to_string(count_), { 
-          .color = Color::Black(), 
-          .fontSize = 50, 
-          .weight = FontWeight::Bold, 
-        }),
-
-        UI::UIView({ 
-          .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
-          .backgroundColor = Color::Blue(), 
-          .borderRadius = 5, 
-          .onTap = [this](const UITapEvent&) { 
-            count_++;
-            markDirty();
-          }, 
-          .child = UI::Text("++", {.color = Color::White(), .fontSize = 25}),
-        }), 
-      }, 
-    });
+    // auto secondColum = UI::ColumnView({
+    //   .spacing = 10,
+    //   .crossAxisAlignment = CrossAxisAlignment::CENTER,
+    //   .crossAxisSize = CrossAxisSize::FIT,
+    //   .mainAxisSize = MainAxisSize::FILL,
+    //   .children = {
+    //     UI::Text("Count 2: " + std::to_string(count_), { 
+    //       .color = Color::Black(), 
+    //       .fontSize = 50, 
+    //       .weight = FontWeight::Bold, 
+    //     }),
+    //
+    //     UI::UIView({ 
+    //       .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+    //       .backgroundColor = Color::Blue(), 
+    //       .borderRadius = 5, 
+    //       .onTap = [this](const UITapEvent&) { 
+    //         count_++;
+    //         markDirty();
+    //       }, 
+    //       .child = UI::Text("++", {.color = Color::White(), .fontSize = 25}),
+    //     }), 
+    //   }, 
+    // });
 
 
     return UI::UIView({ 
@@ -100,14 +100,14 @@ class CounterComponent : public StatefulComponent {
             .backgroundColor = Color::Magenta().withAlpha(255 * 0.2),
             .child = firstColum,
           }),
-          UI::UIView({
-            .backgroundColor = Color::Cyan().withAlpha(255 * 0.2),
-            .child = thirdColum,
-          }),
-          UI::UIView({
-            .backgroundColor = Color::Yellow().withAlpha(255 * 0.2),
-            .child = secondColum,
-          }),
+          // UI::UIView({
+          //   .backgroundColor = Color::Cyan().withAlpha(255 * 0.2),
+          //   .child = thirdColum,
+          // }),
+          // UI::UIView({
+          //   .backgroundColor = Color::Yellow().withAlpha(255 * 0.2),
+          //   // .child = secondColum,
+          // }),
         },
       })
     });

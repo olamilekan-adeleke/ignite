@@ -9,11 +9,12 @@
 #include "rect.hpp"
 #include "size.hpp"
 #include "tap_event.hpp"
-#include "ui_key.hpp"
+#include "key.hpp"
+#include "debug/diagnosable.hpp"
 
 using TapListener = std::function<void(const UITapEvent &event)>;
 
-class UIComponent {
+class UIComponent : public Diagnosable {
  public:
   UIComponent() : key_(UIKey()), tappable_(true), bounds_{0, 0, 0, 0} {}
 
@@ -22,17 +23,11 @@ class UIComponent {
   virtual void layout(UISize size) = 0;
   virtual void draw(SkCanvas *canvas) = 0;
 
-  UIRect getBounds() const { return bounds_; }
+  Rect getBounds() const { return bounds_; }
 
-  void setPosition(float x, float y) {
-    bounds_.x = x;
-    bounds_.y = y;
-  }
+  void setPosition(float x, float y) { bounds_.x = x, bounds_.y = y; }
 
-  void setSize(float w, float h) {
-    bounds_.width = w;
-    bounds_.height = h;
-  }
+  void setSize(float w, float h) { bounds_.width = w, bounds_.height = h; }
 
   void setKey(UIKey key) { key_ = std::move(key); }
   UIKey key() const { return key_; }
@@ -51,14 +46,10 @@ class UIComponent {
   virtual bool processTap(const UITapEvent &event) {
     if (event.consumed) return false;
     if (processChildTaps(event)) return true;
-
     return onTap(event);
   }
 
-  virtual bool tapWithBounds(float x, float y) const {
-    // TODO: come back to see if i can improve this
-    return x >= bounds_.x && x < bounds_.x + bounds_.width && y >= bounds_.y && y < bounds_.y + bounds_.height;
-  }
+  virtual bool tapWithBounds(float x, float y) const { return bounds_.contains(x, y); }
 
   virtual bool onTap(const UITapEvent &event) const {
     const bool inBounds = tapWithBounds(event.x, event.y);
@@ -80,10 +71,12 @@ class UIComponent {
 
   virtual bool wantsToFillCrossAxis() const { return false; }
 
+  std::string toString(int indent = 0) const override;
+
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }
 
-  UIRect bounds_;
+  Rect bounds_;
   UIKey key_;
   TapListener tapListener_;
   bool tappable_;
@@ -92,4 +85,6 @@ class UIComponent {
   static bool debug_paint_initialized_;
 
   void initializeDebugPaint();
+
+  void debugFillProperties(std::ostringstream &os, int indent) const override;
 };
