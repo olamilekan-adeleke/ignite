@@ -3,7 +3,6 @@
 #include <functional>
 #include <fmt/base.h>
 #include <include/core/SkCanvas.h>
-#include <sstream>
 
 #include <memory>
 #include <vector>
@@ -11,10 +10,11 @@
 #include "size.hpp"
 #include "tap_event.hpp"
 #include "key.hpp"
+#include "debug/diagnosable.hpp"
 
 using TapListener = std::function<void(const UITapEvent &event)>;
 
-class UIComponent {
+class UIComponent : public Diagnosable {
  public:
   UIComponent() : key_(UIKey()), tappable_(true), bounds_{0, 0, 0, 0} {}
 

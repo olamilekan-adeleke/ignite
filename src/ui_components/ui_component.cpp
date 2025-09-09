@@ -1,6 +1,8 @@
 #include "ui_component.hpp"
 #include "ui_manager.hpp"
 #include "color.hpp"
+#include <sstream>
+#include "debug/diagnosable.hpp"
 
 SkPaint UIComponent::debug_border_paint_;
 bool UIComponent::debug_paint_initialized_ = false;
