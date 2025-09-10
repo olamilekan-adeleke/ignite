@@ -4,6 +4,6 @@
     "glfw3",
     "opengl",
     "skia",
-    "asio"
+    "boost-asio"
   ]
 }

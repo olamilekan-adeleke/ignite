@@ -75,6 +75,6 @@ void TextRenderer::draw(SkCanvas *canvas) {
 void TextRenderer::debugFillProperties(std::ostringstream &os, int indent) const {
   UIComponent::debugFillProperties(os, indent);
   std::string pad(indent, ' ');
-  os << pad << "text: " << fmt::format("\"{:?}\"", text_) << "\n";
+  os << pad << "text: " << fmt::format("\"{}\"", text_) << "\n";
   os << pad << "style: " << style_.toString() << "\n";
 }

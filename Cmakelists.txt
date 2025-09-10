@@ -41,8 +41,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::skia::skia)
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
 
-find_package(asio CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE asio::asio)
+find_package(Boost REQUIRED COMPONENTS asio)
+target_link_libraries(${PROJECT_NAME} PRIVATE Boost::asio)
 
 
 # Optional: Install and testing
