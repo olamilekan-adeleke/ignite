@@ -44,7 +44,7 @@ void StatefulComponent::markDirty() {
   if (isDirty_ == false) {
     isDirty_ = true;
     needToRedraw_ = true;
-    setKey(UIKey());
+    // setKey(UIKey());
   }
 }
 

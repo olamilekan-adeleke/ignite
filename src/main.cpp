@@ -1,12 +1,10 @@
 #include <fmt/base.h>
 
-#include <chrono>
 #include <cstdlib>
 #include <iostream>
-#include <thread>
+#include <boost/asio.hpp>
 
 #include "debug/debug_log_server.hpp"
-#include "logger.hpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
@@ -77,6 +75,7 @@ int main() {
 
       const std::string logs = rootUI->toString(0);
       if (logs != lastLog) lastLog = logs;
+      // Logger::logToFile(logs);
       // std::this_thread::sleep_for(std::chrono::milliseconds(16));
     });
 
@@ -84,7 +83,6 @@ int main() {
     server.start();
     server.setMessageHandler(
         [](std::shared_ptr<boost::asio::ip::tcp::socket> socket, const std::string& msg, const std::string& addr) {
-          // Logger::logToFile(cur);
           // std::string response = "Echoing your message: " + msg;
           std::string logs = lastLog + "\n";
           async_write(*socket, buffer(logs), [socket](const error_code& error, size_t bytes_transferred) {

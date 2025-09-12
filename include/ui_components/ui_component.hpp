@@ -25,9 +25,15 @@ class UIComponent : public Diagnosable {
 
   UIRect getBounds() const { return bounds_; }
 
-  void setPosition(float x, float y) { bounds_.x = x, bounds_.y = y; }
+  void setPosition(float x, float y) {
+    bounds_.x = x;
+    bounds_.y = y;
+  }
 
-  void setSize(float w, float h) { bounds_.width = w, bounds_.height = h; }
+  void setSize(float w, float h) {
+    bounds_.width = w;
+    bounds_.height = h;
+  }
 
   void setKey(UIKey key) { key_ = std::move(key); }
   UIKey key() const { return key_; }
@@ -44,12 +50,15 @@ class UIComponent : public Diagnosable {
   bool isTapEnabled() const { return tappable_; }
 
   virtual bool processTap(const UITapEvent &event) {
-    if (event.consumed) return false;
+    // if (event.consumed) return false;
     if (processChildTaps(event)) return true;
     return onTap(event);
   }
 
-  virtual bool tapWithBounds(float x, float y) const { return bounds_.contains(x, y); }
+  virtual bool tapWithBounds(float x, float y) const {
+    return x >= bounds_.x && x < bounds_.x + bounds_.width && y >= bounds_.y && y < bounds_.y + bounds_.height;
+    // return bounds_.contains(x, y);
+  }
 
   virtual bool onTap(const UITapEvent &event) const {
     const bool inBounds = tapWithBounds(event.x, event.y);

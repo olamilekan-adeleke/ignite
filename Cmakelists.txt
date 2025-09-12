@@ -18,6 +18,7 @@ endif()
 # Automatically collect all source files
 file(GLOB_RECURSE PROJECT_SOURCES
     src/*.cpp
+    src/*/*.cpp
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
