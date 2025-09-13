@@ -11,12 +11,12 @@
 #include "text_component.hpp"
 #include "ui_manager.hpp"
 
-TextComponent::TextComponent(const std::string &text, const TextStyle &style) : text_(text), style_(style) {
+TextRenderer::TextRenderer(const std::string &text, const TextStyle &style) : text_(text), style_(style) {
   paint_.setColor(style_.color);
   paint_.setAntiAlias(true);
 }
 
-void TextComponent::layout(UISize size) {
+void TextRenderer::layout(UISize size) {
   int skWeight = SkFontStyle::kNormal_Weight;
   if (style_.weight == FontWeight::Bold) {
     skWeight = SkFontStyle::kBold_Weight;
@@ -53,7 +53,7 @@ void TextComponent::layout(UISize size) {
   text_bounds_offset_y_ = textBounds.fTop;
 }
 
-void TextComponent::draw(SkCanvas *canvas) {
+void TextRenderer::draw(SkCanvas *canvas) {
   // SkRect textBounds;
   // font_.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, &textBounds);
 
@@ -72,9 +72,9 @@ void TextComponent::draw(SkCanvas *canvas) {
   UIComponent::draw(canvas);
 }
 
-void TextComponent::debugFillProperties(std::ostringstream &os, int indent) const {
+void TextRenderer::debugFillProperties(std::ostringstream &os, int indent) const {
   UIComponent::debugFillProperties(os, indent);
   std::string pad(indent, ' ');
-  os << pad << "text: " << fmt::format("\"{:?}\"", text_) << "\n";
+  os << pad << "text: " << fmt::format("\"{}\"", text_) << "\n";
   os << pad << "style: " << style_.toString() << "\n";
 }

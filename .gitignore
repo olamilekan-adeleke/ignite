@@ -1,4 +1,5 @@
 ./build/
 build/
 .cache/
-
+./vcpkg_installed/
+vcpkg_installed/

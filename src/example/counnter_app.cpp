@@ -1,16 +1,17 @@
+#include <memory>
 #include "ui.hpp"
 #include "ui_alignment.hpp"
 #include "ui_component.hpp"
 #include "stateful_component.hpp"
 
-class CounterComponent : public StatefulComponent {
+class CounterTextWidget : public StatefulComponent {
  public:
-  CounterComponent() : count_(0) {}
+  CounterTextWidget() : count_(0) {}
 
   // clang-format off
   std::shared_ptr<UIComponent> body() override {
 
-    auto firstColum = UI::ColumnView({
+   return UI::ColumnView({
       // .spacing = 10,
       .mainAxisAlignment = MainAxisAlignment::CENTER,
       .crossAxisAlignment = CrossAxisAlignment::CENTER,
@@ -35,6 +36,19 @@ class CounterComponent : public StatefulComponent {
         }), 
       }, 
     });
+  }
+  // clang-format on
+
+ private:
+  int count_;
+};
+
+class CounterComponent : public StatefulComponent {
+ public:
+  CounterComponent() {}
+
+  // clang-format off
+  std::shared_ptr<UIComponent> body() override {
 
     auto thirdColum = UI::ColumnView({
       .spacing = 10,
@@ -42,7 +56,7 @@ class CounterComponent : public StatefulComponent {
       .crossAxisSize = CrossAxisSize::FILL,
       .mainAxisSize = MainAxisSize::FILL,
       .children = {
-        UI::Text("Count 3: " + std::to_string(count_), { 
+        UI::Text("Count 3: ", { 
           .color = Color::Black(), 
           .fontSize = 50, 
           .weight = FontWeight::Bold, 
@@ -52,10 +66,6 @@ class CounterComponent : public StatefulComponent {
           .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
           .backgroundColor = Color::Green(), 
           .borderRadius = 5, 
-          .onTap = [this](const UITapEvent&) { 
-            count_++;
-            markDirty();
-          }, 
           .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
         }), 
       }, 
@@ -86,6 +96,7 @@ class CounterComponent : public StatefulComponent {
     //   }, 
     // });
 
+    auto firstColum = std::make_shared<CounterTextWidget>();
 
     return UI::UIView({ 
     // .margin = {.left = 40},
@@ -113,7 +124,4 @@ class CounterComponent : public StatefulComponent {
     });
   }
   // clang-format on
-
- private:
-  int count_;
 };

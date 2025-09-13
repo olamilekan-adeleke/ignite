@@ -10,9 +10,14 @@ class StatefulComponent : public UIComponent {
 
   virtual std::shared_ptr<UIComponent> body() = 0;
 
+ protected:
   bool isDirty() const;
 
+  void markDirty();
+
   std::shared_ptr<UIComponent> getChild();
+
+  virtual bool processChildTaps(const UITapEvent &event) override;
 
   void layout(UISize size) override;
   void draw(SkCanvas *canvas) override;
@@ -20,11 +25,6 @@ class StatefulComponent : public UIComponent {
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
   std::string toString(int indent = 0) const override;
-
- protected:
-  void markDirty();
-
-  virtual bool processChildTaps(const UITapEvent &event) override;
 
  private:
   bool isDirty_;

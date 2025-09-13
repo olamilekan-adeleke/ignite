@@ -15,8 +15,8 @@
 
 namespace UI {
 
-inline std::shared_ptr<TextComponent> Text(const std::string &str, const TextStyle &style = TextStyle()) {
-  return std::make_shared<TextComponent>(str, style);
+inline std::shared_ptr<TextRenderer> Text(const std::string &str, const TextStyle &style = TextStyle()) {
+  return std::make_shared<TextRenderer>(str, style);
 }
 
 inline std::shared_ptr<Column> ColumnView(const ColumnParams &props = {}) { return std::make_shared<Column>(props); }
