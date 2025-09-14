@@ -1,19 +1,17 @@
 #pragma once
 
-#include <functional>
 #include <fmt/base.h>
 #include <include/core/SkCanvas.h>
 
 #include <memory>
 #include <vector>
 #include "basic/ui_render_object.hpp"
+#include "basic/ui_tap_handler.hpp"
 #include "rect.hpp"
 #include "tap_event.hpp"
 #include "key.hpp"
 
-using TapListener = std::function<void(const UITapEvent &event)>;
-
-class UIComponent : public UIRenderObject {
+class UIComponent : public UIRenderObject, public UITapHandler {
  public:
   UIComponent() {}
   virtual ~UIComponent() = default;
@@ -23,26 +21,9 @@ class UIComponent : public UIRenderObject {
     return empty_children;
   }
 
-  void setTapListener(TapListener listener) { tapListener_ = std::move(listener); }
-
   virtual bool processTap(const UITapEvent &event) {
-    // if (event.consumed) return false;
     if (processChildTaps(event)) return true;
-    return onTap(event);
-  }
-
-  virtual bool tapWithBounds(float x, float y) const { return bounds_.contains(x, y); }
-
-  virtual bool onTap(const UITapEvent &event) const {
-    const bool inBounds = tapWithBounds(event.x, event.y);
-    if (tapListener_ && inBounds) {
-      UITapEvent localEvent = event;
-      localEvent.x = event.x - bounds_.x;
-      localEvent.y = event.y - bounds_.y;
-      tapListener_(localEvent);
-      return true;
-    }
-    return false;
+    return onTap(event, bounds_);
   }
 
   std::string toString(int indent = 0) const override;
