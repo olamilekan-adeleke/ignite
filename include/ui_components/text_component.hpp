@@ -6,7 +6,6 @@
 #include <include/core/SkPaint.h>
 #include <sstream>
 #include <vector>
-#include <hb.h>
 
 #include "./color.hpp"
 #include "./size.hpp"

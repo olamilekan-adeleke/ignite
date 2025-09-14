@@ -35,8 +35,6 @@ include_directories(
     include/ui_components
 )
 
-set(SKIA_ENABLE_HARFBUZZ ON CACHE BOOL "Enable HarfBuzz support in Skia" FORCE)
-
 # Dependencies
 find_package(fmt CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
