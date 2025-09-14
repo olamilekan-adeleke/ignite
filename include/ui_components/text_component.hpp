@@ -5,16 +5,18 @@
 #include <include/core/SkFont.h>
 #include <include/core/SkPaint.h>
 #include <sstream>
+#include <vector>
 
 #include "./color.hpp"
 #include "./size.hpp"
 #include "ui_component.hpp"
 
 struct TextMetrics {
-  float ascent = 0.0f;     // Distance from baseline to top of glyphs (positive value)
-  float descent = 0.0f;    // Distance from baseline to bottom of glyphs (positive value)
-  float leading = 0.0f;    // Recommended line spacing
-  float x_advance = 0.0f;  // Total width of the text string
+  float ascent = 0.0f;         // Distance from baseline to top of glyphs (positive value)
+  float descent = 0.0f;        // Distance from baseline to bottom of glyphs (positive value)
+  float leading = 0.0f;        // Recommended line spacing
+  float x_advance = 0.0f;      // Total width of the text string
+  float x_max_advance = 0.0f;  // Use to track the widest line for multi-line
 };
 
 /**
@@ -70,7 +72,7 @@ struct TextStyle {
     os << "fontSize: " << fontSize << ", ";
     os << "weight: " << weight << ", ";
     os << "decoration: " << decoration << ", ";
-    os << "italic: " << italic;
+    os << "italic: " << (italic ? "true" : "false");
     os << "}";
     return os.str();
   }
@@ -99,11 +101,18 @@ class TextRenderer : public UIComponent {
   SkPaint paint_;
   SkFont font_;
   TextMetrics text_metrics_;
-  float text_bounds_offset_x_;
-  float text_bounds_offset_y_;
+  float text_bounds_offset_x_ = 0.0f;
+  float text_bounds_offset_y_ = 0.0f;
 
   SkRect text_bounds_;
+  std::vector<std::string> line_;
 
  protected:
   void debugFillProperties(std::ostringstream& os, int indent) const override;
+
+  std::vector<std::string> splitByNewlines(const std::string& text);
+
+  std::string breakLongWord(const SkFont& font, const std::string& word, float maxWidth);
+
+  void breakTextIntoLines(const SkFont& font, float maxWidth);
 };

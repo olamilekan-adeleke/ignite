@@ -1,9 +1,9 @@
 {
   "dependencies": [
+    "boost-asio",
     "fmt",
     "glfw3",
     "opengl",
-    "skia",
-    "boost-asio"
+    "skia"
   ]
 }
