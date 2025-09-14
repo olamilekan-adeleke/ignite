@@ -7,7 +7,7 @@
 
 View::View(const ViewParams &params) : params_(params) {
   setTapListener(params_.onTap);
-  setTapEnabled(params_.tappable);
+  // setTapEnabled(params_.tappable);
 }
 
 void View::layout(UISize size) {
