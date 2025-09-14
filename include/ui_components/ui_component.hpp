@@ -7,9 +7,7 @@
 #include <vector>
 #include "basic/ui_render_object.hpp"
 #include "basic/ui_tap_handler.hpp"
-#include "rect.hpp"
 #include "tap_event.hpp"
-#include "key.hpp"
 
 class UIComponent : public UIRenderObject, public UITapHandler {
  public:
@@ -30,9 +28,4 @@ class UIComponent : public UIRenderObject, public UITapHandler {
 
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }
-
-  UIRect bounds_;
-  UIKey key_;
-
-  TapListener tapListener_;
 };

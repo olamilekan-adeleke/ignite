@@ -8,7 +8,7 @@
 
 class UIRenderObject : public Diagnosable {
  public:
-  UIRenderObject() : key_(UIKey()), bounds_{0, 0, 0, 0} {}
+  UIRenderObject() : key_(UIKey()) {}
   virtual ~UIRenderObject() = default;
 
   // Required overrides for concrete implementations
@@ -31,6 +31,9 @@ class UIRenderObject : public Diagnosable {
   virtual bool wantsToFillMainAxis() const { return false; }
   virtual bool wantsToFillCrossAxis() const { return false; }
 
+ private:
+  void initializeDebugPaint();
+
  protected:
   UIRect bounds_;
   UIKey key_;
@@ -38,6 +41,5 @@ class UIRenderObject : public Diagnosable {
   static SkPaint debug_border_paint_;
   static bool debug_paint_initialized_;
 
-  void initializeDebugPaint();
   void debugFillProperties(std::ostringstream& os, int indent) const override;
 };

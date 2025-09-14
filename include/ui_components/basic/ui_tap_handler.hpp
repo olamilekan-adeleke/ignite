@@ -1,4 +1,3 @@
-#include <fmt/base.h>
 #include <functional>
 #include "rect.hpp"
 #include "tap_event.hpp"
@@ -10,11 +9,12 @@ class UITapHandler {
   UITapHandler() : tappable_(true) {}
   virtual ~UITapHandler() = default;
 
+  // Override this method to customize hit detection logic
   virtual bool hitTest(const UITapEvent& event, const UIRect& bounds) const {
     return bounds.contains(event.x, event.y);
   }
 
-  virtual bool onTap(const UITapEvent& event, const UIRect& bounds) {
+  bool onTap(const UITapEvent& event, const UIRect& bounds) {
     if (!tappable_ || !tapListener_) return false;
     if (hitTest(event, bounds)) {
       UITapEvent localEvent = event;

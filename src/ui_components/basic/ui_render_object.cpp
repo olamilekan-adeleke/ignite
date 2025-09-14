@@ -28,30 +28,9 @@ void UIRenderObject::initializeDebugPaint() {
   }
 }
 
-// std::string UIRenderObject::toString(int indent) const {
-//   std::ostringstream os;
-//   std::string pad(indent, ' ');
-//
-//   os << pad << typeid(*this).name() << " {\n";
-//   debugFillProperties(os, indent);
-//
-//   auto kids = children();
-//   if (!kids.empty()) {
-//     os << pad << "  children: [\n";
-//     for (const auto& child : kids) {
-//       os << child->toString(indent + 4) << "\n";
-//     }
-//     os << pad << "  ]\n";
-//   }
-//
-//   os << pad << "}";
-//   return os.str();
-// }
-
 void UIRenderObject::debugFillProperties(std::ostringstream& os, int indent) const {
   std::string pad(indent, ' ');
   os << pad << "key: " << key_.toString() << "\n";
   os << pad << "offset: { x: " << bounds_.x << ", y: " << bounds_.y << " }\n";
-  os << pad << "size: { w:" << bounds_.width << ", h: " << bounds_.height << " }\n";
-  // os << pad << "tappable: " << (tappable_ ? "true" : "false") << "\n";
+  os << pad << "size: { w: " << bounds_.width << ", h: " << bounds_.height << " }\n";
 }
