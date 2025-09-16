@@ -12,6 +12,7 @@
 #include "ui_view.hpp"
 #include "opacity.hpp"
 #include "image.hpp"
+#include "layout/flex_box.hpp"
 
 namespace UI {
 
@@ -38,4 +39,6 @@ inline std::shared_ptr<UIComponent> UIImageView(const ImageParams &params = {}) 
 inline std::shared_ptr<UITextField> UITextFieldView(const UITextFieldParams &params = {}) {
   return std::make_shared<UITextField>(params);
 }
+
+inline std::shared_ptr<FlexBox> UIFlexBox(const FlexParam &params = {}) { return std::make_shared<FlexBox>(params); }
 }  // namespace UI
