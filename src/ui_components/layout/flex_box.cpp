@@ -1,24 +1,18 @@
 #include "layout/flex_box.hpp"
-#include <_strings.h>
 #include <fmt/base.h>
 #include <fmt/format.h>
 #include <include/core/SkCanvas.h>
 #include <cassert>
+#include <cmath>
 #include <memory>
 #include <vector>
 #include "rect.hpp"
 #include "size.hpp"
-#include "debug/debug_assert.hpp"
 #include "ui_component.hpp"
 
 void FlexBox::addChild(std::shared_ptr<UIComponent> child) { children_.push_back(std::move(child)); }
 
-FlexBox::FlexBox(const FlexParam& param) : param_(param), children_(param.children) {
-  children_.clear();
-  for (auto child : param.children) {
-    addChild(child);
-  }
-}
+FlexBox::FlexBox(const FlexParam& param) : param_(param), children_(param.children) {}
 
 bool FlexBox::wantsToFillCrossAxis() const { return false; }
 
@@ -48,13 +42,14 @@ void FlexBox::layout(UISize size) {
   // We pass in the parent size to allow child to size it self freely
   const UISize childSize = size;
   for (auto& child : children_) {
-    child->layout(childSize);
+    UISize sizedChild = size;
+    child->layout(sizedChild);
 
     const float childMainAxis = getChildMainAxisSize(child->getBounds());
     const float childCrossAxisSize = getChildCrossAxisSize(child->getBounds());
 
-    maxChildMainAxisSize = std::fmax(maxChildMainAxisSize, childMainAxis);
-    maxChildCrossAxisSize = std::fmax(maxChildCrossAxisSize, childCrossAxisSize);
+    maxChildMainAxisSize = std::max(maxChildMainAxisSize, childMainAxis);
+    maxChildCrossAxisSize = std::max(maxChildCrossAxisSize, childCrossAxisSize);
 
     const bool wantToExpand = child->wantsToFillMainAxis();
     if (wantToExpand) {
@@ -68,42 +63,48 @@ void FlexBox::layout(UISize size) {
   // be a sum of the total main axis size of children with fitted size [fittedMainSize]
   // and the total spacing. Once we know that we can then known the amount of space
   // to share among the flexible children, if any
-  const float totalSpacing = children_.size() > 1 ? param_.spacing * (children_.size()) : 0;
-  const float availableFillSpace = std::fmax(0, size.height - totalSpacing - fittedMainSize);
+  const float totalSpacing = children_.size() > 1 ? param_.spacing * (children_.size() - 1) : 0;
+  const float availableMainAxisSize = param_.flexAxis == Axis::HORIZONTAL ? size.width : size.height;
+  const float availableFillSpace = std::fmax(0, (availableMainAxisSize - fittedMainSize - totalSpacing));
 
-  VERIFY(availableFillSpace <= 0, fmt::format("FlexBox::layout: availableFillSpace <= 0"));
+  // VERIFY(availableFillSpace == 0,
+  //        fmt::format(
+  //            "FlexBox::layout: availableFillSpace <= 0 [totalSpacing: {}, fittedMainSize: {}, availableFillSpace:
+  //            {}]", totalSpacing, fittedMainSize, availableFillSpace));
 
   float sizePerChild = flexibleChildCount > 0 ? availableFillSpace / flexibleChildCount : 0;
 
   // Set the flex box main axis size
-  bounds_ = setMainAxisSize(maxChildMainAxisSize, bounds_);
-  float totalContentSize = totalSpacing + fittedMainSize;
+  float totalContentSize = totalSpacing + fittedMainSize + (sizePerChild * flexibleChildCount);
+  bounds_ = setMainAxisSize(totalContentSize, bounds_, size);
 
   // Second pass: this is to size the flexible children.
   for (auto& child : children_) {
     if (child->wantsToFillMainAxis()) {
-      child->layout(childSize);
-      totalContentSize += getChildCrossAxisSize(child->getBounds());
+      UISize sizedChild = isHorizontal ? UISize{.width = sizePerChild, .height = childSize.height}
+                                       : UISize{.width = childSize.width, .height = sizePerChild};
+      child->layout(sizedChild);
+      maxChildCrossAxisSize = std::max(maxChildCrossAxisSize, getChildCrossAxisSize(child->getBounds()));
     }
   }
 
   // set the flex cross axis size
-  bounds_ = setCrossAxisSize(std::fmax(totalContentSize, maxChildCrossAxisSize), bounds_);
-  float availableSpacingSize = bounds_.height - totalContentSize;
+  bounds_ = setCrossAxisSize(maxChildCrossAxisSize, bounds_);
 
-  // Third pass: this pass is to position all the children
-  float startY = bounds_.y;
-  float dynmicSpacing = param_.spacing;  // will expand later
-  float currentY = startY;
-  for (size_t i = 0; i < children_.size(); i++) {
+  // Third pass: position children along main axis
+  float currentMain = 0.0f;
+  for (size_t i = 0; i < children_.size(); ++i) {
     auto& child = children_[i];
-    float crossAxisPosition = 0.0f;
-    child->setPosition(crossAxisPosition, currentY);
+    const float mainAdvance = getChildMainAxisSize(child->getBounds());
+    const float crossPos = 0.0f;  // TODO: add alignment support
 
-    currentY += getChildMainAxisSize(child->getBounds());
-    if (i + 1 != children_.size()) {
-      currentY += dynmicSpacing;
+    if (isHorizontal) {
+      child->setPosition(currentMain, crossPos);
+    } else {
+      child->setPosition(crossPos, currentMain);
     }
+    currentMain += mainAdvance;
+    if (i + 1 != children_.size()) currentMain += param_.spacing;
   }
 }
 

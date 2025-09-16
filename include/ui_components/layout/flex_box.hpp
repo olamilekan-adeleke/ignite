@@ -1,12 +1,14 @@
 #include <fmt/base.h>
 #include "rect.hpp"
 #include "size.hpp"
+#include "ui_alignment.hpp"
 #include "ui_component.hpp"
 #include "axis.hpp"
 
 struct FlexParam {
   float spacing = 0.0f;
   Axis flexAxis = Axis::VERTICAL;
+  MainAxisSize mainAxisSize = MainAxisSize::FIT;
   std::vector<std::shared_ptr<UIComponent>> children;
 };
 
@@ -26,8 +28,17 @@ class FlexBox : public UIComponent {
 
  protected:
   virtual bool processChildTaps(const UITapEvent& event) override {
-    for (auto i = children_.rbegin(); i != children_.rend(); ++i) {
-      if ((*i)->processTap(event)) return true;
+    if (!bounds_.contains(event.x, event.y)) return false;
+
+    // Transform to local coordinates
+    UITapEvent localEvent = event;
+    localEvent.x = event.x - bounds_.x;
+    localEvent.y = event.y - bounds_.y;
+
+    for (auto& child : children_) {
+      if (child->processTap(localEvent)) {
+        return true;
+      }
     }
     return false;
   }
@@ -35,7 +46,7 @@ class FlexBox : public UIComponent {
   float getChildMainAxisSize(UIRect bound);
   float getChildCrossAxisSize(UIRect bound);
 
-  UIRect setMainAxisSize(float contentSize, UIRect bound);
+  UIRect setMainAxisSize(float contentSize, UIRect bound, UISize parentSize);
   UIRect setCrossAxisSize(float contentSize, UIRect bound);
 
  private:
@@ -61,11 +72,19 @@ inline float FlexBox::getChildCrossAxisSize(UIRect bound) {
   }
 };
 
-inline UIRect FlexBox::setMainAxisSize(float contentSize, UIRect bound) {
+inline UIRect FlexBox::setMainAxisSize(float contentSize, UIRect bound, UISize parentSize) {
   switch (param_.flexAxis) {
     case Axis::HORIZONTAL:
+      if (param_.mainAxisSize == MainAxisSize::FILL) {
+        return bound.copyWith({.width = parentSize.width});
+      }
+
       return bound.copyWith({.width = contentSize});
     case Axis::VERTICAL:
+      if (param_.mainAxisSize == MainAxisSize::FILL) {
+        return bound.copyWith({.height = parentSize.height});
+      }
+
       return bound.copyWith({.height = contentSize});
   }
 }
