@@ -2,6 +2,8 @@
 
 #include <fmt/base.h>
 #include <fmt/format.h>
+#include <optional>
+#include <string>
 #include <include/core/SkRect.h>
 
 using optional_float = std::optional<float>;
