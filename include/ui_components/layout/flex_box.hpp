@@ -1,4 +1,5 @@
-#include <fmt/base.h>
+#pragma once
+
 #include "rect.hpp"
 #include "size.hpp"
 #include "ui_alignment.hpp"
@@ -27,21 +28,7 @@ class FlexBox : public UIComponent {
   bool wantsToFillCrossAxis() const override;
 
  protected:
-  virtual bool processChildTaps(const UITapEvent& event) override {
-    if (!bounds_.contains(event.x, event.y)) return false;
-
-    // Transform to local coordinates
-    UITapEvent localEvent = event;
-    localEvent.x = event.x - bounds_.x;
-    localEvent.y = event.y - bounds_.y;
-
-    for (auto& child : children_) {
-      if (child->processTap(localEvent)) {
-        return true;
-      }
-    }
-    return false;
-  }
+  virtual bool processChildTaps(const UITapEvent& event) override;
 
   float getChildMainAxisSize(UIRect bound);
   float getChildCrossAxisSize(UIRect bound);
@@ -51,8 +38,23 @@ class FlexBox : public UIComponent {
 
  private:
   FlexParam param_;
-  std::vector<std::shared_ptr<UIComponent>> children_;
 };
+
+inline bool FlexBox::processChildTaps(const UITapEvent& event) {
+  if (!bounds_.contains(event.x, event.y)) return false;
+
+  // Transform to local coordinates
+  UITapEvent localEvent = event;
+  localEvent.x = event.x - bounds_.x;
+  localEvent.y = event.y - bounds_.y;
+
+  for (auto& child : param_.children) {
+    if (child->processTap(localEvent)) {
+      return true;
+    }
+  }
+  return false;
+}
 
 inline float FlexBox::getChildMainAxisSize(UIRect bound) {
   switch (param_.flexAxis) {
@@ -61,6 +63,7 @@ inline float FlexBox::getChildMainAxisSize(UIRect bound) {
     case Axis::VERTICAL:
       return bound.height;
   }
+  return 0.0f;
 };
 
 inline float FlexBox::getChildCrossAxisSize(UIRect bound) {
@@ -70,9 +73,12 @@ inline float FlexBox::getChildCrossAxisSize(UIRect bound) {
     case Axis::VERTICAL:
       return bound.width;
   }
+  return 0.0f;
 };
 
 inline UIRect FlexBox::setMainAxisSize(float contentSize, UIRect bound, UISize parentSize) {
+  contentSize = std::fmax(0, contentSize);
+
   switch (param_.flexAxis) {
     case Axis::HORIZONTAL:
       if (param_.mainAxisSize == MainAxisSize::FILL) {
@@ -87,13 +93,17 @@ inline UIRect FlexBox::setMainAxisSize(float contentSize, UIRect bound, UISize p
 
       return bound.copyWith({.height = contentSize});
   }
+  return bound;
 }
 
 inline UIRect FlexBox::setCrossAxisSize(float contentSize, UIRect bound) {
+  contentSize = std::fmax(0, contentSize);
+
   switch (param_.flexAxis) {
     case Axis::HORIZONTAL:
       return bound.copyWith({.height = contentSize});
     case Axis::VERTICAL:
       return bound.copyWith({.width = contentSize});
   }
+  return bound;
 }

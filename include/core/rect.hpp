@@ -34,5 +34,5 @@ struct UIRect {
     return newRect;
   }
 
-  std::string toString() const { return fmt::format("x: {}, y: {}, w: {}, h: {}", x, y, width, height); }
+  std::string toString() const { return fmt::format("UIRect{ x: {}, y: {}, w: {}, h: {} }", x, y, width, height); }
 };

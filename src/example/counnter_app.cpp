@@ -13,13 +13,25 @@ class CounterTextWidget : public StatefulComponent {
 
    // return UI::ColumnView({
     return UI::UIFlexBox({
-      .spacing = 0,
+      .spacing = 12,
       .flexAxis = Axis::VERTICAL,
       // .mainAxisAlignment = MainAxisAlignment::CENTER,
       // .crossAxisAlignment = CrossAxisAlignment::CENTER,
       // .crossAxisSize = CrossAxisSize::FILL,
       // .mainAxisSize = MainAxisSize::FILL,
       .children = {
+            UI::UIView({ 
+            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+            .margin = {.top = 50},
+            .backgroundColor = Color::Green(), 
+            .borderRadius = 5, 
+            .onTap = [this](const UITapEvent&) { 
+              count_++;
+              markDirty();
+            }, 
+            .child = UI::Text("Click Me", {.color = Color::White(), .fontSize = 25}),
+          }), 
+
         UI::Text(
           "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n\nIt has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. -> "
                  + std::to_string(count_),
@@ -29,15 +41,53 @@ class CounterTextWidget : public StatefulComponent {
           .weight = FontWeight::Bold, 
         }),
 
-        UI::UIView({ 
-          .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
-          .backgroundColor = Color::Green(), 
-          .borderRadius = 5, 
-          .onTap = [this](const UITapEvent&) { 
-            count_++;
-            markDirty();
-          }, 
-          .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+        UI::Text(
+          std::to_string(count_),
+          { 
+          .color = Color::Black(), 
+          .fontSize = 32, 
+          .weight = FontWeight::Bold, 
+        }),
+
+
+            UI::UIView({ 
+            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+            .backgroundColor = Color::Green(), 
+            .borderRadius = 5, 
+            .onTap = [this](const UITapEvent&) { 
+              count_++;
+              markDirty();
+            }, 
+            .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+          }), 
+
+        UI::UIFlexBox({
+          .spacing = 40,
+          .flexAxis = Axis::HORIZONTAL,
+          .mainAxisSize = MainAxisSize::FIT,
+          .children = {
+            UI::UIView({ 
+            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+            .backgroundColor = Color::Green(), 
+            .borderRadius = 5, 
+            .onTap = [this](const UITapEvent&) { 
+              count_++;
+              markDirty();
+            }, 
+            .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+          }), 
+
+          UI::UIView({ 
+            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+            .backgroundColor = Color::Green(), 
+            .borderRadius = 5, 
+            .onTap = [this](const UITapEvent&) { 
+              count_--;
+              markDirty();
+            }, 
+            .child = UI::Text("-", {.color = Color::White(), .fontSize = 25}),
+          }), 
+          }
         }), 
       }, 
     });
