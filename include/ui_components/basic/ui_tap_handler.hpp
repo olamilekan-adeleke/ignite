@@ -15,22 +15,29 @@ class UITapHandler {
   }
 
   bool onTap(const UITapEvent& event, const UIRect& bounds) {
-    if (!tappable_ || !tapListener_) return false;
+    if (!tapListener_.has_value()) return false;
+
     if (hitTest(event, bounds)) {
       UITapEvent localEvent = event;
       localEvent.x = event.x - bounds.x;
       localEvent.y = event.y - bounds.y;
-      tapListener_(localEvent);
+      (*tapListener_)(localEvent);
       return true;
     }
     return false;
   }
 
   void setTapListener(TapListener listener) { tapListener_ = std::move(listener); }
+
+  void clearTapListener() { tapListener_.reset(); }
+
   void setTapEnabled(bool enabled) { tappable_ = enabled; }
+
   bool isTapEnabled() const { return tappable_; }
 
+  bool hasTapListener() const { return tapListener_.has_value(); }
+
  protected:
-  TapListener tapListener_;
+  std::optional<TapListener> tapListener_;
   bool tappable_;
 };
