@@ -12,11 +12,12 @@
 #include "ui_component.hpp"
 
 struct TextMetrics {
-  float ascent = 0.0f;         // Distance from baseline to top of glyphs (positive value)
-  float descent = 0.0f;        // Distance from baseline to bottom of glyphs (positive value)
-  float leading = 0.0f;        // Recommended line spacing
-  float x_advance = 0.0f;      // Total width of the text string
-  float x_max_advance = 0.0f;  // Use to track the widest line for multi-line
+  float ascent = 0.0f;                // Distance from baseline to top of glyphs (positive value)
+  float descent = 0.0f;               // Distance from baseline to bottom of glyphs (positive value)
+  float leading = 0.0f;               // Recommended line spacing
+  float x_advance = 0.0f;             // Total width of the text string
+  float x_max_advance = 0.0f;         // Use to track the widest line for multi-line
+  float visual_center_offset = 0.0f;  // Use to center the text vertically
 };
 
 /**

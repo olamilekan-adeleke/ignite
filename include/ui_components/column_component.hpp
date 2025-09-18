@@ -51,23 +51,15 @@ class Column : public UIComponent {
     return 0.0f;
   }
 
-  inline float getMainAxisStartPosition(MainAxisAlignment axis,
-                                        float availableSpace,
-                                        float totalContentHeight,
-                                        size_t childCount) {
+  inline float getMainAxisStartPosition(MainAxisAlignment axis, float availableSpace, size_t childCount) {
     switch (axis) {
       case MainAxisAlignment::START:
+      case MainAxisAlignment::STRETCH:
         return 0;
       case MainAxisAlignment::CENTER:
         return availableSpace / 2.0f;
       case MainAxisAlignment::END:
         return availableSpace;
-      case MainAxisAlignment::SPACE_BETWEEN:
-        return 0;
-      case MainAxisAlignment::SPACE_AROUND:
-        return availableSpace / (2.0f * childCount);
-      case MainAxisAlignment::SPACE_EVENLY:
-        return availableSpace / (childCount + 1);
     }
     return 0;
   }
@@ -80,13 +72,8 @@ class Column : public UIComponent {
       case MainAxisAlignment::START:
       case MainAxisAlignment::CENTER:
       case MainAxisAlignment::END:
+      case MainAxisAlignment::STRETCH:
         return originalSpacing;
-      case MainAxisAlignment::SPACE_BETWEEN:
-        return childCount > 1 ? availableSpace / (childCount - 1) : 0;
-      case MainAxisAlignment::SPACE_AROUND:
-        return availableSpace / childCount;
-      case MainAxisAlignment::SPACE_EVENLY:
-        return availableSpace / (childCount + 1);
     }
     return originalSpacing;
   }
