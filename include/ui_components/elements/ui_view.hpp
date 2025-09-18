@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sstream>
 #include "color.hpp"
 #include "size.hpp"
 #include "ui_alignment.hpp"
@@ -12,7 +13,7 @@ struct ViewParams {
   UIEdgeInsets margin = {0.0f, 0.0f, 0.0f, 0.0f};
   Color backgroundColor = Color::Clear();
   float borderRadius = 0.0f;
-  bool antiAlias = false;
+  bool antiAlias = true;
   bool tappable = true;
   TapListener onTap = nullptr;
   MainAxisSize mainAxisSize = MainAxisSize::FIT;
@@ -57,5 +58,18 @@ class View : public UIComponent {
     return false;
   }
 
+  void debugFillProperties(std::ostringstream &os, int indent) const override;
+
   ViewParams params_;
 };
+
+inline void View::debugFillProperties(std::ostringstream &os, int indent) const {
+  UIComponent::debugFillProperties(os, indent);
+  std::string pad(indent, ' ');
+  os << pad << "insets: " << params_.insets.toString() << "\n";
+  os << pad << "margin: " << params_.margin.toString() << "\n";
+  os << pad << "backgroundColor: " << params_.backgroundColor.toString() << "\n";
+  os << pad << "borderRadius: " << params_.borderRadius << "\n";
+  os << pad << "antiAlias: " << (params_.antiAlias ? "true" : "false") << "\n";
+  os << pad << "tappable: " << (params_.tappable ? "true" : "false") << "\n";
+}

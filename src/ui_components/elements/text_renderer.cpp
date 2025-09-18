@@ -215,12 +215,3 @@ void TextRenderer::breakTextIntoLinesConst(const SkFont &font, float maxWidth) n
 void TextRenderer::breakTextIntoLines(const SkFont &font, float maxWidth) noexcept {
   breakTextIntoLinesConst(font, maxWidth);
 }
-
-void TextRenderer::debugFillProperties(std::ostringstream &os, int indent) const {
-  UIComponent::debugFillProperties(os, indent);
-  std::string pad(indent, ' ');
-  os << pad << "text: " << fmt::format("\"{}\"", text_) << "\n";
-  os << pad << "style: " << style_.toString() << "\n";
-  os << pad << "max_advance: " << text_metrics_.x_max_advance << "\n";
-  os << pad << "line_count: " << line_.size() << "\n";
-}

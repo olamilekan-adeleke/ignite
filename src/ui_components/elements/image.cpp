@@ -34,7 +34,6 @@ UIImage::UIImage(const ImageParams& param) : params_(param) {
     fmt::println("ImageView: Failed to read data {}", fullPath);
     return;
   }
-  fmt::println("ImageView: Read {} bytes", data->size());
 
   imageData_ = SkImages::DeferredFromEncodedData(data);
 }

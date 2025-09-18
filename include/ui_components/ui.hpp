@@ -5,6 +5,8 @@
 
 #include "elements/image.hpp"
 #include "elements/text_renderer.hpp"
+#include "elements/ui_view.hpp"
+#include "elements/opacity.hpp"
 
 #include "layout/flex_box.hpp"
 #include "layout/h_flex_box.hpp"
@@ -13,8 +15,6 @@
 #include "ui_component.hpp"
 #include "ui_sized.hpp"
 #include "ui_text_field.hpp"
-#include "ui_view.hpp"
-#include "opacity.hpp"
 
 namespace UI {
 

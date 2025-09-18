@@ -56,13 +56,19 @@ class CounterTextWidget : public StatefulComponent {
           .height = 320,
         }),
 
-
-        UI::UIImageView({
-          .path = "assets/user_one.jpeg",
-          .width = 320,
-          .height = 320,
+        UI::OpacityView({
+            .opacity = 0.3f,
+            .child = UI::UIView({ 
+                .borderRadius = 320.0 / 2.0f,
+                .child = UI::UIImageView({
+                .path = "assets/user_one.jpeg",
+                .width = 320,
+                .height = 320,
+              }),
+            }),
         }),
-          }
+
+        }
         }),
 
      UI::UIFlexBox({

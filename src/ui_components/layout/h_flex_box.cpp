@@ -6,7 +6,7 @@ FlexBox HFlexBox::create(const HFlexParam& param) {
       .spacing = param.spacing,
       .axis = Axis::HORIZONTAL,
       .crossAxisAlignment = param.crossAxisAlignment,
-      .children = param.children,
+      .children = std::move(param.children),
   };
   return FlexBox(flexParam);
 }
