@@ -3,16 +3,18 @@
 #include <memory>
 #include <string>
 
+#include "elements/image.hpp"
 #include "elements/text_renderer.hpp"
+
+#include "layout/flex_box.hpp"
 #include "layout/h_flex_box.hpp"
 #include "layout/v_flex_box.hpp"
+
 #include "ui_component.hpp"
 #include "ui_sized.hpp"
 #include "ui_text_field.hpp"
 #include "ui_view.hpp"
 #include "opacity.hpp"
-#include "image.hpp"
-#include "layout/flex_box.hpp"
 
 namespace UI {
 
