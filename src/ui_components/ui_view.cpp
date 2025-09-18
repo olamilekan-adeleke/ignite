@@ -2,12 +2,28 @@
 #include <include/core/SkPaint.h>
 #include <include/core/SkRRect.h>
 #include <include/core/SkRect.h>
+#include "size.hpp"
 
 #include "ui_view.hpp"
 
 View::View(const ViewParams &params) : params_(params) {
   setTapListener(params_.onTap);
   // setTapEnabled(params_.tappable);
+}
+
+UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
+  UISize childSize{0.0f, 0.0f};
+
+  if (params_.child) {
+    auto constraintsShrinked = constraints.shrinkBy(params_.margin.horizonal() + params_.insets.horizonal(),
+                                                    params_.margin.vertical() + params_.insets.vertical());
+    childSize = params_.child->getIntrinsicSize(constraintsShrinked);
+  }
+
+  const float totalWidth = childSize.width + params_.insets.horizonal() + params_.margin.horizonal();
+  const float totalHeight = childSize.height + params_.insets.vertical() + params_.margin.vertical();
+
+  return UISize{totalWidth, totalHeight};
 }
 
 void View::layout(UISize size) {

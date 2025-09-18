@@ -1,6 +1,7 @@
 #pragma once
 
 #include "offset.hpp"
+#include "rect.hpp"
 #include "ui_alignment.hpp"
 
 /// LayoutConstraints
@@ -12,6 +13,24 @@ struct LayoutConstraints {
 struct UISize {
   float width = 0.0f;
   float height = 0.0f;
+
+  UIConstraints toUIConstraints() const noexcept { return {width, height}; }
+
+  UISize combineHorizontal(const UISize &other) const noexcept {
+    return {
+        this->width + other.width,
+        std::max(this->height, other.height),
+    };
+  }
+
+  UISize combineVertical(const UISize &other) const noexcept {
+    return {
+        std::max(this->width, other.width),
+        this->height + other.height,
+    };
+  }
+
+  std::string toString() const noexcept { return fmt::format("UISize{ w: {}, h: {} }", width, height); }
 };
 
 inline constexpr UISize operator+(const UISize &lhs, const UISize &rhs) noexcept {
