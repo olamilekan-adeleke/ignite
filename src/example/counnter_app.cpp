@@ -123,11 +123,9 @@ class CounterComponent : public StatefulComponent {
   // clang-format off
   std::shared_ptr<UIComponent> body() override {
 
-    auto thirdColum = UI::ColumnView({
+    auto thirdColum = UI::VFlexBox({
       .spacing = 10,
       .crossAxisAlignment = CrossAxisAlignment::CENTER,
-      .crossAxisSize = CrossAxisSize::FILL,
-      .mainAxisSize = MainAxisSize::FILL,
       .children = {
         UI::Text("Count 3: ", { 
           .color = Color::Black(), 
