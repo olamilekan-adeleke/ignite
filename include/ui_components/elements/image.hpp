@@ -18,7 +18,11 @@ class UIImage : public UIComponent {
   void layout(UISize size) override;
   void draw(SkCanvas* canvas) override;
 
+  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
+
  protected:
   ImageParams params_;
   sk_sp<SkImage> imageData_;
+
+  void debugFillProperties(std::ostringstream& os, int indent) const override;
 };
