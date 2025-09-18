@@ -11,17 +11,14 @@ class CounterTextWidget : public StatefulComponent {
   // clang-format off
   std::shared_ptr<UIComponent> body() override {
 
-   // return UI::ColumnView({
-    return UI::UIFlexBox({
-      .spacing = 12,
-      .axis = Axis::VERTICAL,
-      .mainAxisAlignment = MainAxisAlignment::START,
+    return UI::VFlexBox({
+      .spacing = 30,
       .crossAxisAlignment = CrossAxisAlignment::CENTER,
       .children = {
             UI::UIView({ 
             .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
             .margin = {.top = 50},
-            .backgroundColor = Color::Green(), 
+            .backgroundColor = Color::Red(), 
             .borderRadius = 5, 
             .onTap = [this](const UITapEvent&) { 
               count_++;
@@ -40,17 +37,15 @@ class CounterTextWidget : public StatefulComponent {
         }),
 
         UI::Text(
-          std::to_string(count_),
+          "Tap Count: " + std::to_string(count_),
           { 
-          .color = Color::Black(), 
+          .color = Color::Magenta(), 
           .fontSize = 32, 
           .weight = FontWeight::Bold, 
         }),
 
-     UI::UIFlexBox({
+     UI::VFlexBox({
       .spacing = 20,
-      .axis = Axis::VERTICAL,
-      .mainAxisAlignment = MainAxisAlignment::START,
       .crossAxisAlignment = CrossAxisAlignment::START,
       .children = {
             UI::UIView({ 
@@ -85,10 +80,8 @@ class CounterTextWidget : public StatefulComponent {
        }
        }),
 
-        UI::UIFlexBox({
+        UI::HFlexBox({
           .spacing = 40,
-          .axis = Axis::HORIZONTAL,
-          .mainAxisAlignment = MainAxisAlignment::START,
           .crossAxisAlignment = CrossAxisAlignment::START,
           .children = {
             UI::UIView({ 
@@ -104,7 +97,7 @@ class CounterTextWidget : public StatefulComponent {
 
           UI::UIView({ 
             .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
-            .backgroundColor = Color::Green(), 
+            .backgroundColor = Color::Red(), 
             .borderRadius = 5, 
             .onTap = [this](const UITapEvent&) { 
               count_--;

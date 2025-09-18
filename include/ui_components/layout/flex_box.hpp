@@ -11,7 +11,6 @@ struct FlexParam {
   float spacing = 0.0f;
   Axis axis = Axis::VERTICAL;
   // MainAxisSize mainAxisSize = MainAxisSize::FIT;
-  MainAxisAlignment mainAxisAlignment = MainAxisAlignment::START;
   CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment::START;
   std::vector<std::shared_ptr<UIComponent>> children;
 };
@@ -24,6 +23,8 @@ class FlexBox : public UIComponent {
 
   void layout(UISize size) override;
   void draw(SkCanvas* canvas) override;
+
+  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
   const std::vector<std::shared_ptr<UIComponent>>& children() const override;
 
@@ -129,33 +130,6 @@ inline float FlexBox::getCrossAxisStartPosition(float availableWidth, float chil
   return 0.0f;
 }
 
-inline float FlexBox::getMainAxisStartPosition(float availableSizeLeft) const {
-  const auto childCount = param_.children.size();
+inline float FlexBox::getMainAxisStartPosition(float availableSizeLeft) const { return 0.0f; };
 
-  switch (param_.mainAxisAlignment) {
-    case MainAxisAlignment::STRETCH:
-    case MainAxisAlignment::START:
-      return 0.0f;
-    case MainAxisAlignment::CENTER:
-      return availableSizeLeft / 2.0f;
-    case MainAxisAlignment::END:
-      return availableSizeLeft;
-  }
-
-  return 0.0f;
-};
-
-inline float FlexBox::getMainAxisSpacing(float availableSizeLeft) const noexcept {
-  const auto spacing = param_.spacing;
-  const auto childCount = param_.children.size();
-
-  switch (param_.mainAxisAlignment) {
-    case MainAxisAlignment::START:
-    case MainAxisAlignment::CENTER:
-    case MainAxisAlignment::END:
-    case MainAxisAlignment::STRETCH:
-      return spacing;
-  }
-
-  return spacing;
-}
+inline float FlexBox::getMainAxisSpacing(float availableSizeLeft) const noexcept { return param_.spacing; }

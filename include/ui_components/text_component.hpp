@@ -4,12 +4,16 @@
 #include <include/core/SkCanvas.h>
 #include <include/core/SkFont.h>
 #include <include/core/SkPaint.h>
+#include <unicode/umachine.h>
+#include <unicode/utf8.h>
 #include <sstream>
 #include <vector>
 
 #include "./color.hpp"
 #include "./size.hpp"
+#include "rect.hpp"
 #include "ui_component.hpp"
+#include "ui_manager.hpp"
 
 struct TextMetrics {
   float ascent = 0.0f;                // Distance from baseline to top of glyphs (positive value)
@@ -92,8 +96,9 @@ class TextRenderer : public UIComponent {
   TextRenderer(const std::string& text, const TextStyle& style = TextStyle());
 
   void layout(UISize size) override;
-
   void draw(SkCanvas* canvas) override;
+
+  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
  private:
   std::string text_;
@@ -109,11 +114,61 @@ class TextRenderer : public UIComponent {
   std::vector<std::string> line_;
 
  protected:
+  SkFont configureFont();
+
   void debugFillProperties(std::ostringstream& os, int indent) const override;
 
   std::vector<std::string> splitByNewlines(const std::string& text);
-
-  std::string breakLongWord(const SkFont& font, const std::string& word, float maxWidth);
-
-  void breakTextIntoLines(const SkFont& font, float maxWidth);
+  std::string breakLongWord(const SkFont& font, const std::string& word, float maxWidth) noexcept;
+  void breakTextIntoLines(const SkFont& font, float maxWidth) noexcept;
+  void breakTextIntoLinesConst(const SkFont& font, float maxWidth) noexcept;
 };
+
+inline SkFont TextRenderer::configureFont() {
+  int skWeight = SkFontStyle::kNormal_Weight;
+  if (style_.weight == FontWeight::Bold) {
+    skWeight = SkFontStyle::kBold_Weight;
+  } else if (style_.weight == FontWeight::Light) {
+    skWeight = SkFontStyle::kLight_Weight;
+  }
+
+  int slant = style_.italic ? SkFontStyle::kItalic_Slant : SkFontStyle::kUpright_Slant;
+  SkFontStyle skStyle(skWeight, SkFontStyle::kNormal_Width, static_cast<SkFontStyle::Slant>(slant));
+
+  SkFont font = UIManager::instance().defaultFont();
+  sk_sp<SkTypeface> typeface = UIManager::instance().fontManager()->matchFamilyStyle(nullptr, skStyle);
+  font.setTypeface(typeface ? std::move(typeface) : SkTypeface::MakeEmpty());
+  font.setSize(style_.fontSize);
+  return font;
+}
+
+inline std::string TextRenderer::breakLongWord(const SkFont& font, const std::string& word, float maxWidth) noexcept {
+  std::string currentChunk;
+  std::string result;
+  UChar32 c;
+  int32_t i = 0;
+
+  while (i < word.length()) {
+    U8_NEXT(word.c_str(), i, word.length(), c);
+    if (c < 0) break;  // Invalid UTF-8
+    std::string testChunk = currentChunk;
+    testChunk.append(word, i - U8_LENGTH(c), U8_LENGTH(c));
+    SkRect bounds;
+    font.measureText(testChunk.c_str(), testChunk.length(), SkTextEncoding::kUTF8, &bounds);
+
+    if (bounds.width() <= maxWidth) {
+      currentChunk = testChunk;
+    } else {
+      if (!currentChunk.empty()) {
+        line_.push_back(currentChunk);
+        SkRect chunkBounds;
+        font.measureText(currentChunk.c_str(), currentChunk.length(), SkTextEncoding::kUTF8, &chunkBounds);
+        text_metrics_.x_max_advance = std::max(text_metrics_.x_max_advance, chunkBounds.width());
+      }
+      currentChunk.clear();
+      currentChunk.append(word, i - U8_LENGTH(c), U8_LENGTH(c));
+    }
+  }
+
+  return currentChunk;
+}
