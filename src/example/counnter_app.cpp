@@ -14,11 +14,9 @@ class CounterTextWidget : public StatefulComponent {
    // return UI::ColumnView({
     return UI::UIFlexBox({
       .spacing = 12,
-      .flexAxis = Axis::VERTICAL,
-      // .mainAxisAlignment = MainAxisAlignment::CENTER,
-      // .crossAxisAlignment = CrossAxisAlignment::CENTER,
-      // .crossAxisSize = CrossAxisSize::FILL,
-      // .mainAxisSize = MainAxisSize::FILL,
+      .axis = Axis::VERTICAL,
+      .mainAxisAlignment = MainAxisAlignment::START,
+      .crossAxisAlignment = CrossAxisAlignment::CENTER,
       .children = {
             UI::UIView({ 
             .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
@@ -49,7 +47,12 @@ class CounterTextWidget : public StatefulComponent {
           .weight = FontWeight::Bold, 
         }),
 
-
+     UI::UIFlexBox({
+      .spacing = 20,
+      .axis = Axis::VERTICAL,
+      .mainAxisAlignment = MainAxisAlignment::START,
+      .crossAxisAlignment = CrossAxisAlignment::START,
+      .children = {
             UI::UIView({ 
             .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
             .backgroundColor = Color::Green(), 
@@ -61,10 +64,32 @@ class CounterTextWidget : public StatefulComponent {
             .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
           }), 
 
+
+            UI::UIView({ 
+            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+            .backgroundColor = Color::Green(), 
+            .borderRadius = 5, 
+            .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+          }), 
+
+            UI::UIView({ 
+            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+            .backgroundColor = Color::Green(), 
+            .borderRadius = 5, 
+            .onTap = [this](const UITapEvent&) { 
+              count_++;
+              markDirty();
+            }, 
+            .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+          }), 
+       }
+       }),
+
         UI::UIFlexBox({
           .spacing = 40,
-          .flexAxis = Axis::HORIZONTAL,
-          .mainAxisSize = MainAxisSize::FIT,
+          .axis = Axis::HORIZONTAL,
+          .mainAxisAlignment = MainAxisAlignment::START,
+          .crossAxisAlignment = CrossAxisAlignment::START,
           .children = {
             UI::UIView({ 
             .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
@@ -152,7 +177,6 @@ class CounterComponent : public StatefulComponent {
     // });
 
     auto firstColum = std::make_shared<CounterTextWidget>();
-
     return firstColum;
 
     // return UI::UIView({ 
