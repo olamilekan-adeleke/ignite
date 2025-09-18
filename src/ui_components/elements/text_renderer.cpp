@@ -9,12 +9,11 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
-#include "text_component.hpp"
-#include "size.hpp"
-
 #include <unicode/uchar.h>
 #include <unicode/utf8.h>
+
+#include "size.hpp"
+#include "elements/text_renderer.hpp"
 
 inline bool isUnicodeWhitespace(UChar32 c) {
   return c == 0x0020 ||  // Space

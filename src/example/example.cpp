@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include "logger.hpp"
-#include "text_component.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
 #include "ui_component.hpp"
@@ -33,7 +32,7 @@ struct TodoItem {
 inline const std::vector<TodoItem> myTodoList = TodoItem::todoItems();
 
 // clang-format off
-inline const auto headerView = UI::RowView({
+inline const auto headerView = UI::HFlexBox({
   .spacing = 11,
   .crossAxisAlignment = CrossAxisAlignment::CENTER,
   .children = {
@@ -70,7 +69,7 @@ inline auto buildTodoItem(const TodoItem& item) {
     .child = UI::SizedView({
       .size = {.width = 432},
       .align = UIAlignment::CenterLeft,
-      .child = UI::RowView({
+      .child = UI::HFlexBox({
         // .mainAxisAlignment = MainAxisAlignment::SPACE_BETWEEN,
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .children = {
@@ -79,7 +78,7 @@ inline auto buildTodoItem(const TodoItem& item) {
             .fontSize = 16,
             .weight = FontWeight::Normal,
           }),
-          UI::RowView({
+          UI::HFlexBox({
             .spacing = 8,
             .children = {
               checkBox,
@@ -116,7 +115,7 @@ inline auto bodyTodoListItems() {
     }
   }
 
-  return UI::ColumnView({
+  return UI::VFlexBox({
     .crossAxisAlignment = CrossAxisAlignment::START,
     .children = {
       UI::UIView({
@@ -130,7 +129,7 @@ inline auto bodyTodoListItems() {
       }),
       }),
       UI::SizedView({.size = {.height = 18}}),
-      UI::ColumnView({
+      UI::VFlexBox({
         .spacing = 16,
         .crossAxisAlignment = CrossAxisAlignment::START,
         .children = std::move(children),
@@ -147,7 +146,7 @@ inline auto bodySuccessListItems() {
     };
   }
 
-  return UI::ColumnView({
+  return UI::VFlexBox({
     .crossAxisAlignment = CrossAxisAlignment::START,
     .children = {
       UI::Text("Done - " + std::to_string(children.size()), {
@@ -156,7 +155,7 @@ inline auto bodySuccessListItems() {
         .weight = FontWeight::Normal,
       }),
       UI::SizedView({.size = {.height = 18}}),
-      UI::ColumnView({
+      UI::VFlexBox({
         .spacing = 16,
         .crossAxisAlignment = CrossAxisAlignment::START,
         .children = std::move(children),
@@ -173,7 +172,7 @@ inline const auto rootApp = UI::UIView({
     .backgroundColor = Color(0x1D1825).withAlpha(255),
     .borderRadius = 20.0f,
     .antiAlias = true,
-    .child = UI::ColumnView({
+    .child = UI::VFlexBox({
       .children = {
         headerView,
         UI::SizedView({.size = {.height = 50}}),

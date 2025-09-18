@@ -3,11 +3,11 @@
 #include <memory>
 #include <string>
 
+#include "elements/text_renderer.hpp"
 #include "layout/h_flex_box.hpp"
 #include "layout/v_flex_box.hpp"
 #include "ui_component.hpp"
 #include "ui_sized.hpp"
-#include "text_component.hpp"
 #include "ui_text_field.hpp"
 #include "ui_view.hpp"
 #include "opacity.hpp"
