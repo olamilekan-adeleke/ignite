@@ -40,6 +40,10 @@ void TextRenderer::layout(UISize size) {
   SkFontMetrics fontMetrics;
   font_.getMetrics(&fontMetrics);
 
+  // Calculate visual center offset
+  float capHeight = fontMetrics.fCapHeight > 0 ? fontMetrics.fCapHeight : (-fontMetrics.fAscent * 0.7f);
+  float xHeight = fontMetrics.fXHeight > 0 ? fontMetrics.fXHeight : (-fontMetrics.fAscent * 0.5f);
+
   float totalLineHeight = -fontMetrics.fAscent + fontMetrics.fDescent + fontMetrics.fLeading;
   bounds_.width = text_metrics_.x_max_advance;
   bounds_.height = totalLineHeight * static_cast<float>(line_.size());
@@ -47,6 +51,7 @@ void TextRenderer::layout(UISize size) {
   text_metrics_.ascent = -fontMetrics.fAscent;
   text_metrics_.descent = fontMetrics.fDescent;
   text_metrics_.leading = fontMetrics.fLeading;
+  text_metrics_.visual_center_offset = (capHeight + xHeight) / 2.0f;
 
   SkRect singleTextBounds;
   font.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, &singleTextBounds);
@@ -59,13 +64,16 @@ void TextRenderer::layout(UISize size) {
 void TextRenderer::draw(SkCanvas *canvas) {
   if (line_.empty()) return;
 
-  float baselineY = bounds_.y + text_metrics_.ascent;
   float lineHeight = text_metrics_.ascent + text_metrics_.descent + text_metrics_.leading;
+  float totalTextHeight = lineHeight * line_.size();
+
+  float startY = bounds_.y + (bounds_.height - totalTextHeight) / 2.0f + text_metrics_.ascent;
   float drawX = bounds_.x - text_bounds_offset_x_;
+  float currentY = startY;
 
   for (const auto &line : line_) {
-    canvas->drawSimpleText(line.c_str(), line.length(), SkTextEncoding::kUTF8, drawX, baselineY, font_, paint_);
-    baselineY += lineHeight;
+    canvas->drawSimpleText(line.c_str(), line.length(), SkTextEncoding::kUTF8, drawX, currentY, font_, paint_);
+    currentY += lineHeight;
   }
 
   UIComponent::draw(canvas);
