@@ -8,37 +8,70 @@
 #include <include/core/SkTextBlob.h>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "text_component.hpp"
-#include "ui_manager.hpp"
+#include "size.hpp"
+
+#include <unicode/uchar.h>
+#include <unicode/utf8.h>
+
+inline bool isUnicodeWhitespace(UChar32 c) {
+  return c == 0x0020 ||  // Space
+         c == 0x0009 ||  // Tab
+         c == 0x000A ||  // Line feed
+         c == 0x000D ||  // Carriage return
+         c == 0x00A0 ||  // Non-breaking space
+         c == 0x1680 ||  // Ogham space mark
+         c == 0x2000 ||  // En quad
+         c == 0x2001 ||  // Em quad
+         c == 0x2002 ||  // En space
+         c == 0x2003 ||  // Em space
+         c == 0x2004 ||  // Three-per-em space
+         c == 0x2005 ||  // Four-per-em space
+         c == 0x2006 ||  // Six-per-em space
+         c == 0x2007 ||  // Figure space
+         c == 0x2008 ||  // Punctuation space
+         c == 0x2009 ||  // Thin space
+         c == 0x200A ||  // Hair space
+         c == 0x202F ||  // Narrow no-break space
+         c == 0x205F ||  // Medium mathematical space
+         c == 0x3000;    // Ideographic space
+}
 
 TextRenderer::TextRenderer(const std::string &text, const TextStyle &style) : text_(text), style_(style) {
   paint_.setColor(style_.color);
   paint_.setAntiAlias(true);
 }
 
+UISize TextRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
+  UISize intrinsicSize = {0, 0};
+  SkFont font = configureFont();
+  font_ = font;
+
+  breakTextIntoLinesConst(font, constraints.minWidth);
+
+  SkFontMetrics fontMetrics;
+  font.getMetrics(&fontMetrics);
+
+  float totalLineHeight = -fontMetrics.fAscent + fontMetrics.fDescent + fontMetrics.fLeading;
+  intrinsicSize.width = text_metrics_.x_max_advance;
+  intrinsicSize.height = totalLineHeight * static_cast<float>(line_.size());
+
+  return intrinsicSize;
+}
+
 void TextRenderer::layout(UISize size) {
-  int skWeight = SkFontStyle::kNormal_Weight;
-  if (style_.weight == FontWeight::Bold) {
-    skWeight = SkFontStyle::kBold_Weight;
-  } else if (style_.weight == FontWeight::Light) {
-    skWeight = SkFontStyle::kLight_Weight;
-  }
-
-  int slant = style_.italic ? SkFontStyle::kItalic_Slant : SkFontStyle::kUpright_Slant;
-  SkFontStyle style(skWeight, SkFontStyle::kNormal_Width, (SkFontStyle::Slant)slant);
-
-  SkFont font = UIManager::instance().defaultFont();
-  sk_sp<SkTypeface> typeface = UIManager::instance().fontManager()->matchFamilyStyle(nullptr, style);
-  font.setTypeface(typeface ? std::move(typeface) : SkTypeface::MakeEmpty());
-  font.setSize(style_.fontSize);
-
+  SkFont font = configureFont();
   font_ = font;
 
   breakTextIntoLines(font, size.width);
 
   SkFontMetrics fontMetrics;
-  font_.getMetrics(&fontMetrics);
+  font.getMetrics(&fontMetrics);
+
+  float capHeight = fontMetrics.fCapHeight > 0 ? fontMetrics.fCapHeight : (-fontMetrics.fAscent * 0.7f);
+  float xHeight = fontMetrics.fXHeight > 0 ? fontMetrics.fXHeight : (-fontMetrics.fAscent * 0.5f);
 
   float totalLineHeight = -fontMetrics.fAscent + fontMetrics.fDescent + fontMetrics.fLeading;
   bounds_.width = text_metrics_.x_max_advance;
@@ -47,50 +80,102 @@ void TextRenderer::layout(UISize size) {
   text_metrics_.ascent = -fontMetrics.fAscent;
   text_metrics_.descent = fontMetrics.fDescent;
   text_metrics_.leading = fontMetrics.fLeading;
+  text_metrics_.visual_center_offset = (capHeight + xHeight) / 2.0f;
 
   SkRect singleTextBounds;
   font.measureText(text_.c_str(), text_.length(), SkTextEncoding::kUTF8, &singleTextBounds);
   text_bounds_ = singleTextBounds;
   text_bounds_offset_x_ = singleTextBounds.fLeft;
   text_bounds_offset_y_ = -fontMetrics.fTop;
-  // text_bounds_offset_y_ = -fontMetrics.fAscent;
 }
 
 void TextRenderer::draw(SkCanvas *canvas) {
   if (line_.empty()) return;
 
-  float baselineY = bounds_.y + text_metrics_.ascent;
   float lineHeight = text_metrics_.ascent + text_metrics_.descent + text_metrics_.leading;
+  float totalTextHeight = lineHeight * line_.size();
+
+  float startY = bounds_.y + (bounds_.height - totalTextHeight) / 2.0f + text_metrics_.ascent;
   float drawX = bounds_.x - text_bounds_offset_x_;
+  float currentY = startY;
 
   for (const auto &line : line_) {
-    canvas->drawSimpleText(line.c_str(), line.length(), SkTextEncoding::kUTF8, drawX, baselineY, font_, paint_);
-    baselineY += lineHeight;
+    canvas->drawSimpleText(line.c_str(), line.length(), SkTextEncoding::kUTF8, drawX, currentY, font_, paint_);
+    currentY += lineHeight;
   }
 
   UIComponent::draw(canvas);
 }
 
-void TextRenderer::breakTextIntoLines(const SkFont &font, float maxWidth) {
+inline std::vector<std::string> TextRenderer::splitByNewlines(const std::string &text) {
+  std::vector<std::string> paragraphs;
+  std::string currentParagraph;
+  UChar32 c;
+  int32_t i = 0;
+
+  while (i < text.length()) {
+    U8_NEXT(text.c_str(), i, text.length(), c);  // Get next UTF-8 character
+    if (c < 0) break;                            // Invalid UTF-8, stop processing
+    if (c == '\n') {
+      paragraphs.push_back(currentParagraph);
+      currentParagraph.clear();
+    } else if (c == '\r') {
+      paragraphs.push_back(currentParagraph);
+      currentParagraph.clear();
+      // Handle \r\n
+      if (i < text.length() && text[i] == '\n') {
+        ++i;
+      }
+    } else {
+      currentParagraph.append(text, i - U8_LENGTH(c), U8_LENGTH(c));
+    }
+  }
+  if (!currentParagraph.empty()) {
+    paragraphs.push_back(currentParagraph);
+  }
+  return paragraphs;
+}
+
+inline std::vector<std::string> splitIntoWords(const std::string &paragraph) {
+  std::vector<std::string> words;
+  std::string currentWord;
+  UChar32 c;
+  int32_t i = 0;
+
+  while (i < paragraph.length()) {
+    U8_NEXT(paragraph.c_str(), i, paragraph.length(), c);
+    if (c < 0) {
+      fmt::print("Invalid UTF-8: {}", c);
+      break;  // Invalid UTF-8
+    }
+    if (isUnicodeWhitespace(c)) {
+      if (!currentWord.empty()) {
+        words.push_back(currentWord);
+        currentWord.clear();
+      }
+    } else {
+      currentWord.append(paragraph, i - U8_LENGTH(c), U8_LENGTH(c));
+    }
+  }
+  if (!currentWord.empty()) {
+    words.push_back(currentWord);
+  }
+  return words;
+}
+
+void TextRenderer::breakTextIntoLinesConst(const SkFont &font, float maxWidth) noexcept {
   line_.clear();
   text_metrics_.x_max_advance = 0.0f;
 
-  // First, split text by explicit line breaks (\n)
   std::vector<std::string> paragraphs = splitByNewlines(text_);
-
   for (const auto &paragraph : paragraphs) {
     if (paragraph.empty()) {
-      // Handle empty lines (consecutive \n characters)
       line_.push_back("");
       continue;
     }
 
-    // Process each paragraph for word wrapping
     std::string currentLine;
-    std::istringstream iss(paragraph);
-    std::string word;
-
-    while (iss >> word) {
+    for (const auto &word : splitIntoWords(paragraph)) {
       std::string testLine = currentLine.empty() ? word : currentLine + " " + word;
       SkRect testBounds;
       font.measureText(testLine.c_str(), testLine.length(), SkTextEncoding::kUTF8, &testBounds);
@@ -104,18 +189,12 @@ void TextRenderer::breakTextIntoLines(const SkFont &font, float maxWidth) {
           font.measureText(currentLine.c_str(), currentLine.length(), SkTextEncoding::kUTF8, &currentLineBounds);
           text_metrics_.x_max_advance = std::max(text_metrics_.x_max_advance, currentLineBounds.width());
         }
-
         currentLine = word;
-
-        SkRect wordBounds;
-        font.measureText(word.c_str(), word.length(), SkTextEncoding::kUTF8, &wordBounds);
-        if (wordBounds.width() > maxWidth) {
+        if (font.measureText(word.c_str(), word.length(), SkTextEncoding::kUTF8, nullptr) > maxWidth) {
           currentLine = breakLongWord(font, word, maxWidth);
         }
       }
     }
-
-    // Add the last line of this paragraph if it exists
     if (!currentLine.empty()) {
       line_.push_back(currentLine);
       SkRect lastLineBounds;
@@ -124,61 +203,13 @@ void TextRenderer::breakTextIntoLines(const SkFont &font, float maxWidth) {
     }
   }
 
-  // Ensure we have a minimum width
   if (text_metrics_.x_max_advance < 1.0f) {
     text_metrics_.x_max_advance = 1.0f;
   }
 }
 
-std::vector<std::string> TextRenderer::splitByNewlines(const std::string &text) {
-  std::vector<std::string> paragraphs;
-  std::string currentParagraph;
-
-  for (size_t i = 0; i < text.length(); ++i) {
-    if (text[i] == '\n') {
-      paragraphs.push_back(currentParagraph);
-      currentParagraph.clear();
-    } else if (text[i] == '\r') {
-      // Handle Windows-style line endings (\r\n) or Mac-style (\r)
-      paragraphs.push_back(currentParagraph);
-      currentParagraph.clear();
-      // Skip the \n if it follows \r
-      if (i + 1 < text.length() && text[i + 1] == '\n') {
-        ++i;
-      }
-    } else {
-      currentParagraph += text[i];
-    }
-  }
-
-  paragraphs.push_back(currentParagraph);
-  return paragraphs;
-}
-
-std::string TextRenderer::breakLongWord(const SkFont &font, const std::string &word, float maxWidth) {
-  std::string result;
-  std::string currentChunk;
-
-  // UTF-8 safe character iteration would be better, but this is a simple approach
-  for (size_t i = 0; i < word.length(); ++i) {
-    std::string testChunk = currentChunk + word[i];
-    SkRect bounds;
-    font.measureText(testChunk.c_str(), testChunk.length(), SkTextEncoding::kUTF8, &bounds);
-
-    if (bounds.width() <= maxWidth) {
-      currentChunk = testChunk;
-    } else {
-      if (!currentChunk.empty()) {
-        line_.push_back(currentChunk);
-        SkRect chunkBounds;
-        font.measureText(currentChunk.c_str(), currentChunk.length(), SkTextEncoding::kUTF8, &chunkBounds);
-        text_metrics_.x_max_advance = std::max(text_metrics_.x_max_advance, chunkBounds.width());
-      }
-      currentChunk = word[i];
-    }
-  }
-
-  return currentChunk;
+void TextRenderer::breakTextIntoLines(const SkFont &font, float maxWidth) noexcept {
+  breakTextIntoLinesConst(font, maxWidth);
 }
 
 void TextRenderer::debugFillProperties(std::ostringstream &os, int indent) const {

@@ -11,19 +11,14 @@ class CounterTextWidget : public StatefulComponent {
   // clang-format off
   std::shared_ptr<UIComponent> body() override {
 
-   // return UI::ColumnView({
-    return UI::UIFlexBox({
-      .spacing = 12,
-      .flexAxis = Axis::VERTICAL,
-      // .mainAxisAlignment = MainAxisAlignment::CENTER,
-      // .crossAxisAlignment = CrossAxisAlignment::CENTER,
-      // .crossAxisSize = CrossAxisSize::FILL,
-      // .mainAxisSize = MainAxisSize::FILL,
+    return UI::VFlexBox({
+      .spacing = 30,
+      .crossAxisAlignment = CrossAxisAlignment::CENTER,
       .children = {
             UI::UIView({ 
             .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
             .margin = {.top = 50},
-            .backgroundColor = Color::Green(), 
+            .backgroundColor = Color::Red(), 
             .borderRadius = 5, 
             .onTap = [this](const UITapEvent&) { 
               count_++;
@@ -42,14 +37,17 @@ class CounterTextWidget : public StatefulComponent {
         }),
 
         UI::Text(
-          std::to_string(count_),
+          "Tap Count: " + std::to_string(count_),
           { 
-          .color = Color::Black(), 
+          .color = Color::Magenta(), 
           .fontSize = 32, 
           .weight = FontWeight::Bold, 
         }),
 
-
+     UI::VFlexBox({
+      .spacing = 20,
+      .crossAxisAlignment = CrossAxisAlignment::START,
+      .children = {
             UI::UIView({ 
             .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
             .backgroundColor = Color::Green(), 
@@ -61,10 +59,30 @@ class CounterTextWidget : public StatefulComponent {
             .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
           }), 
 
-        UI::UIFlexBox({
+
+            UI::UIView({ 
+            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+            .backgroundColor = Color::Green(), 
+            .borderRadius = 5, 
+            .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+          }), 
+
+            UI::UIView({ 
+            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+            .backgroundColor = Color::Green(), 
+            .borderRadius = 5, 
+            .onTap = [this](const UITapEvent&) { 
+              count_++;
+              markDirty();
+            }, 
+            .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+          }), 
+       }
+       }),
+
+        UI::HFlexBox({
           .spacing = 40,
-          .flexAxis = Axis::HORIZONTAL,
-          .mainAxisSize = MainAxisSize::FIT,
+          .crossAxisAlignment = CrossAxisAlignment::START,
           .children = {
             UI::UIView({ 
             .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
@@ -79,7 +97,7 @@ class CounterTextWidget : public StatefulComponent {
 
           UI::UIView({ 
             .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
-            .backgroundColor = Color::Green(), 
+            .backgroundColor = Color::Red(), 
             .borderRadius = 5, 
             .onTap = [this](const UITapEvent&) { 
               count_--;
@@ -152,7 +170,6 @@ class CounterComponent : public StatefulComponent {
     // });
 
     auto firstColum = std::make_shared<CounterTextWidget>();
-
     return firstColum;
 
     // return UI::UIView({ 

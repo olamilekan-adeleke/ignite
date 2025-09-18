@@ -4,6 +4,8 @@
 #include <string>
 
 #include "column_component.hpp"
+#include "layout/h_flex_box.hpp"
+#include "layout/v_flex_box.hpp"
 #include "ui_component.hpp"
 #include "ui_sized.hpp"
 #include "row_component.hpp"
@@ -41,4 +43,12 @@ inline std::shared_ptr<UITextField> UITextFieldView(const UITextFieldParams &par
 }
 
 inline std::shared_ptr<FlexBox> UIFlexBox(const FlexParam &params = {}) { return std::make_shared<FlexBox>(params); }
+
+inline std::shared_ptr<FlexBox> HFlexBox(const HFlexParam &params = {}) {
+  return std::make_shared<FlexBox>(HFlexBox::create(params));
+}
+
+inline std::shared_ptr<FlexBox> VFlexBox(const VFlexParam &params = {}) {
+  return std::make_shared<FlexBox>(VFlexBox::create(params));
+}
 }  // namespace UI

@@ -8,7 +8,7 @@ enum class CrossAxisSize : std::uint8_t { FIT, FILL };
 
 enum class MainAxisSize : std::uint8_t { FIT, FILL };
 
-enum class MainAxisAlignment : std::uint8_t { START, CENTER, END, SPACE_BETWEEN, SPACE_AROUND, SPACE_EVENLY };
+enum class MainAxisAlignment : std::uint8_t { START, CENTER, END, STRETCH };
 
 enum class CrossAxisAlignment : std::uint8_t { START, CENTER, END };
 

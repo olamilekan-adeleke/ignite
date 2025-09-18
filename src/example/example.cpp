@@ -71,7 +71,7 @@ inline auto buildTodoItem(const TodoItem& item) {
       .size = {.width = 432},
       .align = UIAlignment::CenterLeft,
       .child = UI::RowView({
-        .mainAxisAlignment = MainAxisAlignment::SPACE_BETWEEN,
+        // .mainAxisAlignment = MainAxisAlignment::SPACE_BETWEEN,
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .children = {
           UI::Text(item.title, {

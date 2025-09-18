@@ -46,11 +46,11 @@ void Row::layout(UISize size) {
     case MainAxisAlignment::START:
       currentX = 0.0f;
       break;
-    case MainAxisAlignment::SPACE_BETWEEN:
-      if (children_.size() > 1) {
-        spaceBetween = (size.width - totalChildWidth) / (children_.size() - 1);
-      }
-      currentX = 0.0f;
+      // case MainAxisAlignment::START:
+      //   if (children_.size() > 1) {
+      //     spaceBetween = (size.width - totalChildWidth) / (children_.size() - 1);
+      //   }
+      //   currentX = 0.0f;
       break;
   }
 
@@ -66,13 +66,13 @@ void Row::layout(UISize size) {
     // Add spacing
     if (mainAxisAlignment_ == MainAxisAlignment::START && spacing_ > 0 && index + 1 != children_.size()) {
       currentX += spacing_;
-    } else if (mainAxisAlignment_ == MainAxisAlignment::SPACE_BETWEEN && index + 1 != children_.size()) {
+      // } else if (mainAxisAlignment_ == MainAxisAlignment::SPACE_BETWEEN && index + 1 != children_.size()) {
       currentX += spaceBetween;
     }
   }
 
   // Set final width based on alignment
-  if (mainAxisAlignment_ == MainAxisAlignment::SPACE_BETWEEN && !children_.empty()) {
+  if (mainAxisAlignment_ == MainAxisAlignment::START && !children_.empty()) {
     bounds_.width = size.width;
   } else {
     bounds_.width = currentX;

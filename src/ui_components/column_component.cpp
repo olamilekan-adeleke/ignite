@@ -80,7 +80,7 @@ void Column::layout(UISize size) {
 
   float availableSpace = bounds_.height - totalContentHeight;
 
-  float startY = getMainAxisStartPosition(mainAxisAlignment_, availableSpace, totalContentHeight, children_.size());
+  float startY = getMainAxisStartPosition(mainAxisAlignment_, availableSpace, children_.size());
   float dynamicSpacing = getSpaceBetweenChildren(mainAxisAlignment_, availableSpace, children_.size(), spacing_);
 
   // Third pass: Position all children

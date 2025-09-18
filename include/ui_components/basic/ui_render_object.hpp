@@ -15,6 +15,9 @@ class UIRenderObject : public Diagnosable {
   virtual void layout(UISize availableSize) = 0;
   virtual void draw(SkCanvas* canvas) = 0;
 
+  // New intrinsic size method - returns preferred size without constraints
+  virtual UISize getIntrinsicSize(UIConstraints constraints) noexcept { return UISize{0.0f, 0.0f}; }
+
   UIRect getBounds() const { return bounds_; }
   void setPosition(float x, float y) {
     bounds_.x = x;
