@@ -109,29 +109,25 @@ void TextRenderer::draw(SkCanvas *canvas) {
 inline std::vector<std::string> TextRenderer::splitByNewlines(const std::string &text) {
   std::vector<std::string> paragraphs;
   std::string currentParagraph;
-  UChar32 c;
-  int32_t i = 0;
 
-  while (i < text.length()) {
-    U8_NEXT(text.c_str(), i, text.length(), c);  // Get next UTF-8 character
-    if (c < 0) break;                            // Invalid UTF-8, stop processing
-    if (c == '\n') {
+  for (size_t i = 0; i < text.length(); ++i) {
+    if (text[i] == '\n') {
       paragraphs.push_back(currentParagraph);
       currentParagraph.clear();
-    } else if (c == '\r') {
+    } else if (text[i] == '\r') {
+      // Handle Windows-style line endings (\r\n) or Mac-style (\r)
       paragraphs.push_back(currentParagraph);
       currentParagraph.clear();
-      // Handle \r\n
-      if (i < text.length() && text[i] == '\n') {
+      // Skip the \n if it follows \r
+      if (i + 1 < text.length() && text[i + 1] == '\n') {
         ++i;
       }
     } else {
-      currentParagraph.append(text, i - U8_LENGTH(c), U8_LENGTH(c));
+      currentParagraph += text[i];
     }
   }
-  if (!currentParagraph.empty()) {
-    paragraphs.push_back(currentParagraph);
-  }
+
+  paragraphs.push_back(currentParagraph);
   return paragraphs;
 }
 
@@ -166,15 +162,22 @@ void TextRenderer::breakTextIntoLinesConst(const SkFont &font, float maxWidth) n
   line_.clear();
   text_metrics_.x_max_advance = 0.0f;
 
+  // First, split text by explicit line breaks (\n)
   std::vector<std::string> paragraphs = splitByNewlines(text_);
+
   for (const auto &paragraph : paragraphs) {
     if (paragraph.empty()) {
+      // Handle empty lines (consecutive \n characters)
       line_.push_back("");
       continue;
     }
 
+    // Process each paragraph for word wrapping
     std::string currentLine;
-    for (const auto &word : splitIntoWords(paragraph)) {
+    std::istringstream iss(paragraph);
+    std::string word;
+
+    while (iss >> word) {
       std::string testLine = currentLine.empty() ? word : currentLine + " " + word;
       SkRect testBounds;
       font.measureText(testLine.c_str(), testLine.length(), SkTextEncoding::kUTF8, &testBounds);
@@ -188,22 +191,24 @@ void TextRenderer::breakTextIntoLinesConst(const SkFont &font, float maxWidth) n
           font.measureText(currentLine.c_str(), currentLine.length(), SkTextEncoding::kUTF8, &currentLineBounds);
           text_metrics_.x_max_advance = std::max(text_metrics_.x_max_advance, currentLineBounds.width());
         }
+
         currentLine = word;
-        if (font.measureText(word.c_str(), word.length(), SkTextEncoding::kUTF8, nullptr) > maxWidth) {
+
+        SkRect wordBounds;
+        font.measureText(word.c_str(), word.length(), SkTextEncoding::kUTF8, &wordBounds);
+        if (wordBounds.width() > maxWidth) {
           currentLine = breakLongWord(font, word, maxWidth);
         }
       }
     }
+
+    // Add the last line of this paragraph if it exists
     if (!currentLine.empty()) {
       line_.push_back(currentLine);
       SkRect lastLineBounds;
       font.measureText(currentLine.c_str(), currentLine.length(), SkTextEncoding::kUTF8, &lastLineBounds);
       text_metrics_.x_max_advance = std::max(text_metrics_.x_max_advance, lastLineBounds.width());
     }
-  }
-
-  if (text_metrics_.x_max_advance < 1.0f) {
-    text_metrics_.x_max_advance = 1.0f;
   }
 }
 
