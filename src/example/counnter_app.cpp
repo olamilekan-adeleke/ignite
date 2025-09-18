@@ -1,4 +1,5 @@
 #include <memory>
+#include "layout/flex_box.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
 #include "ui_component.hpp"
@@ -12,7 +13,7 @@ class CounterTextWidget : public StatefulComponent {
   std::shared_ptr<UIComponent> body() override {
 
     return UI::VFlexBox({
-      .spacing = 30,
+      .spacing = 10,
       .crossAxisAlignment = CrossAxisAlignment::CENTER,
       .children = {
             UI::UIView({ 
@@ -28,13 +29,13 @@ class CounterTextWidget : public StatefulComponent {
           }), 
 
         UI::Text(
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n\nIt has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. -> "
-                 + std::to_string(count_),
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
           { 
           .color = Color::Black(), 
           .fontSize = 32, 
           .weight = FontWeight::Bold, 
         }),
+
 
         UI::Text(
           "Tap Count: " + std::to_string(count_),
@@ -44,7 +45,33 @@ class CounterTextWidget : public StatefulComponent {
           .weight = FontWeight::Bold, 
         }),
 
-     UI::VFlexBox({
+        UI::UIFlexBox({
+          .spacing = 20,
+          .axis = Axis::HORIZONTAL,
+          .children = {
+
+        UI::UIImageView({
+          .path = "assets/test_one.jpeg",
+          .width = 320,
+          .height = 320,
+        }),
+
+        UI::OpacityView({
+            .opacity = 0.3f,
+            .child = UI::UIView({ 
+                .borderRadius = 320.0 / 2.0f,
+                .child = UI::UIImageView({
+                .path = "assets/user_one.jpeg",
+                .width = 320,
+                .height = 320,
+              }),
+            }),
+        }),
+
+        }
+        }),
+
+     UI::UIFlexBox({
       .spacing = 20,
       .crossAxisAlignment = CrossAxisAlignment::START,
       .children = {
@@ -80,8 +107,10 @@ class CounterTextWidget : public StatefulComponent {
        }
        }),
 
-        UI::HFlexBox({
+        UI::UIFlexBox({
+        // UI::HFlexBox({
           .spacing = 40,
+          .axis = Axis::HORIZONTAL,
           .crossAxisAlignment = CrossAxisAlignment::START,
           .children = {
             UI::UIView({ 

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstdint>
+#include <ostream>
 #include <utility>
 
 enum class CrossAxisSize : std::uint8_t { FIT, FILL };
@@ -11,6 +12,21 @@ enum class MainAxisSize : std::uint8_t { FIT, FILL };
 enum class MainAxisAlignment : std::uint8_t { START, CENTER, END, STRETCH };
 
 enum class CrossAxisAlignment : std::uint8_t { START, CENTER, END };
+
+inline std::ostream& operator<<(std::ostream& os, const CrossAxisAlignment& alignment) {
+  switch (alignment) {
+    case CrossAxisAlignment::START:
+      os << "CrossAxisAlignment::START";
+      break;
+    case CrossAxisAlignment::CENTER:
+      os << "CrossAxisAlignment::CENTER";
+      break;
+    case CrossAxisAlignment::END:
+      os << "CrossAxisAlignment::END";
+      break;
+  }
+  return os;
+}
 
 enum class UIAlignment : std::uint8_t {
   TopLeft,

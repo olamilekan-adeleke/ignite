@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sstream>
+#include "size.hpp"
 #include "ui_component.hpp"
 
 struct OpacityParams {
@@ -17,6 +19,15 @@ class Opacity : public UIComponent {
   void layout(UISize size) override;
   void draw(SkCanvas* canvas) override;
 
+  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
+
  protected:
   OpacityParams param_;
+
+  void debugFillProperties(std::ostringstream& os, int indent) const override;
 };
+
+inline void Opacity::debugFillProperties(std::ostringstream& os, int indent) const {
+  UIComponent::debugFillProperties(os, indent);
+  os << ", opacity: " << param_.opacity;
+}

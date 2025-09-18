@@ -27,7 +27,10 @@ class UITapHandler {
     return false;
   }
 
-  void setTapListener(TapListener listener) { tapListener_ = std::move(listener); }
+  void setTapListener(TapListener listener) {
+    if (!listener) return;
+    tapListener_ = std::move(listener);
+  }
 
   void clearTapListener() { tapListener_.reset(); }
 

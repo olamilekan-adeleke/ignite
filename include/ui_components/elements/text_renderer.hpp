@@ -172,3 +172,12 @@ inline std::string TextRenderer::breakLongWord(const SkFont& font, const std::st
 
   return currentChunk;
 }
+
+inline void TextRenderer::debugFillProperties(std::ostringstream& os, int indent) const {
+  UIComponent::debugFillProperties(os, indent);
+  std::string pad(indent, ' ');
+  os << pad << "text: " << fmt::format("\"{}\"", text_) << "\n";
+  os << pad << "style: " << style_.toString() << "\n";
+  os << pad << "max_advance: " << text_metrics_.x_max_advance << "\n";
+  os << pad << "line_count: " << line_.size() << "\n";
+}

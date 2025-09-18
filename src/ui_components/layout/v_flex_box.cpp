@@ -6,7 +6,7 @@ FlexBox VFlexBox::create(const VFlexParam& param) {
       .spacing = param.spacing,
       .axis = Axis::VERTICAL,
       .crossAxisAlignment = param.crossAxisAlignment,
-      .children = param.children,
+      .children = std::move(param.children),
   };
   return FlexBox(flexParam);
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sstream>
 #include <fmt/base.h>
 #include "rect.hpp"
 #include "size.hpp"
@@ -33,6 +34,8 @@ class FlexBox : public UIComponent {
 
  protected:
   virtual bool processChildTaps(const UITapEvent& event) override;
+
+  void debugFillProperties(std::ostringstream& os, int indent) const override;
 
   float getChildMainAxisSize(UIRect bound) const;
   float getChildCrossAxisSize(UIRect bound) const;
@@ -133,3 +136,12 @@ inline float FlexBox::getCrossAxisStartPosition(float availableWidth, float chil
 inline float FlexBox::getMainAxisStartPosition(float availableSizeLeft) const { return 0.0f; };
 
 inline float FlexBox::getMainAxisSpacing(float availableSizeLeft) const noexcept { return param_.spacing; }
+
+inline void FlexBox::debugFillProperties(std::ostringstream& os, int indent) const {
+  UIComponent::debugFillProperties(os, indent);
+  std::string pad(indent, ' ');
+  os << pad << "spacing: " << param_.spacing << "\n";
+  os << pad << "axis: " << axisToString(param_.axis) << "\n";
+  os << pad << "children: " << param_.children.size() << "\n";
+  os << pad << "crossAxisAlignment: " << param_.crossAxisAlignment << "\n";
+}

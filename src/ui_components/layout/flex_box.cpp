@@ -1,4 +1,5 @@
 #include "layout/flex_box.hpp"
+#include "debug/debug_assert.hpp"
 #include <fmt/base.h>
 #include <include/core/SkCanvas.h>
 #include <cmath>
@@ -54,23 +55,9 @@ void FlexBox::layout(UISize size) {
   const bool isHorizontal = param_.axis == Axis::HORIZONTAL;
 
   // We pass in the parent size to allow child to size it self freely
-  // const UISize childSize = size;
   for (auto& child : param_.children) {
-    // UISize sizedChild =
-    //     isHorizontal ? UISize{.height = size.height, .width = 0} : UISize{.width = size.width, .height = 0};
-    // UISize sizedChild = childSize;
-    // if (!child->wantsToFillMainAxis()) {
     auto childIntrinsicSize = child->getIntrinsicSize(size.toUIConstraints());
-    // fmt::println("Child {:?} has the size {}x{}", typeid(*child).name(), childIntrinsicSize.width,
-    // childIntrinsicSize.height);
     child->layout(childIntrinsicSize);
-    // }
-    // child->layout(sizedChild);
-
-    // if (!child->wantsToFillMainAxis()) {
-    //   UISize newKnownSize = UISize{.width = child->getBounds().width, .height = child->getBounds().height};
-    //   child->layout(newKnownSize);
-    // }
 
     const float childMainAxis = getChildMainAxisSize(child->getBounds());
     const float childCrossAxisSize = getChildCrossAxisSize(child->getBounds());
@@ -95,50 +82,22 @@ void FlexBox::layout(UISize size) {
   const float availableCrossAxisSize = param_.axis == Axis::HORIZONTAL ? size.height : size.width;
   const float availableFillSpace = std::fmax(0, (availableMainAxisSize - fittedMainSize - totalSpacing));
 
-  if (!isHorizontal) {
-    // fmt::println(
-    //     "FlexBox::layout [{:?}:{}] [{} child] [totalSpacing: {}, fittedMainSize: {}, availableMainAxisSize: {}]",
-    //     "availableFillSpace: {}]",
-    //     axisToString(param_.axis),
-    //     size.height,
-    //     param_.children.size(),
-    //     totalSpacing,
-    //     fittedMainSize,
-    //     availableMainAxisSize,
-    //     availableFillSpace);
-  }
-
-  if (!isHorizontal) {
-    // VERIFY(availableFillSpace < 0,
-    //        fmt::format("FlexBox::layout [{:?}:{}] [{} child] [totalSpacing: {}, fittedMainSize: {}, "
-    //                    "availableMainAxisSize: {}, "
-    //                    "availableFillSpace: {}]",
-    //                    axisToString(param_.axis),
-    //                    size.height,
-    //                    param_.children.size(),
-    //                    totalSpacing,
-    //                    fittedMainSize,
-    //                    availableMainAxisSize,
-    //                    availableFillSpace));
-  }
+  VERIFY(availableFillSpace == 0,
+         fmt::format("FlexBox::layout [{:?}:{}] [{} child] [totalSpacing: {}, fittedMainSize: {}, "
+                     "availableMainAxisSize: {}, availableFillSpace: {}]",
+                     axisToString(param_.axis),
+                     size.height,
+                     param_.children.size(),
+                     totalSpacing,
+                     fittedMainSize,
+                     availableMainAxisSize,
+                     availableFillSpace));
 
   const float sizePerChild = flexibleChildCount > 0 ? availableFillSpace / flexibleChildCount : 0;
 
   // Set the flex box main axis size
   const float totalContentSize = totalSpacing + fittedMainSize + (sizePerChild * flexibleChildCount);
-
-  // const auto intrinsicSize = getIntrinsicSize(size.toUIConstraints());
-  // const auto intSz = getChildMainAxisSize(UIRect{.width = intrinsicSize.width, .height = intrinsicSize.height});
-
   bounds_ = setMainAxisSize(totalContentSize, bounds_, size);
-  // bounds_ = setMainAxisSize(totalContentSize, bounds_, size);
-  // bounds_ = setMainAxisSize(std::fmax(intSz, totalContentSize), bounds_, size);
-  // fmt::println("FlexBox::layout totalContentSize: {} | intSz: {}", totalContentSize, intSz);
-  //     setMainAxisSize(fmax(getChildMainAxisSize(UIRect{.width = intrinsicSize.width, .height =
-  //     intrinsicSize.height}),
-  //                          totalContentSize),
-  //                     bounds_,
-  //                     size);
 
   // Second pass: this is to size the flexible children.
   for (auto& child : param_.children) {
@@ -147,7 +106,6 @@ void FlexBox::layout(UISize size) {
                                        : UISize{.width = size.width, .height = sizePerChild};
       child->layout(sizedChild);
       maxChildCrossAxisSize = std::max(maxChildCrossAxisSize, getChildCrossAxisSize(child->getBounds()));
-      fmt::println("Child {:?} wants to fill main axis", typeid(*child).name());
     }
   }
 
@@ -172,9 +130,6 @@ void FlexBox::layout(UISize size) {
     currentMain += mainAdvance;
     if (i + 1 != param_.children.size()) currentMain += spacing;
   }
-
-  // fmt::println("FlexBox::layout [{} x {}] | parent: [{} x {}]", bounds_.width, bounds_.height, size.width,
-  // size.height);
 }
 
 void FlexBox::draw(SkCanvas* canvas) {
@@ -182,7 +137,7 @@ void FlexBox::draw(SkCanvas* canvas) {
 
   canvas->translate(bounds_.x, bounds_.y);
 
-  // IMPORTANT: Clip to the FlexBox bounds to prevent children from drawing outside
+  // Clip to the Flex Box bounds to prevent children from drawing outside
   SkRect clipRect = SkRect::MakeWH(bounds_.width, bounds_.height);
   canvas->clipRect(clipRect, SkClipOp::kIntersect);
 

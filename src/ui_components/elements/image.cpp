@@ -1,4 +1,4 @@
-#include "image.hpp"
+#include "elements/image.hpp"
 #include <fmt/base.h>
 #include <include/core/SkData.h>
 #include <include/core/SkImage.h>
@@ -7,15 +7,14 @@
 #include <algorithm>
 #include <filesystem>
 #include <string>
+#include <sstream>
+#include "size.hpp"
 
 UIImage::UIImage(const ImageParams& param) : params_(param) {
-  // auto imageData = SkData::MakeFromFileName(params_.path.c_str());
   auto cwd = std::filesystem::current_path().string();
-  // std::string fullPath = cwd.string() + "/assets/" + params_.path.c_str();
 
   std::string s = "/";
   std::string subpath = params_.path;
-
   if (!std::equal(cwd.rbegin(), cwd.rend(), s.rbegin())) {
     cwd += "/";
   }
@@ -29,17 +28,18 @@ UIImage::UIImage(const ImageParams& param) : params_(param) {
     fmt::println("ImageView: Failed to open {}", fullPath);
     return;
   }
-  // fmt::println("ImageView: Opened {}", params_.path);
 
   sk_sp<SkData> data = SkData::MakeFromStream(stream.get(), stream->getLength());
   if (!data) {
     fmt::println("ImageView: Failed to read data {}", fullPath);
     return;
   }
-  // fmt::println("ImageView: Read {} bytes", data->size());
 
-  // imageData_ = SkImages::DeferredFromEncodedData(imageData);
   imageData_ = SkImages::DeferredFromEncodedData(data);
+}
+
+UISize UIImage::getIntrinsicSize(UIConstraints constraints) noexcept {
+  return UISize{.width = params_.width, .height = params_.height};
 }
 
 void UIImage::layout(UISize size) {
@@ -54,9 +54,17 @@ void UIImage::draw(SkCanvas* canvas) {
   SkPaint paint;
   paint.setAlphaf(params_.opacity);
   // canvas->translate(bounds_.x, bounds_.y);
-  // canvas->drawImage(imageData_, 0, 0, SkSamplingOptions(), &paint);
 
   SkRect dest = SkRect::MakeXYWH(bounds_.x, bounds_.y, bounds_.width, bounds_.height);
   canvas->drawImageRect(imageData_, dest, SkSamplingOptions(), &paint);
   UIComponent::draw(canvas);
 }
+
+void UIImage::debugFillProperties(std::ostringstream& os, int indent) const {
+  UIComponent::debugFillProperties(os, indent);
+  std::string pad(indent, ' ');
+  os << "image height: " << params_.height << "\n";
+  os << "image width: " << params_.width << "\n";
+  os << "opacity: " << params_.opacity << "\n";
+  os << "path: " << params_.path << "\n";
+};
