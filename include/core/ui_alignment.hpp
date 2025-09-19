@@ -16,13 +16,13 @@ enum class CrossAxisAlignment : std::uint8_t { START, CENTER, END };
 inline std::ostream& operator<<(std::ostream& os, const CrossAxisAlignment& alignment) {
   switch (alignment) {
     case CrossAxisAlignment::START:
-      os << "CrossAxisAlignment::START";
+      os << "START";
       break;
     case CrossAxisAlignment::CENTER:
-      os << "CrossAxisAlignment::CENTER";
+      os << "CENTER";
       break;
     case CrossAxisAlignment::END:
-      os << "CrossAxisAlignment::END";
+      os << "END";
       break;
   }
   return os;

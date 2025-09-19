@@ -4,6 +4,7 @@
 #include <include/core/SkCanvas.h>
 
 #include <memory>
+#include <optional>
 #include <vector>
 #include "basic/ui_render_object.hpp"
 #include "basic/ui_tap_handler.hpp"
@@ -24,7 +25,12 @@ class UIComponent : public UIRenderObject, public UITapHandler {
     return onTap(event, bounds_);
   }
 
+  void setParent(std::shared_ptr<UIComponent> parent) noexcept;
+
   std::string toString(int indent = 0) const override;
+
+ private:
+  std::optional<std::shared_ptr<UIComponent>> parent_ = std::nullopt;
 
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }

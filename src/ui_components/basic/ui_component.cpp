@@ -20,3 +20,5 @@ std::string UIComponent::toString(int indent) const {
   os << pad << "}";
   return os.str();
 }
+
+void UIComponent::setParent(std::shared_ptr<UIComponent> parent) noexcept { parent_ = parent; }

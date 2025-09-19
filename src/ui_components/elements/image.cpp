@@ -63,8 +63,8 @@ void UIImage::draw(SkCanvas* canvas) {
 void UIImage::debugFillProperties(std::ostringstream& os, int indent) const {
   UIComponent::debugFillProperties(os, indent);
   std::string pad(indent, ' ');
-  os << "image height: " << params_.height << "\n";
-  os << "image width: " << params_.width << "\n";
-  os << "opacity: " << params_.opacity << "\n";
-  os << "path: " << params_.path << "\n";
+  os << pad << "height: " << params_.height << "\n";
+  os << pad << "width: " << params_.width << "\n";
+  os << pad << "opacity: " << params_.opacity << "\n";
+  os << pad << fmt::format("path: \"{}\"", params_.path) << "\n";
 };

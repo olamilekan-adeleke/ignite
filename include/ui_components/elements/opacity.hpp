@@ -29,5 +29,6 @@ class Opacity : public UIComponent {
 
 inline void Opacity::debugFillProperties(std::ostringstream& os, int indent) const {
   UIComponent::debugFillProperties(os, indent);
-  os << ", opacity: " << param_.opacity;
+  std::string pad(indent, ' ');
+  os << pad << "opacity: " << param_.opacity << "\n";
 }
