@@ -27,6 +27,7 @@ bool StatefulComponent::isDirty() const { return isDirty_; }
 
 std::shared_ptr<UIComponent> StatefulComponent::getChild() {
   if (isDirty_ || needToRedraw_ || !cachedBody_) {
+    fmt::println("returning cached body");
     cachedBody_ = body();
     // needToRedraw_ = false;
     // isDirty_ = false;
@@ -43,7 +44,7 @@ const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::children() c
 void StatefulComponent::markDirty() {
   if (isDirty_ == false) {
     isDirty_ = true;
-    needToRedraw_ = true;
+    // needToRedraw_ = true;
     // setKey(UIKey());
   }
 }

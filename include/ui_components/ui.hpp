@@ -3,6 +3,8 @@
 #include <memory>
 #include <string>
 
+#include "basic/ui_component.hpp"
+
 #include "elements/image.hpp"
 #include "elements/text_renderer.hpp"
 #include "elements/ui_view.hpp"
@@ -12,7 +14,6 @@
 #include "layout/h_flex_box.hpp"
 #include "layout/v_flex_box.hpp"
 
-#include "ui_component.hpp"
 #include "ui_sized.hpp"
 #include "ui_text_field.hpp"
 

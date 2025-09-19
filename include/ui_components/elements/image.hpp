@@ -2,7 +2,7 @@
 
 #include <include/core/SkImage.h>
 #include <string>
-#include "ui_component.hpp"
+#include "basic/ui_component.hpp"
 
 struct ImageParams {
   std::string path;

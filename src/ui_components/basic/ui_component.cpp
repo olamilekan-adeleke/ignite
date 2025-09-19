@@ -1,4 +1,4 @@
-#include "ui_component.hpp"
+#include "basic/ui_component.hpp"
 #include <sstream>
 
 std::string UIComponent::toString(int indent) const {

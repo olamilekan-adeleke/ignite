@@ -7,7 +7,6 @@
 #include <vector>
 #include "rect.hpp"
 #include "size.hpp"
-#include "ui_component.hpp"
 
 void FlexBox::addChild(std::shared_ptr<UIComponent> child) { param_.children.push_back(std::move(child)); }
 

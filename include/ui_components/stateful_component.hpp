@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "ui_component.hpp"
+#include "basic/ui_component.hpp"
 
 class StatefulComponent : public UIComponent {
  public:

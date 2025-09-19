@@ -2,7 +2,7 @@
 
 #include <string>
 #include <cstring>  // Added for strncpy
-#include "ui_component.hpp"
+#include "basic/ui_component.hpp"
 
 struct UITextFieldParams {
   std::string placeholder;

@@ -1,11 +1,10 @@
 #pragma once
 
 #include <sstream>
+#include "basic/ui_component.hpp"
 #include "color.hpp"
 #include "size.hpp"
 #include "ui_alignment.hpp"
-#include "ui_component.hpp"
-#include "ui_components/ui_component.hpp"
 #include "ui_edge_insets.hpp"
 
 struct ViewParams {

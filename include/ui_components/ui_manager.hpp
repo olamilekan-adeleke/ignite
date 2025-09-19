@@ -6,8 +6,8 @@
 
 #include <memory>
 
+#include "basic/ui_component.hpp"
 #include "tap_event.hpp"
-#include "ui_component.hpp"
 
 namespace Debug {
 inline bool ui_debug_mode = false;

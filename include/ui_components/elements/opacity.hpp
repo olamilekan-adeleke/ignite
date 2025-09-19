@@ -2,7 +2,7 @@
 
 #include <sstream>
 #include "size.hpp"
-#include "ui_component.hpp"
+#include "basic/ui_component.hpp"
 
 struct OpacityParams {
   float opacity = 1.0f;

@@ -6,7 +6,6 @@
 #include "logger.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
-#include "ui_component.hpp"
 
 struct TodoItem {
   std::string title = "To study React fundamentals";

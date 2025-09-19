@@ -30,7 +30,7 @@ void Opacity::draw(SkCanvas* canvas) {
   if (!param_.child) return;
 
   float opacity = param_.opacity;
-  VERIFY(opacity >= 0 && opacity <= 1, "Opacity::draw: opacity must be between 0 and 1");
+  VERIFY(opacity < 0 && opacity > 1, "Opacity::draw: opacity must be between 0 and 1");
 
   // Doc link for what opacity creation, turns out opacity is just setting the layer color aplha, lmao
   // https://skia-doc.commondatastorage.googleapis.com/doxygen/doxygen/html/classSkCanvas.html#a853514477dff62c15ced03f5141b2eb7
