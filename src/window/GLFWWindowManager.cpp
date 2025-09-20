@@ -62,7 +62,7 @@ void GLFWWindowManager::setResizeCallback(std::function<void(int, int)> callback
 
 void GLFWWindowManager::run() {
   while (!glfwWindowShouldClose(window)) {
-    glfwPollEvents();
+    glfwWaitEventsTimeout(0.016);
 
     if (renderCallback) {
       renderCallback();

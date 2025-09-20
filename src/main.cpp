@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <boost/asio.hpp>
+#include "debug/fps_tracker.hpp"
 
 #include "debug/debug_log_server.hpp"
 #include "skia/SkiaRenderer.hpp"
@@ -40,10 +41,14 @@ int main() {
 
     bool needsResize = false;
     bool needsLayout = true;
+    bool needsRedraw = true;  // New flag for redraw
 
     auto counter_example = std::make_shared<CounterComponent>();
     std::shared_ptr<UIComponent> rootUI = counter_example;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
+
+    // FPS tracking variables
+    FpsTracker fpsTracker;
 
     // Set resize callback - handle resize logic separately from rendering
     windowManager.setResizeCallback([&](int newWidth, int newHeight) {
@@ -52,26 +57,34 @@ int main() {
       height = newHeight;
       needsResize = true;
       needsLayout = true;
+      needsRedraw = true;  // Redraw needed after resize
     });
 
     static std::string lastLog;
     windowManager.setRenderCallback([&]() {
+      fpsTracker.updateAndLogFps();
+
       if (needsResize) {
         skiaRenderer.resize(width, height);
         fmt::println("Skia resized to: {}x{}", width, height);
-      }
-
-      skiaRenderer.beginFrame();
-      auto canvas = skiaRenderer.getCanvas();
-
-      uiManager.setTree(rootUI, width, height, needsResize);
-      rootUI->draw(canvas);
-
-      if (needsResize) {
         needsResize = false;
       }
 
+      // if (needsLayout) {
+      uiManager.setTree(rootUI, width, height, needsResize);
+      needsLayout = false;
+      needsRedraw = true;  // Redraw needed after layout
+                           // }
+
+      // if (needsRedraw) {
+      skiaRenderer.beginFrame();
+      auto canvas = skiaRenderer.getCanvas();
+
+      rootUI->draw(canvas);
+
       skiaRenderer.endFrame();
+      needsRedraw = false;
+      // }
 
       const std::string logs = rootUI->toString(0);
       if (logs != lastLog) lastLog = logs;
