@@ -18,6 +18,10 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string &tit
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  
+  // Disable DPI scaling by forcing content scale to 1.0
+  glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_FALSE);
+  glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
 
   // // Make window non-resizable
   // glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
@@ -36,6 +40,15 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string &tit
 
   glfwMakeContextCurrent(window);
   glfwSetWindowUserPointer(window, this);
+  
+  // Get current content scale
+  // glfwSetWindowContentScaleCallback(window, NULL);
+  // glfwGetWindowContentScale(window, 1.0f, 1.0f);
+  float xscale, yscale;
+  glfwGetWindowContentScale(window, &xscale, &yscale);
+  
+  // Log the current content scale for debugging
+  std::cout << "Window content scale: " << xscale << ", " << yscale << std::endl;
 
   // Set up mouse callbacks
   glfwSetMouseButtonCallback(window, mouseButtonCallback);
