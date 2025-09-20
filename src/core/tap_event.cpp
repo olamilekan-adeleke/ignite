@@ -9,18 +9,29 @@ void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
       double xpos, ypos;
       glfwGetCursorPos(window, &xpos, &ypos);
 
-      float x = static_cast<float>(xpos);
-      float y = static_cast<float>(ypos);
+      // Get the window's content scale to adjust for DPI
+      float xscale, yscale;
+      glfwGetWindowContentScale(window, &xscale, &yscale);
+
+      // Apply DPI scaling to coordinates
+      float x = static_cast<float>(xpos) * xscale;
+      float y = static_cast<float>(ypos) * yscale;
 
       UITapEvent event(x, y);
+      fmt::println("Tap at ({}, {})", x, y);
       UIManager::instance().sendTapEvent(event);
     }
   }
 }
 
 void mouseMoveCallback(GLFWwindow *window, double xpos, double ypos) {
-  float x = static_cast<float>(xpos);
-  float y = static_cast<float>(ypos);
+  // Get the window's content scale to adjust for DPI
+  float xscale, yscale;
+  glfwGetWindowContentScale(window, &xscale, &yscale);
+
+  // Apply DPI scaling to coordinates
+  float x = static_cast<float>(xpos) * xscale;
+  float y = static_cast<float>(ypos) * yscale;
 
   // TODO: I would probably remove later, i do not have plans to implement
 }
@@ -30,8 +41,13 @@ void scrollCallback(GLFWwindow *window, double xoffset, double yoffset) {
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
 
-  float x = static_cast<float>(xpos);
-  float y = static_cast<float>(ypos);
+  // Get the window's content scale to adjust for DPI
+  float xscale, yscale;
+  glfwGetWindowContentScale(window, &xscale, &yscale);
+
+  // Apply DPI scaling to coordinates
+  float x = static_cast<float>(xpos) * xscale;
+  float y = static_cast<float>(ypos) * yscale;
 
   fmt::println("Scroll at ({}, {}) - offset: ({}, {})", x, y, xoffset, yoffset);
 

@@ -19,9 +19,9 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string &tit
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   
-  // Disable DPI scaling by forcing content scale to 1.0
-  glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_FALSE);
-  glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+  // Enable proper DPI scaling
+  glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+  glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 
   // // Make window non-resizable
   // glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
