@@ -12,7 +12,7 @@
 
 enum class UIMarkDirtyType : uint8_t { LAYOUT, DRAW };
 
-enum class UIMarkDirtyCaller : uint8_t { PARENT_TO_ChILD, CHILD_TO_PARENT };
+enum class UIMarkDirtyCaller : uint8_t { PARENT_TO_ChILD, CHILD_TO_PARENT, NONE };
 
 class UIComponent : public UIRenderObject, public UITapHandler {
  public:

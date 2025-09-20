@@ -35,6 +35,7 @@ void UIImage::markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller&
 
   if (type == UIMarkDirtyType::DRAW) {
     UICacheManager::instance().removeCachedSurface(currentDrawHash);
+    return;
   }
 
   UICacheManager::instance().removeCachedSurface(currentDrawHash);
@@ -99,10 +100,7 @@ void UIImage::layout(UISize size) {
   bounds_.height = params_.height > 0 ? params_.height : imageData_->height();
 
   UICacheManager::instance().setLayoutCached(currentLayoutHash, bounds_);
-
-  // const auto currentDrawHash = params_.drawHashCode();
-  // UICacheManager::instance().removeCachedSurface(currentDrawHash);
-  // fmt::println("");
+  markHasDirty(UIMarkDirtyType::DRAW, UIMarkDirtyCaller::NONE);
 }
 
 void UIImage::draw(SkCanvas* canvas) {
