@@ -18,7 +18,6 @@ void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
       float y = static_cast<float>(ypos) * yscale;
 
       UITapEvent event(x, y);
-      fmt::println("Tap at ({}, {})", x, y);
       UIManager::instance().sendTapEvent(event);
     }
   }
