@@ -4,7 +4,6 @@
 #include <include/core/SkCanvas.h>
 
 #include <memory>
-#include <optional>
 #include <vector>
 #include "basic/ui_render_object.hpp"
 #include "basic/ui_tap_handler.hpp"
@@ -36,7 +35,7 @@ class UIComponent : public UIRenderObject, public UITapHandler {
   virtual void markHasDirty(const UIMarkDirtyType &type, const UIMarkDirtyCaller &caller) noexcept {};
 
  protected:
-  std::optional<std::shared_ptr<UIComponent>> parent_ = std::nullopt;
+  std::weak_ptr<UIComponent> parent_;
 
   virtual bool processChildTaps(const UITapEvent &event) { return false; }
 };

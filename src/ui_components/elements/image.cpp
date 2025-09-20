@@ -40,9 +40,9 @@ void UIImage::markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller&
 
   UICacheManager::instance().removeCachedSurface(currentDrawHash);
   UICacheManager::instance().removeLayoutCached(currentLayoutHash);
-  if (this->parent_.has_value()) {
-    // this->parent_->get()->markHasDirty(type);
-  }
+  // if (this->parent_.has_value()) {
+  // this->parent_->get()->markHasDirty(type);
+  // }
 };
 
 bool UIImage::loadImage() noexcept {
@@ -95,7 +95,7 @@ void UIImage::layout(UISize size) {
   }
 
   if (!imageData_) return;
-  fmt::println("layouting image: {} [currentLayoutHash: {}]", params_.path, currentLayoutHash);
+  // fmt::println("layouting image: {} [currentLayoutHash: {}]", params_.path, currentLayoutHash);
   bounds_.width = params_.width > 0 ? params_.width : imageData_->width();
   bounds_.height = params_.height > 0 ? params_.height : imageData_->height();
 
@@ -114,8 +114,6 @@ void UIImage::draw(SkCanvas* canvas) {
   }
 
   if (!imageData_) return;
-  fmt::println("drawing new image [lastDrawHash_: {}, currentDrawHash: , path: {}]", currentDrawHash, params_.path);
-
   SkImageInfo info = SkImageInfo::Make(bounds_.width, bounds_.height, kRGBA_8888_SkColorType, kOpaque_SkAlphaType);
   sk_sp<SkSurface> newSurface = SkSurfaces::Raster(info);
   if (!newSurface) return;

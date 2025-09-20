@@ -4,6 +4,17 @@
 #include "size.hpp"
 #include "stateful_component.hpp"
 
+void StatefulComponent::markDirty() { isDirty_ = true; }
+
+std::shared_ptr<UIComponent> StatefulComponent::getChild() {
+  if (isDirty_ || !cachedBody_) {
+    fmt::println("building cached body");
+    cachedBody_ = body();
+    isDirty_ = false;
+  }
+  return cachedBody_;
+}
+
 void StatefulComponent::layout(UISize size) {
   const auto child = getChild();
   if (child) {
@@ -14,25 +25,7 @@ void StatefulComponent::layout(UISize size) {
 
 void StatefulComponent::draw(SkCanvas *canvas) {
   auto child = getChild();
-  // fmt::println("StatefulComponent child: {}", child ? std::to_string(child->getBounds().height) : "Null");
-  if (child) {
-    child->draw(canvas);
-  }
-
-  isDirty_ = false;
-  needToRedraw_ = false;
-}
-
-bool StatefulComponent::isDirty() const { return isDirty_; }
-
-std::shared_ptr<UIComponent> StatefulComponent::getChild() {
-  if (isDirty_ || needToRedraw_ || !cachedBody_) {
-    fmt::println("returning cached body");
-    cachedBody_ = body();
-    // needToRedraw_ = false;
-    // isDirty_ = false;
-  }
-  return cachedBody_;
+  if (child) child->draw(canvas);
 }
 
 const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::children() const {
@@ -41,19 +34,9 @@ const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::children() c
   return statefulChildren_;
 }
 
-void StatefulComponent::markDirty() {
-  if (isDirty_ == false) {
-    isDirty_ = true;
-    // needToRedraw_ = true;
-    // setKey(UIKey());
-  }
-}
-
 bool StatefulComponent::processChildTaps(const UITapEvent &event) {
   const auto child = getChild();
-  if (child) {
-    return child->processTap(event);
-  }
+  if (child) return child->processTap(event);
   return false;
 }
 
