@@ -27,6 +27,7 @@ class CounterTextWidget : public StatefulComponent {
             .child = UI::Text("Click Me", {.color = Color::White(), .fontSize = 25}),
           }), 
 
+
         UI::Text(
           "Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
           { 
@@ -68,6 +69,11 @@ class CounterTextWidget : public StatefulComponent {
         }),
 
         }
+        }),
+
+        UI::UISeparator({
+          .axis = Axis::HORIZONTAL,
+          .thinkness = 2.3f,
         }),
 
      UI::UIFlexBox({
