@@ -11,7 +11,6 @@
 struct FlexParam {
   float spacing = 0.0f;
   Axis axis = Axis::VERTICAL;
-  // MainAxisSize mainAxisSize = MainAxisSize::FIT;
   CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment::START;
   std::vector<std::shared_ptr<UIComponent>> children;
 };

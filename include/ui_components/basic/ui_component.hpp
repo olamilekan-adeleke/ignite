@@ -11,7 +11,7 @@
 
 enum class UIMarkDirtyType : uint8_t { LAYOUT, DRAW };
 
-enum class UIMarkDirtyCaller : uint8_t { PARENT_TO_ChILD, CHILD_TO_PARENT, NONE };
+enum class UIMarkDirtyCaller : uint8_t { PARENT_TO_ChILD, NONE };
 
 class UIComponent : public UIRenderObject, public UITapHandler {
  public:
@@ -28,14 +28,10 @@ class UIComponent : public UIRenderObject, public UITapHandler {
     return onTap(event, bounds_);
   }
 
-  void setParent(std::shared_ptr<UIComponent> parent) noexcept;
-
   std::string toString(int indent = 0) const override;
 
   virtual void markHasDirty(const UIMarkDirtyType &type, const UIMarkDirtyCaller &caller) noexcept {};
 
  protected:
-  std::weak_ptr<UIComponent> parent_;
-
   virtual bool processChildTaps(const UITapEvent &event) { return false; }
 };
