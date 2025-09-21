@@ -25,6 +25,7 @@ inline std::string toHex(uint64_t hash) {
 class HasHashCodes {
  public:
   virtual ~HasHashCodes() = default;
-  virtual std::string layoutHashCode() const noexcept = 0;
-  virtual std::string drawHashCode() const noexcept = 0;
+
+  virtual uint64_t layoutHashCode() const noexcept = 0;
+  virtual uint64_t drawHashCode() const noexcept = 0;
 };
