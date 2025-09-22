@@ -11,12 +11,12 @@ class TodoListWidget : public StatefulComponent {
     return UI::UIView({
         .insets = UIEdgeInsets{30, 20, 0, 20},
         .child = UI::VFlexBox({
-            .spacing = 12,
+            .spacing = 6,
             .crossAxisAlignment = CrossAxisAlignment::START,
             .children =
                 {
-                    UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 32, .weight = FontWeight::Bold}),
-                    UI::Text("Things to do today", {.color = Color::Gray(), .fontSize = 20}),
+                    UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
+                    UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
 
                     UI::UIView({.insets = {.top = 20}, .child = UI::SizedView({})}),
 
@@ -32,7 +32,6 @@ class TodoListWidget : public StatefulComponent {
                                 makeTodoItem("Don't forget to ragebait hb"),
                             },
                     }),
-
                 },
         }),
 
@@ -44,6 +43,7 @@ class TodoListWidget : public StatefulComponent {
     return UI::UIFlexBox({
         .spacing = 12,
         .axis = Axis::HORIZONTAL,
+        .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .children =
             {
                 UI::UICheckBox({.size = {24, 24}}),

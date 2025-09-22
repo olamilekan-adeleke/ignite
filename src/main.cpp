@@ -3,14 +3,17 @@
 #include <cstdlib>
 #include <iostream>
 #include <boost/asio.hpp>
+#include <memory>
 #include "debug/fps_tracker.hpp"
 
 #include "debug/debug_log_server.hpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
+
 #include "example/example.cpp"
 #include "example/counnter_app.cpp"
+#include "example/todo_list.cpp"
 
 using boost::asio::async_write;
 using boost::asio::buffer;
@@ -26,7 +29,7 @@ int main() {
     SkiaRenderer skiaRenderer;
 
     // Initialize window
-    if (!windowManager.initialize(800, 600, "Skia Playground")) {
+    if (!windowManager.initialize(800, 600, "Ignite Playground")) {
       std::cerr << "Failed to initialize window" << std::endl;
       return -1;
     }
@@ -44,7 +47,9 @@ int main() {
     bool needsRedraw = true;  // New flag for redraw
 
     auto counter_example = std::make_shared<CounterComponent>();
-    std::shared_ptr<UIComponent> rootUI = counter_example;
+    auto todoList = std::make_shared<TodoListWidget>();
+    // std::shared_ptr<UIComponent> rootUI = counter_example;
+    std::shared_ptr<UIComponent> rootUI = todoList;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
 
     // FPS tracking variables

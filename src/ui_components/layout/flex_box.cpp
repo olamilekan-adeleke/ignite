@@ -115,11 +115,14 @@ void FlexBox::layout(UISize size) {
   const auto availableSpaceLeft = std::max(0.0f, availableMainAxisSize - totalContentSize);
   float currentMain = getMainAxisStartPosition(availableSpaceLeft);
   const float spacing = getMainAxisSpacing(availableSpaceLeft);
+
+  const float flexBoxCrossAxisSize = getChildCrossAxisSize(bounds_);
+
   for (size_t i = 0; i < param_.children.size(); ++i) {
     auto& child = param_.children[i];
     auto childBound = child->getBounds();
     const float mainAdvance = getChildMainAxisSize(childBound);
-    const float crossPos = getCrossAxisStartPosition(availableCrossAxisSize, getChildCrossAxisSize(childBound));
+    const float crossPos = getCrossAxisStartPosition(flexBoxCrossAxisSize, getChildCrossAxisSize(childBound));
 
     if (isHorizontal) {
       child->setPosition(currentMain, crossPos);
