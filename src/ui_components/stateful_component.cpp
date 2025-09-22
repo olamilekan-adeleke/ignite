@@ -6,6 +6,14 @@
 
 void StatefulComponent::markDirty() { isDirty_ = true; }
 
+UISize StatefulComponent::getIntrinsicSize(UIConstraints constraints) noexcept {
+  UISize size{0, 0};
+
+  const auto child = getChild();
+  if (child) size = child->getIntrinsicSize(constraints);
+  return size;
+}
+
 std::shared_ptr<UIComponent> StatefulComponent::getChild() {
   if (isDirty_ || !cachedBody_) {
     fmt::println("building cached body");
@@ -19,13 +27,19 @@ void StatefulComponent::layout(UISize size) {
   const auto child = getChild();
   if (child) {
     child->layout({size.width, size.height});
-    bounds_ = child->getBounds();
+    const auto childBounds = child->getBounds();
+    bounds_.width = childBounds.width;
+    bounds_.height = childBounds.height;
   }
 }
 
 void StatefulComponent::draw(SkCanvas *canvas) {
   auto child = getChild();
-  if (child) child->draw(canvas);
+  if (child) {
+    SkAutoCanvasRestore acr(canvas, true);
+    canvas->translate(bounds_.x, bounds_.y);
+    child->draw(canvas);
+  }
 }
 
 const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::children() const {
@@ -36,7 +50,13 @@ const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::children() c
 
 bool StatefulComponent::processChildTaps(const UITapEvent &event) {
   const auto child = getChild();
-  if (child) return child->processTap(event);
+  if (child) {
+    UITapEvent localEvent = event;
+    localEvent.x -= bounds_.x;
+    localEvent.y -= bounds_.y;
+
+    return child->processTap(localEvent);
+  }
   return false;
 }
 
