@@ -6,6 +6,7 @@
 #include <include/core/SkStream.h>
 #include <include/core/SkSurface.h>
 #include <algorithm>
+#include <cstdint>
 #include <filesystem>
 #include <string>
 #include <sstream>
@@ -30,8 +31,8 @@ struct ImageCacheManager {
 UIImage::UIImage(const ImageParams& param) : params_(param) { loadImage(); }
 
 void UIImage::markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller& caller) noexcept {
-  const auto currentLayoutHash = params_.layoutHashCode();
-  const auto currentDrawHash = params_.drawHashCode();
+  const auto currentLayoutHash{params_.layoutHashCode()};
+  const auto currentDrawHash{params_.drawHashCode()};
 
   if (type == UIMarkDirtyType::DRAW) {
     UICacheManager::instance().removeCachedSurface(currentDrawHash);
@@ -40,9 +41,6 @@ void UIImage::markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller&
 
   UICacheManager::instance().removeCachedSurface(currentDrawHash);
   UICacheManager::instance().removeLayoutCached(currentLayoutHash);
-  // if (this->parent_.has_value()) {
-  // this->parent_->get()->markHasDirty(type);
-  // }
 };
 
 bool UIImage::loadImage() noexcept {
@@ -87,7 +85,7 @@ UISize UIImage::getIntrinsicSize(UIConstraints constraints) noexcept {
 }
 
 void UIImage::layout(UISize size) {
-  const auto currentLayoutHash = params_.layoutHashCode();
+  const uint64_t currentLayoutHash{params_.layoutHashCode()};
   const auto cacheIt = UICacheManager::instance().getLayoutCached(currentLayoutHash);
   if (cacheIt.has_value()) {
     bounds_ = *cacheIt;
@@ -104,7 +102,7 @@ void UIImage::layout(UISize size) {
 }
 
 void UIImage::draw(SkCanvas* canvas) {
-  const auto currentDrawHash = params_.drawHashCode();
+  const uint64_t currentDrawHash{params_.drawHashCode()};
   sk_sp<SkSurface> cachedSurface = UICacheManager::instance().getCachedSurface(currentDrawHash);
 
   if (cachedSurface) {

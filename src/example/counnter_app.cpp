@@ -73,7 +73,7 @@ class CounterTextWidget : public StatefulComponent {
 
         UI::UISeparator({
           .axis = Axis::HORIZONTAL,
-          .thinkness = 2.3f,
+          .thinkness = 1.0f,
         }),
 
      UI::UIFlexBox({
