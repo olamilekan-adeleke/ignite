@@ -11,6 +11,12 @@ class CounterTextWidget : public StatefulComponent {
   // clang-format off
   std::shared_ptr<UIComponent> body() override {
 
+    // auto param = CheckBoxParams{
+    //   .enable = false,
+    //   .size = {40, 40}
+    // };
+    // auto check = std::make_shared<CheckBoxRender>(param);
+
     return UI::VFlexBox({
       .spacing = 10,
       .crossAxisAlignment = CrossAxisAlignment::CENTER,
@@ -45,6 +51,21 @@ class CounterTextWidget : public StatefulComponent {
           .weight = FontWeight::Bold, 
         }),
 
+      UI::UIFlexBox({
+          .spacing = 40,
+          .axis = Axis::HORIZONTAL,
+          .crossAxisAlignment = CrossAxisAlignment::START,
+          .children = {
+              UI::UICheckBox({
+                  .size = {25, 25},
+              }),
+              UI::UICheckBox({
+                  .size = {25, 25},
+              }),
+          },
+          }),
+
+
         UI::UIFlexBox({
           .spacing = 20,
           .axis = Axis::HORIZONTAL,
@@ -76,41 +97,41 @@ class CounterTextWidget : public StatefulComponent {
           .thinkness = 1.0f,
         }),
 
-     UI::UIFlexBox({
-      .spacing = 20,
-      .crossAxisAlignment = CrossAxisAlignment::START,
-      .children = {
-            UI::UIView({ 
-            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
-            .backgroundColor = Color::Green(), 
-            .borderRadius = 5, 
-            .onTap = [this](const UITapEvent&) { 
-              count_++;
-              markDirty();
-            }, 
-            .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
-          }), 
-
-
-            UI::UIView({ 
-            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
-            .backgroundColor = Color::Green(), 
-            .borderRadius = 5, 
-            .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
-          }), 
-
-            UI::UIView({ 
-            .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
-            .backgroundColor = Color::Green(), 
-            .borderRadius = 5, 
-            .onTap = [this](const UITapEvent&) { 
-              count_++;
-              markDirty();
-            }, 
-            .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
-          }), 
-       }
-       }),
+     // UI::UIFlexBox({
+     //  .spacing = 20,
+     //  .crossAxisAlignment = CrossAxisAlignment::START,
+     //  .children = {
+     //        UI::UIView({ 
+     //        .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+     //        .backgroundColor = Color::Green(), 
+     //        .borderRadius = 5, 
+     //        .onTap = [this](const UITapEvent&) { 
+     //          count_++;
+     //          markDirty();
+     //        }, 
+     //        .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+     //      }), 
+     //
+     //
+     //        UI::UIView({ 
+     //        .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+     //        .backgroundColor = Color::Green(), 
+     //        .borderRadius = 5, 
+     //        .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+     //      }), 
+     //
+     //        UI::UIView({ 
+     //        .insets = {.top = 16, .left = 16, .bottom = 16, .right = 16}, 
+     //        .backgroundColor = Color::Green(), 
+     //        .borderRadius = 5, 
+     //        .onTap = [this](const UITapEvent&) { 
+     //          count_++;
+     //          markDirty();
+     //        }, 
+     //        .child = UI::Text("+", {.color = Color::White(), .fontSize = 25}),
+     //      }), 
+     //   }
+     //   }),
 
         UI::UIFlexBox({
         // UI::HFlexBox({
