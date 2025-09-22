@@ -1,3 +1,5 @@
+#pragma once
+
 #include <functional>
 #include "rect.hpp"
 #include "tap_event.hpp"

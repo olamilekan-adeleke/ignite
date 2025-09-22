@@ -22,6 +22,8 @@ class StatefulComponent : public UIComponent {
 
   virtual bool processChildTaps(const UITapEvent &event) override;
 
+  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
+
   std::string toString(int indent = 0) const override;
 
  private:

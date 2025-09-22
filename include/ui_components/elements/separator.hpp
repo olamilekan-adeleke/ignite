@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fmt/format.h>
 #include "basic/ui_component.hpp"
 #include "color.hpp"

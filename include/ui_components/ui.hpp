@@ -10,10 +10,13 @@
 #include "elements/ui_view.hpp"
 #include "elements/opacity.hpp"
 #include "elements/separator.hpp"
+#include "elements/checkbox_render.hpp"
 
 #include "layout/flex_box.hpp"
 #include "layout/h_flex_box.hpp"
 #include "layout/v_flex_box.hpp"
+
+#include "interactive_components/checkbox.hpp"
 
 #include "ui_sized.hpp"
 #include "ui_text_field.hpp"
@@ -48,6 +51,10 @@ inline std::shared_ptr<UIComponent> UIImageView(const ImageParams &params = {}) 
 
 inline std::shared_ptr<UIComponent> UISeparator(const SeparatorParams &params = {}) {
   return std::make_shared<Separator>(params);
+}
+
+inline std::shared_ptr<UIComponent> UICheckBox(const CheckBoxParams &params = {}) {
+  return std::make_shared<CheckBox>(params);
 }
 
 inline std::shared_ptr<UITextField> UITextFieldView(const UITextFieldParams &params = {}) {
