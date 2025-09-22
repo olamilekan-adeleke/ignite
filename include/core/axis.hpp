@@ -6,10 +6,10 @@ enum class Axis : std::uint8_t { HORIZONTAL, VERTICAL };
 inline std::ostream& operator<<(std::ostream& os, const Axis& axis) {
   switch (axis) {
     case Axis::HORIZONTAL:
-      os << "Axis::HORIZONTAL";
+      os << "HORIZONTAL";
       break;
     case Axis::VERTICAL:
-      os << "Axis::VERTICAL";
+      os << "VERTICAL";
       break;
   }
 
@@ -19,8 +19,8 @@ inline std::ostream& operator<<(std::ostream& os, const Axis& axis) {
 inline std::string axisToString(Axis axis) {
   switch (axis) {
     case Axis::HORIZONTAL:
-      return "Axis::HORIZONTAL";
+      return "HORIZONTAL";
     case Axis::VERTICAL:
-      return "Axis::VERTICAL";
+      return "VERTICAL";
   }
 }

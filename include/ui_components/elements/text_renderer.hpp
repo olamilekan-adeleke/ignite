@@ -11,8 +11,8 @@
 
 #include "./color.hpp"
 #include "./size.hpp"
+#include "basic/ui_component.hpp"
 #include "rect.hpp"
-#include "ui_component.hpp"
 #include "ui_manager.hpp"
 
 struct TextMetrics {

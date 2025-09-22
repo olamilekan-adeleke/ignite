@@ -2,16 +2,15 @@
 
 #include <sstream>
 #include <fmt/base.h>
+#include "basic/ui_component.hpp"
 #include "rect.hpp"
 #include "size.hpp"
 #include "ui_alignment.hpp"
-#include "ui_component.hpp"
 #include "axis.hpp"
 
 struct FlexParam {
   float spacing = 0.0f;
   Axis axis = Axis::VERTICAL;
-  // MainAxisSize mainAxisSize = MainAxisSize::FIT;
   CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment::START;
   std::vector<std::shared_ptr<UIComponent>> children;
 };

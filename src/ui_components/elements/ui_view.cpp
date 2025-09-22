@@ -63,45 +63,6 @@ void View::layout(UISize size) {
   }
 }
 
-// void View::draw(SkCanvas *canvas) {
-//   // Always draw background if we have a backgroundColor
-//   SkPaint paint;
-//   paint.setColor(params_.backgroundColor);
-//   paint.setStyle(SkPaint::kFill_Style);
-//   paint.setAntiAlias(params_.antiAlias);
-//
-//   // Background starts after margin and covers the area minus margins
-//   float backgroundX = bounds_.x + params_.margin.left;
-//   float backgroundY = bounds_.y + params_.margin.top;
-//   float backgroundWidth = bounds_.width - params_.margin.horizonal();
-//   float backgroundHeight = bounds_.height - params_.margin.vertical();
-//
-//   SkRect rect = SkRect::MakeXYWH(backgroundX, backgroundY, backgroundWidth, backgroundHeight);
-//
-//   canvas->save();
-//   // Translate to this View's position
-//   if (params_.child) canvas->translate(bounds_.x, bounds_.y);
-//
-//   if (params_.borderRadius > 0) {
-//     SkRRect rrect;
-//     rrect.setRectXY(rect, params_.borderRadius, params_.borderRadius);
-//     // canvas->clipRRect(rrect, SkClipOp::kIntersect);
-//     canvas->drawRRect(rrect, paint);
-//   } else {
-//     // canvas->clipRect(rect, SkClipOp::kIntersect);
-//     canvas->drawRect(rect, paint);
-//   }
-//
-//   // Draw child if present
-//   if (params_.child) {
-//     // Child draws at its relative position (set in layout())
-//     params_.child->draw(canvas);
-//   }
-//
-//   canvas->restore();
-//   UIComponent::draw(canvas);
-// }
-
 void View::draw(SkCanvas *canvas) {
   if (params_.child) {
     // set up paint stuff and all

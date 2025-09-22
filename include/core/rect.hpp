@@ -2,7 +2,6 @@
 
 #include <fmt/base.h>
 #include <fmt/format.h>
-#include <algorithm>
 #include <optional>
 #include <string>
 #include <include/core/SkRect.h>
@@ -29,6 +28,7 @@ struct UIRect {
   float x, y, width, height;
 
   SkRect toSkRect() const noexcept { return SkRect::MakeXYWH(x, y, width, height); }
+  SkRect toSkRectHW() const noexcept { return SkRect::MakeWH(width, height); }
 
   bool contains(float x, float y) const noexcept {
     return x >= this->x && y >= this->y && x <= this->x + this->width && y <= this->y + this->height;

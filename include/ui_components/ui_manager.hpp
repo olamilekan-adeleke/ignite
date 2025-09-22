@@ -3,14 +3,17 @@
 #include <include/core/SkFont.h>
 #include <include/core/SkFontMgr.h>
 #include <include/core/SkTypeface.h>
+#include <include/core/SkImage.h>
+#include <include/core/SkSurface.h>
 
 #include <memory>
 
+#include "basic/ui_component.hpp"
+#include "rect.hpp"
 #include "tap_event.hpp"
-#include "ui_component.hpp"
 
 namespace Debug {
-inline bool ui_debug_mode = false;
+inline bool ui_debug_mode = true;
 }
 
 // just to maanger some UI Shit
@@ -44,4 +47,48 @@ class UIManager {
   bool dirty_ = false;
 
   bool shouldRebuild(const std::shared_ptr<UIComponent> &oldNode, const std::shared_ptr<UIComponent> &newNode);
+};
+
+class UICacheManager {
+ public:
+  static UICacheManager &instance() {
+    static UICacheManager instance;
+    return instance;
+  }
+
+  UICacheManager(const UICacheManager &) = delete;
+  void operator=(const UICacheManager &) = delete;
+
+  sk_sp<SkSurface> getCachedSurface(const uint64_t drawHash) {
+    auto it = cache_.find(drawHash);
+    if (it != cache_.end()) return it->second;
+    return nullptr;
+  }
+
+  std::optional<UIRect> getLayoutCached(const uint64_t layoutHash) {
+    auto it = layoutCache_.find(layoutHash);
+    if (it != layoutCache_.end()) return it->second;
+    return std::nullopt;
+  }
+
+  void setCachedSurface(const uint64_t drawHash, sk_sp<SkSurface> surface) {
+    if (surface) cache_[drawHash] = surface;
+  }
+
+  void setLayoutCached(const uint64_t layoutHash, const UIRect &rect) { layoutCache_[layoutHash] = rect; }
+
+  void removeCachedSurface(const uint64_t drawHash) { cache_.erase(drawHash); }
+
+  void removeLayoutCached(const uint64_t layoutHash) { layoutCache_.erase(layoutHash); }
+
+  void clear() {
+    cache_.clear();
+    layoutCache_.clear();
+  }
+
+ private:
+  UICacheManager() = default;
+
+  std::unordered_map<uint64_t, sk_sp<SkSurface>> cache_;
+  std::unordered_map<uint64_t, UIRect> layoutCache_;
 };

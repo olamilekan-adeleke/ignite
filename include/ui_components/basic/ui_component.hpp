@@ -9,6 +9,10 @@
 #include "basic/ui_tap_handler.hpp"
 #include "tap_event.hpp"
 
+enum class UIMarkDirtyType : uint8_t { LAYOUT, DRAW };
+
+enum class UIMarkDirtyCaller : uint8_t { PARENT_TO_ChILD, NONE };
+
 class UIComponent : public UIRenderObject, public UITapHandler {
  public:
   UIComponent() {}
@@ -25,6 +29,8 @@ class UIComponent : public UIRenderObject, public UITapHandler {
   }
 
   std::string toString(int indent = 0) const override;
+
+  virtual void markHasDirty(const UIMarkDirtyType &type, const UIMarkDirtyCaller &caller) noexcept {};
 
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }

@@ -33,6 +33,12 @@ struct UISize {
   std::string toString() const noexcept { return fmt::format("UISize{ w: {}, h: {} }", width, height); }
 };
 
+inline constexpr bool operator==(const UISize &lhs, const UISize &rhs) noexcept {
+  return lhs.width == rhs.width && lhs.height == rhs.height;
+}
+
+inline constexpr bool operator!=(const UISize &lhs, const UISize &rhs) noexcept { return !(lhs == rhs); }
+
 inline constexpr UISize operator+(const UISize &lhs, const UISize &rhs) noexcept {
   return UISize{lhs.width + rhs.width, lhs.height + rhs.height};
 }
