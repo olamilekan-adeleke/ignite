@@ -1,6 +1,5 @@
 #pragma once
 
-#include <fmt/base.h>
 #include <include/core/SkCanvas.h>
 #include "basic/ui_component.hpp"
 #include "color.hpp"
@@ -32,7 +31,7 @@ struct CheckBoxParams {
 class CheckBoxRender : public UIComponent {
  public:
   CheckBoxRender(const CheckBoxParams &params) : params_(params) {
-    if (params_.onTap != nullptr) tapListener_ = params_.onTap;
+    if (params_.onTap != nullptr) setTapListener(params_.onTap);
   }
 
   void layout(UISize size) override;
@@ -54,9 +53,7 @@ class CheckBoxRender : public UIComponent {
 };
 
 inline bool CheckBoxRender::processChildTaps(const UITapEvent &event) {
-  if (params_.onTap == nullptr || tapListener_ == nullptr) {
-    return false;
-  }
+  if (params_.onTap == nullptr) return false;
   return onTap(event, bounds_);
 }
 

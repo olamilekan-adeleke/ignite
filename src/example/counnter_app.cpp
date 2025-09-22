@@ -11,12 +11,6 @@ class CounterTextWidget : public StatefulComponent {
   // clang-format off
   std::shared_ptr<UIComponent> body() override {
 
-    // auto param = CheckBoxParams{
-    //   .enable = false,
-    //   .size = {40, 40}
-    // };
-    // auto check = std::make_shared<CheckBoxRender>(param);
-
     return UI::VFlexBox({
       .spacing = 10,
       .crossAxisAlignment = CrossAxisAlignment::CENTER,

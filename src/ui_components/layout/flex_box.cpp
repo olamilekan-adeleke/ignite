@@ -116,6 +116,8 @@ void FlexBox::layout(UISize size) {
   float currentMain = getMainAxisStartPosition(availableSpaceLeft);
   const float spacing = getMainAxisSpacing(availableSpaceLeft);
 
+  // Use the flex box's actual cross-axis size instead of available size
+  // to ensure child positioning is relative to the container's computed bounds
   const float flexBoxCrossAxisSize = getChildCrossAxisSize(bounds_);
 
   for (size_t i = 0; i < param_.children.size(); ++i) {

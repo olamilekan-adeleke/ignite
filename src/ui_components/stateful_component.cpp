@@ -27,9 +27,9 @@ void StatefulComponent::layout(UISize size) {
   const auto child = getChild();
   if (child) {
     child->layout({size.width, size.height});
-    const auto childSize = child->getIntrinsicSize({.minWidth = size.width, .minHeight = size.height});
-    bounds_.width = childSize.width;
-    bounds_.height = childSize.height;
+    const auto childBounds = child->getBounds();
+    bounds_.width = childBounds.width;
+    bounds_.height = childBounds.height;
   }
 }
 
