@@ -58,7 +58,7 @@ inline std::shared_ptr<UIComponent> UICheckBox(const CheckBoxParams &params = {}
   return std::make_shared<CheckBox>(params);
 }
 
-inline std::shared_ptr<UIComponent> UIButton(const BottonParams &params = {}) {
+inline std::shared_ptr<UIComponent> UIButton(const ButtonParams &params = {}) {
   return std::make_shared<Button>(params);
 }
 

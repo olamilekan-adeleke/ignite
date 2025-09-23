@@ -3,7 +3,7 @@
 #include "elements/ui_view.hpp"
 #include "stateful_component.hpp"
 
-struct BottonParams {
+struct ButtonParams {
   std::shared_ptr<UIComponent> child = nullptr;
   bool enable = true;
   float radius = 4.0f;
@@ -15,7 +15,7 @@ struct BottonParams {
 
 class Button : public StatefulComponent {
  public:
-  Button(const BottonParams& param = {}) : param_(param) {}
+  Button(const ButtonParams& param = {}) : param_(param) {}
 
   std::shared_ptr<UIComponent> body() override {
     const TapListener onTap = param_.onTap;
@@ -26,14 +26,12 @@ class Button : public StatefulComponent {
         .child = param_.child,
     };
     viewParams.onTap = [this, onTap](const UITapEvent& e) {
-      if (!param_.enable) return;
-      fmt::println("Button tapped!");
-      if (onTap != nullptr) onTap(e);
+      if (param_.enable && onTap != nullptr) onTap(e);
     };
 
     return std::make_shared<View>(viewParams);
   }
 
  private:
-  BottonParams param_{};
+  ButtonParams param_{};
 };
