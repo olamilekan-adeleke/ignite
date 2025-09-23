@@ -17,6 +17,7 @@
 #include "layout/v_flex_box.hpp"
 
 #include "interactive_components/checkbox.hpp"
+#include "interactive_components/button.hpp"
 
 #include "ui_sized.hpp"
 #include "ui_text_field.hpp"
@@ -55,6 +56,10 @@ inline std::shared_ptr<UIComponent> UISeparator(const SeparatorParams &params = 
 
 inline std::shared_ptr<UIComponent> UICheckBox(const CheckBoxParams &params = {}) {
   return std::make_shared<CheckBox>(params);
+}
+
+inline std::shared_ptr<UIComponent> UIButton(const BottonParams &params = {}) {
+  return std::make_shared<Button>(params);
 }
 
 inline std::shared_ptr<UITextField> UITextFieldView(const UITextFieldParams &params = {}) {

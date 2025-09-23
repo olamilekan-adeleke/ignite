@@ -8,6 +8,24 @@ class TodoListWidget : public StatefulComponent {
   TodoListWidget() {}
 
   std::shared_ptr<UIComponent> body() override {
+    const std::shared_ptr<FlexBox> itemList = UI::UIFlexBox({
+        .spacing = 12,
+        .axis = Axis::VERTICAL,
+        .children =
+            {
+                makeTodoItem("Buy more coffec and monster"),
+                makeTodoItem("Finish C++ project"),
+                makeTodoItem("Call dad"),
+                makeTodoItem("Read 30 pages of a book"),
+                makeTodoItem("Don't forget to ragebait hb"),
+            },
+    });
+
+    const auto button = UI::UIButton({
+        .child = UI::Text("Reset All Item", {.color = Color::White(), .fontSize = 16}),
+        .onTap = [this](const UITapEvent& e) { markDirty(); },
+    });
+
     return UI::UIView({
         .insets = UIEdgeInsets{30, 20, 0, 20},
         .child = UI::VFlexBox({
@@ -19,19 +37,11 @@ class TodoListWidget : public StatefulComponent {
                     UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
 
                     UI::UIView({.insets = {.top = 20}, .child = UI::SizedView({})}),
+                    itemList,
 
-                    UI::UIFlexBox({
-                        .spacing = 12,
-                        .axis = Axis::VERTICAL,
-                        .children =
-                            {
-                                makeTodoItem("Buy more coffec and monster"),
-                                makeTodoItem("Finish C++ project"),
-                                makeTodoItem("Call dad"),
-                                makeTodoItem("Read 30 pages of a book"),
-                                makeTodoItem("Don't forget to ragebait hb"),
-                            },
-                    }),
+                    UI::UIView({.insets = {.top = 20}, .child = UI::SizedView({})}),
+                    button,
+
                 },
         }),
 
