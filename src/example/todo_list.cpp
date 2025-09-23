@@ -1,7 +1,7 @@
 #include "layout/flex_box.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
-#include "stateful_component.hpp"
+#include "interactive_components/stateful_component.hpp"
 
 class TodoListWidget : public StatefulComponent {
  public:
@@ -44,7 +44,6 @@ class TodoListWidget : public StatefulComponent {
 
                 },
         }),
-
     });
   }
 

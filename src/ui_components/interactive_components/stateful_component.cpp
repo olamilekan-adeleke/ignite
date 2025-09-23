@@ -2,7 +2,7 @@
 #include <memory>
 #include <sstream>
 #include "size.hpp"
-#include "stateful_component.hpp"
+#include "interactive_components/stateful_component.hpp"
 
 void StatefulComponent::markDirty() { isDirty_ = true; }
 
