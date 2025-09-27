@@ -38,7 +38,7 @@ inline const auto headerView = UI::HFlexBox({
     UI::UIView({
       .backgroundColor = Color(0x9E78CF).withAlpha(255 * 0.2),
       .borderRadius = 10.0F,
-      .child = UI::SizedView({.size = {.width = 380, .height = 40}})
+      .child = UI::FixedBoxView({.size = {.width = 380, .height = 40}})
     }),
     UI::UIView({
       .insets = {.top = 6, .left = 6, .right = 6, .bottom = 6},
@@ -57,7 +57,7 @@ inline const auto headerView = UI::HFlexBox({
 inline auto buildTodoItem(const TodoItem& item) {
 
   std::shared_ptr<UIComponent> checkBox = item.isDone  ?
-    UI::SizedView({}) :  
+    UI::FixedBoxView({}) :  
     UI::UIImageView({ .path = "assets/Check.png", .width = 22, .height = 22 });
 
   return UI::UIView({
@@ -65,11 +65,9 @@ inline auto buildTodoItem(const TodoItem& item) {
     .backgroundColor = Color(0x15101C).withAlpha(255),
     .borderRadius = 10.0F,
     .antiAlias = false,
-    .child = UI::SizedView({
+    .child = UI::FixedBoxView({
       .size = {.width = 432},
-      .align = UIAlignment::CenterLeft,
       .child = UI::HFlexBox({
-        // .mainAxisAlignment = MainAxisAlignment::SPACE_BETWEEN,
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .children = {
           UI::Text(item.title, {
@@ -127,7 +125,7 @@ inline auto bodyTodoListItems() {
         .weight = FontWeight::Normal,
       }),
       }),
-      UI::SizedView({.size = {.height = 18}}),
+      UI::FixedBoxView({.size = {.height = 18}}),
       UI::VFlexBox({
         .spacing = 16,
         .crossAxisAlignment = CrossAxisAlignment::START,
@@ -153,7 +151,7 @@ inline auto bodySuccessListItems() {
         .fontSize = 16,
         .weight = FontWeight::Normal,
       }),
-      UI::SizedView({.size = {.height = 18}}),
+      UI::FixedBoxView({.size = {.height = 18}}),
       UI::VFlexBox({
         .spacing = 16,
         .crossAxisAlignment = CrossAxisAlignment::START,
@@ -174,9 +172,9 @@ inline const auto rootApp = UI::UIView({
     .child = UI::VFlexBox({
       .children = {
         headerView,
-        UI::SizedView({.size = {.height = 50}}),
+        UI::FixedBoxView({.size = {.height = 50}}),
         bodyTodoListItems(),
-        UI::SizedView({.size = {.height = 50}}),
+        UI::FixedBoxView({.size = {.height = 50}}),
         bodySuccessListItems(),
       },
     }),
