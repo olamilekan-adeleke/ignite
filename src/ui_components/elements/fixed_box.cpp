@@ -10,7 +10,7 @@ UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
 
   return {
       w_fixed ? params_.size.width : (params_.child ? child_is.width : constraints.minWidth),
-      h_fixed ? params_.size.height : (params_.child ? child_is.height : constraints.maxHeight),
+      h_fixed ? params_.size.height : (params_.child ? child_is.height : constraints.minHeight),
   };
 }
 
