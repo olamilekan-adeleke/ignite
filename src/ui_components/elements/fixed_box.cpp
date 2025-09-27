@@ -1,7 +1,18 @@
 #include "elements/fixed_box.hpp"
 #include <fmt/base.h>
 
-UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept { return params_.size; }
+UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
+  const bool w_fixed = params_.size.width >= 0.f;
+  const bool h_fixed = params_.size.height >= 0.f;
+  UISize child_is{};
+
+  if (params_.child) child_is = params_.child->getIntrinsicSize(constraints);
+
+  return {
+      w_fixed ? params_.size.width : (params_.child ? child_is.width : constraints.minWidth),
+      h_fixed ? params_.size.height : (params_.child ? child_is.height : constraints.maxHeight),
+  };
+}
 
 void FixedBox::layout(UISize size) {
   float width = params_.size.width >= 0 ? params_.size.width : size.width;

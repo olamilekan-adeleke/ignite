@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <utility>
 #include <sstream>
 #include "basic/ui_component.hpp"
 
@@ -11,7 +12,7 @@ struct FixedBoxParam {
 
 class FixedBox : public UIComponent {
  public:
-  FixedBox(const FixedBoxParam &param = {}) : params_(std::move(param)) {};
+  FixedBox(FixedBoxParam param = {}) : params_(std::move(param)) {};
 
   void layout(UISize size) override;
   void draw(SkCanvas *canvas) override;

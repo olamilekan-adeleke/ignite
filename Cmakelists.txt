@@ -49,6 +49,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 
 find_package(unofficial-skia CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::skia::skia)
+target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::skia::modules::skparagraph)
 
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
