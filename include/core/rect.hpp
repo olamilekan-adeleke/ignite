@@ -18,6 +18,8 @@ struct UIRectParams {
 struct UIConstraints {
   float minWidth;
   float minHeight;
+  float maxWidth = -1.0f;   // -1.0f means unbounded
+  float maxHeight = -1.0f;  // -1.0f means unbounded
 
   UIConstraints shrinkBy(float horizontal, float vertical) const noexcept {
     return {minWidth - horizontal, minHeight - vertical};
