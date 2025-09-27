@@ -33,7 +33,9 @@ struct UISize {
   std::string toString() const noexcept { return fmt::format("UISize{ w: {}, h: {} }", width, height); }
 };
 
-inline std::ostream &operator<<(std::ostream &os, const UISize &size) noexcept { return os << size.toString(); }
+inline std::ostream &operator<<(std::ostream &os, const UISize &size) noexcept {
+  return os << "UISize{ w: " << size.width << ", h: " << size.height << " }";
+}
 
 inline constexpr bool operator==(const UISize &lhs, const UISize &rhs) noexcept {
   return lhs.width == rhs.width && lhs.height == rhs.height;

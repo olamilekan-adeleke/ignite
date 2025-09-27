@@ -5,7 +5,7 @@
 #include "basic/ui_component.hpp"
 
 struct FixedBoxParam {
-  UISize size = {0, 0};
+  UISize size = {-1.f, -1.f};
   std::shared_ptr<UIComponent> child = nullptr;
 };
 

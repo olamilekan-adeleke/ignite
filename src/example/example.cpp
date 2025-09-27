@@ -67,9 +67,7 @@ inline auto buildTodoItem(const TodoItem& item) {
     .antiAlias = false,
     .child = UI::SizedView({
       .size = {.width = 432},
-      .align = UIAlignment::CenterLeft,
       .child = UI::HFlexBox({
-        // .mainAxisAlignment = MainAxisAlignment::SPACE_BETWEEN,
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .children = {
           UI::Text(item.title, {
