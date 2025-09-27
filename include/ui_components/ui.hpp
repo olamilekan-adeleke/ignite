@@ -38,7 +38,7 @@ inline std::shared_ptr<FlexBox> VFlexBox(const VFlexParam &params = {}) {
 
 inline std::shared_ptr<View> UIView(const ViewParams &params = {}) { return std::make_shared<View>(params); }
 
-inline std::shared_ptr<UIComponent> SizedView(const FixedBoxParam &params = {}) {
+inline std::shared_ptr<UIComponent> FixedBoxView(const FixedBoxParam &params = {}) {
   return std::make_shared<FixedBox>(params);
 }
 
