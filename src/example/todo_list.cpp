@@ -44,12 +44,12 @@ class TodoListWidget : public StatefulComponent {
 
                     UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
                     button,
+
+                    UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    UI::UIView({.margin = UIEdgeInsets::horizonal(100), .child = makePara()}),
                 },
         }),
     });
-
-    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-    // UI::UIView({.margin = UIEdgeInsets::horizonal(100), .child = makePara()}),
   }
 
  private:

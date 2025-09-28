@@ -17,14 +17,14 @@ struct FontWeight {
 
   FontWeight(Value v) : value(v) {}
 
-  operator SkFontStyle() {
+  operator SkFontStyle() const {
     switch (value) {
       case Normal:
         return SkFontStyle(SkFontStyle::kNormal_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant);
       case Bold:
         return SkFontStyle(SkFontStyle::kBold_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant);
       case Light:
-        return SkFontStyle(SkFontStyle::kNormal_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant);
+        return SkFontStyle(SkFontStyle::kLight_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant);
     }
   }
 };
@@ -49,7 +49,7 @@ struct TextAlignment {
 
   TextAlignment(Value v) : value(v) {}
 
-  operator skia::textlayout::TextAlign() {
+  operator skia::textlayout::TextAlign() const {
     switch (value) {
       case left:
         return skia::textlayout::TextAlign::kLeft;
@@ -86,7 +86,7 @@ struct TextDecoration {
 
   TextDecoration(Value v) : value(v) {}
 
-  operator skia::textlayout::TextDecoration() {
+  operator skia::textlayout::TextDecoration() const {
     switch (value) {
       case underline:
         return skia::textlayout::kUnderline;

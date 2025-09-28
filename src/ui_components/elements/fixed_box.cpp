@@ -5,6 +5,9 @@ UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
   UISize size{};
 
   if (params_.child) size = params_.child->getIntrinsicSize(constraints);
+
+  if (params_.size.width >= 0) size.width = params_.size.width;
+  if (params_.size.height >= 0) size.height = params_.size.height;
   return size;
 }
 
