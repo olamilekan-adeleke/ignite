@@ -10,7 +10,14 @@ struct UIEdgeInsets {
   float bottom = 0.0f;
   float right = 0.0f;
 
-  // TODO: add setters
+  static UIEdgeInsets horizonal(float horizonalSpace) {
+    return UIEdgeInsets{.left = horizonalSpace, .right = horizonalSpace};
+  }
+
+  static UIEdgeInsets vertical(float verticalSpace) {
+    return UIEdgeInsets{.top = verticalSpace, .bottom = verticalSpace};
+  }
+
   float horizonal() const { return left + right; }
 
   float vertical() const { return top + bottom; }
@@ -23,3 +30,7 @@ struct UIEdgeInsets {
     return os.str();
   }
 };
+
+inline constexpr UIEdgeInsets operator+(const UIEdgeInsets lhs, const UIEdgeInsets rhs) noexcept {
+  return UIEdgeInsets{lhs.top + rhs.top, lhs.left + rhs.left, lhs.bottom + rhs.bottom, lhs.right + rhs.right};
+}
