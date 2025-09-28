@@ -1,8 +1,10 @@
+#include <fmt/base.h>
 #include <modules/skparagraph/include/ParagraphBuilder.h>
 #include "elements/paragraph_builder.hpp"
 #include "debug_assert.hpp"
 #include "size.hpp"
 #include "ui_manager.hpp"
+#include "rect.hpp"
 
 ParagraphBuilder::ParagraphBuilder(const std::string& text, const TextStyle& params) : text_(text), params_(params) {
   fontCollection_ = sk_make_sp<skia::textlayout::FontCollection>();
@@ -21,7 +23,9 @@ UISize ParagraphBuilder::getIntrinsicSize(UIConstraints constraints) noexcept {
   float paragraphMaxWidth = std::min(paragraph_->getMaxWidth(), paragraph_->getMaxIntrinsicWidth());
   float paragraphHeight = paragraph_->getHeight();
 
-  float usedWidth = std::min(constraints.minWidth, paragraphMaxWidth);
+  float usedWidth = std::min(constraints.minWidth, paragraph_->getMaxIntrinsicWidth());
+  usedWidth += 1.0f;  // Add a small buffer to prevent last word in single line text from clipping
+
   float usedHeight = paragraphHeight;
 
   VERIFY(paragraphMaxWidth > layoutWidth * 1.1f,
@@ -41,7 +45,8 @@ void ParagraphBuilder::draw(SkCanvas* canvas, SkPoint point) {
 
 void ParagraphBuilder::buildParagraph() {
   skia::textlayout::ParagraphStyle paragraphStyle;
-  paragraphStyle.setTextAlign(params_.textAlign);
+
+  paragraphStyle.setTextAlign(params_.textAlignment);
   if (params_.maxLines > 0) {
     paragraphStyle.setMaxLines(params_.maxLines);
     paragraphStyle.setEllipsis(u"...");
@@ -50,6 +55,9 @@ void ParagraphBuilder::buildParagraph() {
   skia::textlayout::TextStyle textStyle;
   textStyle.setColor(params_.color);
   textStyle.setFontSize(params_.fontSize);
+  textStyle.setFontStyle(params_.weight);
+  textStyle.setDecorationColor(params_.color);
+  textStyle.setDecoration(params_.decoration);
 
   std::unique_ptr<skia::textlayout::ParagraphBuilder> builder =
       skia::textlayout::ParagraphBuilder::make(paragraphStyle, fontCollection_);

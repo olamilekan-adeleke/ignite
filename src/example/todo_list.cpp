@@ -1,5 +1,4 @@
 #include <memory>
-#include "elements/paragraph_builder.hpp"
 #include "layout/flex_box.hpp"
 #include "text_style.hpp"
 #include "ui.hpp"
@@ -31,31 +30,26 @@ class TodoListWidget : public StatefulComponent {
     });
 
     return UI::UIView({
-        .insets = UIEdgeInsets{0, 0, 0, 0},
-        // .margin = UIEdgeInsets{.left = 20, .right = 20},
+        .insets = UIEdgeInsets::horizonal(20) + UIEdgeInsets::vertical(30),
         .child = UI::VFlexBox({
             .spacing = 6,
             .crossAxisAlignment = CrossAxisAlignment::START,
             .children =
                 {
-                    // UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
-                    // UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
-                    //
-                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                    // itemList,
-                    //
-                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                    // button,
-                    //
-                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                    UI::UIView({
-                        // .insets = UIEdgeInsets::horizonal(10),
-                        .margin = UIEdgeInsets::horizonal(100),
-                        .child = makePara(),
-                    }),
+                    UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
+                    UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
+
+                    UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    itemList,
+
+                    UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    button,
                 },
         }),
     });
+
+    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+    // UI::UIView({.margin = UIEdgeInsets::horizonal(100), .child = makePara()}),
   }
 
  private:
@@ -82,11 +76,7 @@ class TodoListWidget : public StatefulComponent {
         " 1234567890 @ #$ % ^&*()[]{ } < > / ? End of test ✅✨🔥 ";
     // text = "Hello word, this is a test";
 
-    const TextStyle params = {
-        .color = Color::Black(),
-        .fontSize = 18,
-    };
-
+    const TextStyle params{.color = Color::Black(), .fontSize = 18};
     return std::make_shared<TextRenderer>(text, params);
   }
 };

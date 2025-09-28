@@ -1,18 +1,36 @@
 #pragma once
 
+#include <include/core/SkFontStyle.h>
+#include <modules/skparagraph/include/DartTypes.h>
+#include <modules/skparagraph/include/TextStyle.h>
+#include <iostream>
 #include <sstream>
 #include "color.hpp"
-#include "modules/skparagraph/include/Paragraph.h"
 
 /**
  * @brief The FontWeight enum represents the font weight of a Text element.
  *
  * e.g. FontWeight::Normal, FontWeight::Bold, FontWeight::Light
  */
-enum class FontWeight { Normal, Bold, Light };
+struct FontWeight {
+  enum Value { Normal, Bold, Light } value;
+
+  FontWeight(Value v) : value(v) {}
+
+  operator SkFontStyle() {
+    switch (value) {
+      case Normal:
+        return SkFontStyle(SkFontStyle::kNormal_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant);
+      case Bold:
+        return SkFontStyle(SkFontStyle::kBold_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant);
+      case Light:
+        return SkFontStyle(SkFontStyle::kNormal_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant);
+    }
+  }
+};
 
 inline std::ostream& operator<<(std::ostream& os, const FontWeight& weight) {
-  switch (weight) {
+  switch (weight.value) {
     case FontWeight::Normal:
       os << "Normal";
       break;
@@ -26,10 +44,62 @@ inline std::ostream& operator<<(std::ostream& os, const FontWeight& weight) {
   return os;
 }
 
-enum class TextDecoration { underline, strikethrough, none };
+struct TextAlignment {
+  enum Value { left, center, right, justified } value;
+
+  TextAlignment(Value v) : value(v) {}
+
+  operator skia::textlayout::TextAlign() {
+    switch (value) {
+      case left:
+        return skia::textlayout::TextAlign::kLeft;
+      case center:
+        return skia::textlayout::TextAlign::kCenter;
+      case right:
+        return skia::textlayout::TextAlign::kRight;
+      case justified:
+        return skia::textlayout::TextAlign::kJustify;
+    }
+  }
+};
+
+inline std::ostream& operator<<(std::ostream& os, const TextAlignment& alignment) {
+  switch (alignment.value) {
+    case TextAlignment::left:
+      os << "left";
+      break;
+    case TextAlignment::center:
+      os << "center";
+      break;
+    case TextAlignment::right:
+      os << "right";
+      break;
+    case TextAlignment::justified:
+      os << "justified";
+      break;
+  }
+  return os;
+}
+
+struct TextDecoration {
+  enum Value { underline, strikethrough, none } value;
+
+  TextDecoration(Value v) : value(v) {}
+
+  operator skia::textlayout::TextDecoration() {
+    switch (value) {
+      case underline:
+        return skia::textlayout::kUnderline;
+      case strikethrough:
+        return skia::textlayout::kLineThrough;
+      case none:
+        return skia::textlayout::kNoDecoration;
+    }
+  }
+};
 
 inline std::ostream& operator<<(std::ostream& os, const TextDecoration& decoration) {
-  switch (decoration) {
+  switch (decoration.value) {
     case TextDecoration::underline:
       os << "underline";
       break;
@@ -49,7 +119,7 @@ struct TextStyle {
   FontWeight weight = FontWeight::Normal;
   TextDecoration decoration = TextDecoration::none;
   bool italic = false;
-  skia::textlayout::TextAlign textAlign = skia::textlayout::TextAlign::kLeft;
+  TextAlignment textAlignment = TextAlignment::left;
   int maxLines = 0;
 
   std::string toString() const {
@@ -60,7 +130,7 @@ struct TextStyle {
     os << "weight: " << weight << ", ";
     os << "decoration: " << decoration << ", ";
     os << "italic: " << (italic ? "true" : "false") << ", ";
-    os << "textAlign: " << static_cast<int>(textAlign) << ", ";
+    os << "textAlign: " << textAlignment << ", ";
     os << "maxLines: " << maxLines;
     os << "}";
     return os.str();

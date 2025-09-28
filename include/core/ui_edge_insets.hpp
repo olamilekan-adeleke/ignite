@@ -30,3 +30,7 @@ struct UIEdgeInsets {
     return os.str();
   }
 };
+
+inline constexpr UIEdgeInsets operator+(const UIEdgeInsets lhs, const UIEdgeInsets rhs) noexcept {
+  return UIEdgeInsets{lhs.top + rhs.top, lhs.left + rhs.left, lhs.bottom + rhs.bottom, lhs.right + rhs.right};
+}
