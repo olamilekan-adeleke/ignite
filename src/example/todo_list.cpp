@@ -49,7 +49,8 @@ class TodoListWidget : public StatefulComponent {
                     //
                     // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
                     UI::UIView({
-                        .insets = UIEdgeInsets::horizonal(100),
+                        // .insets = UIEdgeInsets::horizonal(10),
+                        .margin = UIEdgeInsets::horizonal(100),
                         .child = makePara(),
                     }),
                 },
@@ -72,13 +73,14 @@ class TodoListWidget : public StatefulComponent {
   }
 
   std::shared_ptr<UIComponent> makePara() {
-    const auto text =
+    auto text =
         "Hello, world! 🙂🚀🔥🍕❤️🎉🐱🌍✨  This is a long test string with multiple languages and emojis. العربية: "
         "مرحبًا بك في الاختبار، كيف حالك اليوم؟ 中文 : 你好，世界！这是一个文本渲染测试字符串。 हिन्दी : नमस्ते, यह एक "
         "लंबा परीक्षण स्ट्रिंग है। Русский : Привет, это строка для тестирования рендеринга текста.日本語 : "
         "こんにちは、これはテキストレンダリングのテストです。  Yorùbá: Bawo ni, ayé! Èyí jẹ́ ìdánwò pípa ọrọ́. "
         "Accents & combining marks: é ã ö ů n̄ ṡ ž  Mixed directions: hello שלום مرحبا world 🌍  Numbers & symbols : "
         " 1234567890 @ #$ % ^&*()[]{ } < > / ? End of test ✅✨🔥 ";
+    // text = "Hello word, this is a test";
 
     const TextStyle params = {
         .color = Color::Black(),
