@@ -55,8 +55,7 @@ void ParagraphBuilder::buildParagraph() {
       skia::textlayout::ParagraphBuilder::make(paragraphStyle, fontCollection_);
 
   builder->pushStyle(textStyle);
-  const std::u16string text = utf8_to_utf16(text_);
-  builder->addText(text);
+  builder->addText(text_.c_str());
   builder->pop();
 
   paragraph_ = builder->Build();
