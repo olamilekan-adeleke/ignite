@@ -114,3 +114,51 @@ bool UIManager::shouldRebuild(const std::shared_ptr<UIComponent> &oldNode,
 
   return false;
 }
+
+void UIManager::sendKeyEvent(int key, int scancode, int action, int mods) {
+  // Logger::log(fmt::format("Key Event: key={}, scancode={}, action={}, mods={}", key, scancode, action,
+  // mods).c_str());
+
+  // if (currentTreeRoot_) { }
+}
+
+void UIManager::sendMouseEvent(double xpos, double ypos) {
+  Logger::log(fmt::format("Mouse Event: xpos={}, ypos={}", xpos, ypos).c_str());
+
+  if (!currentTreeRoot_) return;
+  std::shared_ptr<UIComponent> newHoveredComponent = nullptr;
+
+  std::function<void(const std::shared_ptr<UIComponent> &)> findHovered =
+      [&](const std::shared_ptr<UIComponent> &component) {
+        if (component && component->getBounds().contains(xpos, ypos)) {
+          newHoveredComponent = component;
+
+          for (const auto &child : component->children()) {
+            findHovered(child);
+          }
+        }
+      };
+
+  findHovered(currentTreeRoot_);
+
+  if (newHoveredComponent != currentHoveredComponent_) {
+    if (currentHoveredComponent_) {
+      // currentHoveredComponent_->onHoverExit();
+    }
+    if (newHoveredComponent) {
+      // newHoveredComponent->onHoverEnter();
+    }
+    currentHoveredComponent_ = newHoveredComponent;
+  }
+
+  if (currentHoveredComponent_) {
+    // currentHoveredComponent_->onHoverMove(xpos, ypos);
+  }
+}
+
+void UIManager::sendCharEvent(unsigned int codepoint) {
+  // Logger::log(fmt::format("Char Event: codepoint={} (char='{}')", codepoint, static_cast<char>(codepoint)).c_str());
+  if (currentTreeRoot_) {
+    currentTreeRoot_->handleCharEvent(static_cast<char>(codepoint));
+  }
+}

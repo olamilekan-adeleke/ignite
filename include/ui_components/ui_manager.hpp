@@ -13,7 +13,7 @@
 #include "tap_event.hpp"
 
 namespace Debug {
-inline bool ui_debug_mode = true;
+inline bool ui_debug_mode = false;
 }
 
 // just to maanger some UI Shit
@@ -35,6 +35,10 @@ class UIManager {
 
   void sendTapEvent(const UITapEvent &event);
 
+  void sendKeyEvent(int key, int scancode, int action, int mods);
+  void sendMouseEvent(double xpos, double ypos);
+  void sendCharEvent(unsigned int codepoint);
+
  private:
   sk_sp<SkFontMgr> fontMgr_;
   sk_sp<SkTypeface> defaultTypeface_;
@@ -47,6 +51,9 @@ class UIManager {
   bool dirty_ = false;
 
   bool shouldRebuild(const std::shared_ptr<UIComponent> &oldNode, const std::shared_ptr<UIComponent> &newNode);
+
+  std::shared_ptr<UIComponent> currentHoveredComponent_ = nullptr;
+  std::shared_ptr<UIComponent> currentFocusedComponent_ = nullptr;
 };
 
 class UICacheManager {

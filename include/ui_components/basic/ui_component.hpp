@@ -5,15 +5,17 @@
 
 #include <memory>
 #include <vector>
+
 #include "basic/ui_render_object.hpp"
 #include "basic/ui_tap_handler.hpp"
+#include "basic/ui_text_input_handler.hpp"
 #include "tap_event.hpp"
 
 enum class UIMarkDirtyType : uint8_t { LAYOUT, DRAW };
 
 enum class UIMarkDirtyCaller : uint8_t { PARENT_TO_ChILD, NONE };
 
-class UIComponent : public UIRenderObject, public UITapHandler {
+class UIComponent : public UIRenderObject, public UITapHandler, public UITextInputHandler {
  public:
   UIComponent() {}
   virtual ~UIComponent() = default;
