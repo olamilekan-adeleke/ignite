@@ -59,8 +59,14 @@ class View : public UIComponent {
 
   void debugFillProperties(std::ostringstream &os, int indent) const override;
 
+  void handleCharEvent(char letter) noexcept override;
+
   ViewParams params_;
 };
+
+inline void View::handleCharEvent(char letter) noexcept {
+  if (params_.child) params_.child->handleCharEvent(letter);
+}
 
 inline void View::debugFillProperties(std::ostringstream &os, int indent) const {
   UIComponent::debugFillProperties(os, indent);

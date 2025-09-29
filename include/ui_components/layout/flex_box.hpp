@@ -47,9 +47,17 @@ class FlexBox : public UIComponent {
 
   float getMainAxisSpacing(float availableSizeLeft) const noexcept;
 
+  void handleCharEvent(char letter) noexcept override;
+
  private:
   FlexParam param_;
 };
+
+inline void FlexBox::handleCharEvent(char letter) noexcept {
+  for (auto& child : param_.children) {
+    child->handleCharEvent(letter);
+  }
+}
 
 inline bool FlexBox::processChildTaps(const UITapEvent& event) {
   if (!bounds_.contains(event.x, event.y)) return false;

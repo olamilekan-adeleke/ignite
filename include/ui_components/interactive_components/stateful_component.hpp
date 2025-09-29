@@ -26,8 +26,14 @@ class StatefulComponent : public UIComponent {
 
   std::string toString(int indent = 0) const override;
 
+  void handleCharEvent(char letter) noexcept override;
+
  private:
   bool isDirty_;
   std::shared_ptr<UIComponent> cachedBody_;
   mutable std::vector<std::shared_ptr<UIComponent>> statefulChildren_;
 };
+
+inline void StatefulComponent::handleCharEvent(char letter) noexcept {
+  if (cachedBody_) cachedBody_->handleCharEvent(letter);
+}
