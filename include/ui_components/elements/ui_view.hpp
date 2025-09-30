@@ -61,11 +61,17 @@ class View : public UIComponent {
 
   void handleCharEvent(char letter) noexcept override;
 
+  void handleKeyEvent(KeyEvent &key) noexcept override;
+
   ViewParams params_;
 };
 
 inline void View::handleCharEvent(char letter) noexcept {
   if (params_.child) params_.child->handleCharEvent(letter);
+}
+
+inline void View::handleKeyEvent(KeyEvent &key) noexcept {
+  if (params_.child) params_.child->handleKeyEvent(key);
 }
 
 inline void View::debugFillProperties(std::ostringstream &os, int indent) const {

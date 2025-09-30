@@ -6,6 +6,7 @@
 #include <string>
 
 #include "core/logger.hpp"
+#include "keyboard_key_event.hpp"
 #include "tap_event.hpp"
 
 #if defined(SK_BUILD_FOR_MAC)
@@ -116,10 +117,13 @@ bool UIManager::shouldRebuild(const std::shared_ptr<UIComponent> &oldNode,
 }
 
 void UIManager::sendKeyEvent(int key, int scancode, int action, int mods) {
-  // Logger::log(fmt::format("Key Event: key={}, scancode={}, action={}, mods={}", key, scancode, action,
-  // mods).c_str());
+  if (!currentTreeRoot_ || scancode == 0) return;
 
-  // if (currentTreeRoot_) { }
+  KeyEvent event{static_cast<KeyboardKey>(key), static_cast<KeyAction>(action), mods};
+  if (event.action == KeyAction::RELEASE || event.action == KeyAction::REPEAT) {
+    fmt::println("Key Event: key={}, scancode={}, action={}, mods={}", key, scancode, action, mods);
+    currentTreeRoot_->handleKeyEvent(event);
+  }
 }
 
 void UIManager::sendMouseEvent(double xpos, double ypos) {

@@ -24,6 +24,7 @@ UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
 }
 
 void View::layout(UISize size) {
+  fmt::println("View::layout({},{}) at x:{},y:{}", size.width, size.height, bounds_.x, bounds_.y);
   const bool wantsToFillMainAxis = this->wantsToFillMainAxis();
 
   if (params_.child) {

@@ -32,8 +32,8 @@ UISize TextFieldRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
 }
 
 void TextFieldRenderer::layout(UISize size) {
-  bounds_.width = size.width;
-  bounds_.height = size.height;
+  fmt::println("TextFieldRenderer::layout({},{}) at x:{},y:{}", size.width, size.height, bounds_.x, bounds_.y);
+  setSize(size.width, size.height);
 }
 
 void TextFieldRenderer::draw(SkCanvas* canvas) {

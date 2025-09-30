@@ -49,6 +49,8 @@ class FlexBox : public UIComponent {
 
   void handleCharEvent(char letter) noexcept override;
 
+  void handleKeyEvent(KeyEvent& key) noexcept override;
+
  private:
   FlexParam param_;
 };
@@ -56,6 +58,12 @@ class FlexBox : public UIComponent {
 inline void FlexBox::handleCharEvent(char letter) noexcept {
   for (auto& child : param_.children) {
     child->handleCharEvent(letter);
+  }
+}
+
+inline void FlexBox::handleKeyEvent(KeyEvent& key) noexcept {
+  for (auto& child : param_.children) {
+    child->handleKeyEvent(key);
   }
 }
 
@@ -68,9 +76,7 @@ inline bool FlexBox::processChildTaps(const UITapEvent& event) {
   localEvent.y = event.y - bounds_.y;
 
   for (auto& child : param_.children) {
-    if (child->processTap(localEvent)) {
-      return true;
-    }
+    if (child->processTap(localEvent)) return true;
   }
   return false;
 }

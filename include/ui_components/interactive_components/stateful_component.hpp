@@ -28,6 +28,8 @@ class StatefulComponent : public UIComponent {
 
   void handleCharEvent(char letter) noexcept override;
 
+  void handleKeyEvent(KeyEvent &key) noexcept override;
+
  private:
   bool isDirty_;
   std::shared_ptr<UIComponent> cachedBody_;
@@ -36,4 +38,8 @@ class StatefulComponent : public UIComponent {
 
 inline void StatefulComponent::handleCharEvent(char letter) noexcept {
   if (cachedBody_) cachedBody_->handleCharEvent(letter);
+}
+
+inline void StatefulComponent::handleKeyEvent(KeyEvent &key) noexcept {
+  if (cachedBody_) cachedBody_->handleKeyEvent(key);
 }

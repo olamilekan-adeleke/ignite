@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include "keyboard_key_event.hpp"
 
 using KeyCallback = std::function<void(int, int, int, int)>;
 using CharCallback = std::function<void(unsigned int)>;
@@ -10,6 +11,8 @@ class UITextInputHandler {
   UITextInputHandler() {};
 
   virtual void handleCharEvent(char letter) noexcept {};
+
+  virtual void handleKeyEvent(KeyEvent& key) noexcept {};
 
   void setFocus(bool focus) noexcept { hasFocus_ = focus; }
   bool hasFocus() const noexcept { return hasFocus_; }
