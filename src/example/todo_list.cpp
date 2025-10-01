@@ -84,7 +84,8 @@ class TodoListWidget : public StatefulComponent {
                     .enable = done,
                     .size = {24, 24},
                     .onTap =
-                        [&, index](const UITapEvent &e) {
+                        [&, index, done](const UITapEvent &e) {
+                          fmt::println("onTap: {}, {}", index, done);
                           data.markDone(index, !done);
                           markDirty();
                         },
