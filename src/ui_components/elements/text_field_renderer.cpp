@@ -5,22 +5,36 @@
 
 #include "rect.hpp"
 #include "size.hpp"
+#include "ui_manager.hpp"
 
 #include "elements/text_field_renderer.hpp"
 
 UISize TextFieldRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
-  const float minWidth = params_.width;
   const float minHeight = params_.minHeight;
 
+  float contentWidth = 0.0f;
+  if (params_.width > 0.0f) {
+    contentWidth = params_.width - params_.padding.horizonal();
+  } else if (constraints.minWidth > 0.0f) {
+    contentWidth = constraints.minWidth - params_.padding.horizonal();
+  }
+
   UIConstraints contentConstraints = {
-      std::max(0.0f, constraints.minWidth - params_.padding.horizonal()),
-      std::max(0.0f, constraints.minHeight - params_.padding.vertical()),
+      .minWidth = std::max(0.0f, contentWidth),
   };
 
   const UISize& placeHolderSize = placeholderParagraph_.getIntrinsicSize(contentConstraints);
   const UISize& valueSize = textValueParagraph_.getIntrinsicSize(contentConstraints);
 
-  float contentWidth = std::max(minWidth, std::max(placeHolderSize.width, valueSize.width));
+  float finalWidth;
+  if (params_.width > 0.0f) {
+    finalWidth = params_.width;
+  } else if (constraints.minWidth > 0.0f) {
+    finalWidth = constraints.minWidth;
+  } else {
+    finalWidth = std::max(placeHolderSize.width, valueSize.width) + params_.padding.horizonal();
+  }
+
   float contentHeight;
   if (params_.multiline) {
     contentHeight = valueSize.height;
@@ -31,10 +45,12 @@ UISize TextFieldRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
   lastTextFieldHeight_ = std::max(placeHolderSize.height, valueSize.height);
 
   return UISize{
-      contentWidth + params_.padding.horizonal(),
+      finalWidth,
       contentHeight + params_.padding.vertical(),
   };
 }
+
+void TextFieldRenderer::onTextFieldTap() noexcept { UIManager::instance().requestFocus(*this); }
 
 void TextFieldRenderer::layout(UISize size) { setSize(size.width, size.height); }
 

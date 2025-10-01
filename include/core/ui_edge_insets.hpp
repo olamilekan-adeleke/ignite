@@ -18,6 +18,10 @@ struct UIEdgeInsets {
     return UIEdgeInsets{.top = verticalSpace, .bottom = verticalSpace};
   }
 
+  static UIEdgeInsets all(float space) {
+    return UIEdgeInsets{.top = space, .left = space, .bottom = space, .right = space};
+  }
+
   float horizonal() const { return left + right; }
 
   float vertical() const { return top + bottom; }

@@ -14,6 +14,7 @@
 #include "example/example.cpp"
 #include "example/counnter_app.cpp"
 #include "example/todo_list.cpp"
+#include "example/paragraph_test.cpp"
 
 using std::string;
 
@@ -51,8 +52,10 @@ int main() {
 
     auto counter_example = std::make_shared<CounterComponent>();
     auto todoList = std::make_shared<TodoListWidget>();
+    auto paragraphTest = std::make_shared<ParagraphTestWidget>();
     // std::shared_ptr<UIComponent> rootUI = counter_example;
     std::shared_ptr<UIComponent> rootUI = todoList;
+    // std::shared_ptr<UIComponent> rootUI = paragraphTest;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
 
     // FPS tracking variables

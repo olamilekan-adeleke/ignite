@@ -14,7 +14,6 @@
 
 #include "basic/ui_component.hpp"
 #include "elements/paragraph_builder.hpp"
-#include "ui_manager.hpp"
 
 struct UITextFieldParams {
   UIEdgeInsets padding{8.0f, 12.0f, 8.0f, 12.0f};
@@ -28,6 +27,7 @@ struct UITextFieldParams {
   float width = 120.0f;
   float minHeight = 20.0f;
   bool multiline = false;
+  ValueChangedListener<std::string> onChanged = nullptr;
 };
 
 class TextFieldRenderer : public UIComponent {
@@ -36,6 +36,15 @@ class TextFieldRenderer : public UIComponent {
       : params_(params),
         textValueParagraph_(params_.value, params_.textStyle),
         placeholderParagraph_(params_.placeholder, params_.placeholderStyle) {
+    if (!params_.value.empty()) {
+      size_t position = 0;
+      while (position < params_.value.size()) {
+        std::string utf8Char = extractUtf8Char(params_.value, position);
+        if (!utf8Char.empty()) buffer_.push_back(utf8Char);
+      }
+      cursorIndex_ = static_cast<uint32_t>(buffer_.size());
+    }
+
     lastBlinkTime_ = std::chrono::steady_clock::now();
     cursorVisible_ = true;
 
@@ -59,11 +68,9 @@ class TextFieldRenderer : public UIComponent {
   void onTextFieldTap() noexcept;
 
   void insertLetter(std::string letter) noexcept;
-
   void deleteLetter(uint32_t index) noexcept;
 
   void handleCharEvent(std::string letter) noexcept override;
-
   void handleKeyEvent(KeyEvent& key) noexcept override;
 
   void setCursorIndex(uint32_t index) noexcept;
@@ -84,8 +91,6 @@ class TextFieldRenderer : public UIComponent {
   std::vector<std::string> buffer_{};
 };
 
-inline void TextFieldRenderer::onTextFieldTap() noexcept { UIManager::instance().requestFocus(*this); }
-
 inline void TextFieldRenderer::insertLetter(std::string letter) noexcept {
   auto insertIdx = buffer_.begin() + cursorIndex_;
   if (insertIdx >= buffer_.end()) {
@@ -97,7 +102,9 @@ inline void TextFieldRenderer::insertLetter(std::string letter) noexcept {
 
   std::string newText = text();
   textValueParagraph_.setText(newText);
-  fmt::println("DEBUG: New text: {}", text());
+  // fmt::println("DEBUG: New text: {}", text());
+
+  if (params_.onChanged) params_.onChanged(text());
 }
 
 inline void TextFieldRenderer::deleteLetter(uint32_t index) noexcept {
@@ -109,15 +116,16 @@ inline void TextFieldRenderer::deleteLetter(uint32_t index) noexcept {
 
   const std::string& newText = text();
   textValueParagraph_.setText(newText);
-  fmt::println("DEBUG: New text: {}", text());
+  // fmt::println("DEBUG: New text: {}", text());
+
+  if (params_.onChanged) params_.onChanged(text());
 }
 
 inline void TextFieldRenderer::handleCharEvent(std::string letter) noexcept {
   if (!hasFocus()) return;
-
-  size_t posistion = 0;
-  while (posistion < letter.length()) {
-    std::string utf8Char = extractUtf8Char(letter, posistion);
+  size_t position = 0;
+  while (position < letter.length()) {
+    std::string utf8Char = extractUtf8Char(letter, position);
     if (!utf8Char.empty()) insertLetter(utf8Char);
   }
 }
