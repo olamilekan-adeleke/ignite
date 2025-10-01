@@ -36,6 +36,18 @@ class StatefulComponent : public UIComponent {
   mutable std::vector<std::shared_ptr<UIComponent>> statefulChildren_;
 };
 
+inline bool StatefulComponent::processChildTaps(const UITapEvent &event) {
+  const auto child = getChild();
+  if (child) {
+    UITapEvent localEvent = event;
+    localEvent.x -= bounds_.x;
+    localEvent.y -= bounds_.y;
+
+    return child->processTap(localEvent);
+  }
+  return false;
+}
+
 inline void StatefulComponent::handleCharEvent(char letter) noexcept {
   if (cachedBody_) cachedBody_->handleCharEvent(letter);
 }

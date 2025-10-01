@@ -52,8 +52,13 @@ class View : public UIComponent {
  protected:
   bool processChildTaps(const UITapEvent &event) override {
     if (params_.child) {
-      return params_.child->processTap(event);
+      UITapEvent localEvent = event;
+      localEvent.x -= bounds_.x;
+      localEvent.y -= bounds_.y;
+
+      return params_.child->processTap(localEvent);
     }
+
     return false;
   }
 

@@ -48,18 +48,6 @@ const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::children() c
   return statefulChildren_;
 }
 
-bool StatefulComponent::processChildTaps(const UITapEvent &event) {
-  const auto child = getChild();
-  if (child) {
-    UITapEvent localEvent = event;
-    localEvent.x -= bounds_.x;
-    localEvent.y -= bounds_.y;
-
-    return child->processTap(localEvent);
-  }
-  return false;
-}
-
 std::string StatefulComponent::toString(int indent) const {
   std::ostringstream os;
   std::string pad(indent, ' ');
