@@ -10,7 +10,7 @@ class UITextInputHandler {
  public:
   UITextInputHandler() = default;
 
-  virtual void handleCharEvent(char letter) noexcept {};
+  virtual void handleCharEvent(std::string letter) noexcept {};
 
   virtual void handleKeyEvent(KeyEvent& key) noexcept {};
 

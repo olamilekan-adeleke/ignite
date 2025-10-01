@@ -34,7 +34,7 @@ class UIComponent : public UIRenderObject, public UITapHandler, public UITextInp
 
   virtual void markHasDirty(const UIMarkDirtyType &type, const UIMarkDirtyCaller &caller) noexcept {};
 
-  void handleCharEvent(char letter) noexcept override;
+  void handleCharEvent(std::string letter) noexcept override;
 
   void handleKeyEvent(KeyEvent &key) noexcept override;
 
@@ -50,7 +50,9 @@ class UIComponent : public UIRenderObject, public UITapHandler, public UITextInp
   std::shared_ptr<UIComponent> child_;
 };
 
-inline void UIComponent::handleCharEvent(char letter) noexcept {
+inline void UIComponent::handleCharEvent(std::string letter) noexcept {
+  // if (!hasFocus()) return;
+
   const auto children = this->children();
   for (auto &child : children) {
     child->handleCharEvent(letter);
@@ -60,6 +62,8 @@ inline void UIComponent::handleCharEvent(char letter) noexcept {
 }
 
 inline void UIComponent::handleKeyEvent(KeyEvent &key) noexcept {
+  // if (!hasFocus()) return;
+
   const auto children = this->children();
   for (auto &child : children) {
     child->handleKeyEvent(key);

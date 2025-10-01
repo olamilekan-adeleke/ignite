@@ -1,15 +1,16 @@
 #pragma once
 
 #include <fmt/base.h>
+#include <cstddef>
 #include <cstdint>
 #include <string>
-#include <string_view>
 #include <vector>
 
 #include "color.hpp"
 #include "keyboard_key_event.hpp"
 #include "text_style.hpp"
 #include "ui_edge_insets.hpp"
+#include "utils_helper.hpp"
 
 #include "basic/ui_component.hpp"
 #include "elements/paragraph_builder.hpp"
@@ -46,23 +47,27 @@ class TextFieldRenderer : public UIComponent {
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
  protected:
-  std::string_view text() const { return std::string_view(buffer_.data(), buffer_.size()); }
+  std::string text() const {
+    std::string value;
+    for (const auto& letter : buffer_) {
+      value += letter;
+    }
+    return value;
+  }
 
   void onTextFieldTap() noexcept;
 
-  void insertLetter(char letter) noexcept;
+  void insertLetter(std::string letter) noexcept;
 
   void deleteLetter(uint32_t index) noexcept;
 
-  void handleCharEvent(char letter) noexcept override;
+  void handleCharEvent(std::string letter) noexcept override;
 
   void handleKeyEvent(KeyEvent& key) noexcept override;
 
   void setCursorIndex(uint32_t index) noexcept;
 
   void debugFillProperties(std::ostringstream& os, int indent) const override;
-
-  bool processChildTaps(const UITapEvent& event) override;
 
  private:
   UITextFieldParams params_;
@@ -75,12 +80,12 @@ class TextFieldRenderer : public UIComponent {
 
   float lastTextFieldHeight_ = 0;
   uint32_t cursorIndex_ = 0;
-  std::vector<char> buffer_{};
+  std::vector<std::string> buffer_{};
 };
 
 inline void TextFieldRenderer::onTextFieldTap() noexcept { UIManager::instance().requestFocus(*this); }
 
-inline void TextFieldRenderer::insertLetter(char letter) noexcept {
+inline void TextFieldRenderer::insertLetter(std::string letter) noexcept {
   auto insertIdx = buffer_.begin() + cursorIndex_;
   if (insertIdx >= buffer_.end()) {
     insertIdx = buffer_.end();
@@ -89,9 +94,9 @@ inline void TextFieldRenderer::insertLetter(char letter) noexcept {
   buffer_.insert(insertIdx, letter);
   setCursorIndex(cursorIndex_ + 1);
 
-  const std::string& newText = std::string(buffer_.begin(), buffer_.end());
+  std::string newText = text();
   textValueParagraph_.setText(newText);
-  fmt::println("DEBUG: New text: {}", std::string(buffer_.begin(), buffer_.end()));
+  fmt::println("DEBUG: New text: {}", text());
 }
 
 inline void TextFieldRenderer::deleteLetter(uint32_t index) noexcept {
@@ -101,39 +106,38 @@ inline void TextFieldRenderer::deleteLetter(uint32_t index) noexcept {
   buffer_.erase(deleteIdx);
   setCursorIndex(cursorIndex_ - 1);
 
-  const std::string& newText = std::string(buffer_.begin(), buffer_.end());
+  const std::string& newText = text();
   textValueParagraph_.setText(newText);
-  fmt::println("DEBUG: New text: {}", std::string(buffer_.begin(), buffer_.end()));
+  fmt::println("DEBUG: New text: {}", text());
 }
 
-inline void TextFieldRenderer::handleCharEvent(char letter) noexcept {
+inline void TextFieldRenderer::handleCharEvent(std::string letter) noexcept {
   if (!hasFocus()) return;
-  insertLetter(letter);
+
+  size_t posistion = 0;
+  while (posistion < letter.length()) {
+    std::string utf8Char = extractUtf8Char(letter, posistion);
+    if (!utf8Char.empty()) insertLetter(utf8Char);
+  }
 }
 
 inline void TextFieldRenderer::handleKeyEvent(KeyEvent& key) noexcept {
   if (!hasFocus()) return;
   if (key.key == KeyboardKey::BACKSPACE) {
-    deleteLetter(cursorIndex_ - 1);
+    if (cursorIndex_ > 0) deleteLetter(cursorIndex_ - 1);
   } else if (key.key == KeyboardKey::LEFT) {
-    setCursorIndex(cursorIndex_ - 1);
+    if (cursorIndex_ > 0) setCursorIndex(cursorIndex_ - 1);
   } else if (key.key == KeyboardKey::RIGHT) {
-    setCursorIndex(cursorIndex_ + 1);
+    if (cursorIndex_ < buffer_.size()) setCursorIndex(cursorIndex_ + 1);
   } else if (key.key == KeyboardKey::ENTER) {
-    insertLetter('\n');
+    insertLetter("\n");
   } else if (key.key == KeyboardKey::TAB) {
-    insertLetter('\t');
+    insertLetter("\t");
   }
 }
 
 inline void TextFieldRenderer::setCursorIndex(uint32_t index) noexcept {
   cursorIndex_ = std::min(index, static_cast<uint32_t>(buffer_.size()));
-}
-
-inline bool TextFieldRenderer::processChildTaps(const UITapEvent& event) {
-  auto result = onTap(event, bounds_);
-  setFocus(result);
-  return result;
 }
 
 inline void TextFieldRenderer::debugFillProperties(std::ostringstream& os, int indent) const {

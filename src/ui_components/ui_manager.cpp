@@ -112,7 +112,8 @@ void UIManager::sendKeyEvent(int key, int scancode, int action, int mods) {
 void UIManager::sendCharEvent(unsigned int codepoint) {
   // Logger::log(fmt::format("Char Event: codepoint={} (char='{}')", codepoint, static_cast<char>(codepoint)).c_str());
   if (currentTreeRoot_) {
-    currentTreeRoot_->handleCharEvent(static_cast<char>(codepoint));
+    std::string utf8Char = std::string(1, static_cast<char>(codepoint));
+    currentTreeRoot_->handleCharEvent(utf8Char);
   }
 }
 
