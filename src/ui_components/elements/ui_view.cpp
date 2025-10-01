@@ -1,5 +1,4 @@
 #include "elements/ui_view.hpp"
-#include <fmt/base.h>
 #include <include/core/SkPaint.h>
 #include <include/core/SkRRect.h>
 #include <include/core/SkRect.h>

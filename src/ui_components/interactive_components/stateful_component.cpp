@@ -26,9 +26,7 @@ std::shared_ptr<UIComponent> StatefulComponent::getChild() {
 void StatefulComponent::layout(UISize size) {
   const auto child = getChild();
   if (child) {
-    auto childSide = child->getIntrinsicSize(size.toUIConstraints());
-    child->layout(childSide);
-    // child->layout({size.width, size.height});
+    child->layout({size.width, size.height});
     const auto childBounds = child->getBounds();
     bounds_.width = childBounds.width;
     bounds_.height = childBounds.height;

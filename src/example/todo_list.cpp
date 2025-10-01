@@ -46,15 +46,15 @@ class TodoListWidget : public StatefulComponent {
                     // itemList,
 
                     // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                    button,
-
-                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
                     // UI::UIView({.margin = UIEdgeInsets::horizonal(100), .child = makePara()}),
 
                     // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
                     // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
                     UI::UIView({.child = makeTextField()}),
                     makeTextField(),
+
+                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    // button,
                 },
         }),
     });

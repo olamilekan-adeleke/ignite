@@ -1,10 +1,9 @@
 #pragma once
 
 #include <fmt/base.h>
-#include <sys/stat.h>
 #include <cstdint>
 #include <string>
-#include <cstring>
+#include <string_view>
 #include <vector>
 
 #include "color.hpp"
@@ -38,7 +37,7 @@ class TextFieldRenderer : public UIComponent {
     lastBlinkTime_ = std::chrono::steady_clock::now();
     cursorVisible_ = true;
 
-    setTapListener([&](const UITapEvent& event) { onTextFiedTap(); });
+    setTapListener([this](const UITapEvent& event) { onTextFieldTap(); });
   }
 
   void layout(UISize size) override;
@@ -47,9 +46,9 @@ class TextFieldRenderer : public UIComponent {
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
  protected:
-  std::string text() const { return std::string(buffer_.begin(), buffer_.end()); }
+  std::string_view text() const { return std::string_view(buffer_.data(), buffer_.size()); }
 
-  void onTextFiedTap() noexcept;
+  void onTextFieldTap() noexcept;
 
   void insertLetter(char letter) noexcept;
 
@@ -79,7 +78,7 @@ class TextFieldRenderer : public UIComponent {
   std::vector<char> buffer_{};
 };
 
-inline void TextFieldRenderer::onTextFiedTap() noexcept { UIManager::instance().requestFocus(*this); }
+inline void TextFieldRenderer::onTextFieldTap() noexcept { UIManager::instance().requestFocus(*this); }
 
 inline void TextFieldRenderer::insertLetter(char letter) noexcept {
   auto insertIdx = buffer_.begin() + cursorIndex_;
@@ -128,8 +127,7 @@ inline void TextFieldRenderer::handleKeyEvent(KeyEvent& key) noexcept {
 }
 
 inline void TextFieldRenderer::setCursorIndex(uint32_t index) noexcept {
-  if (index > buffer_.size()) index = cursorIndex_;
-  cursorIndex_ = index;
+  cursorIndex_ = std::min(index, static_cast<uint32_t>(buffer_.size()));
 }
 
 inline bool TextFieldRenderer::processChildTaps(const UITapEvent& event) {

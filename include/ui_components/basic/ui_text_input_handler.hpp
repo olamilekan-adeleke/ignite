@@ -8,7 +8,7 @@ using CharCallback = std::function<void(unsigned int)>;
 
 class UITextInputHandler {
  public:
-  UITextInputHandler() {};
+  UITextInputHandler() = default;
 
   virtual void handleCharEvent(char letter) noexcept {};
 
