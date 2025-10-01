@@ -31,10 +31,7 @@ UISize TextFieldRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
   };
 }
 
-void TextFieldRenderer::layout(UISize size) {
-  fmt::println("TextFieldRenderer::layout({},{}) at x:{},y:{}", size.width, size.height, bounds_.x, bounds_.y);
-  setSize(size.width, size.height);
-}
+void TextFieldRenderer::layout(UISize size) { setSize(size.width, size.height); }
 
 void TextFieldRenderer::draw(SkCanvas* canvas) {
   SkPaint backgroundPaint;
@@ -61,12 +58,12 @@ void TextFieldRenderer::draw(SkCanvas* canvas) {
   }
 
   canvas->save();
-  // canvas->translate(bounds_.x, bounds_.y);
+  canvas->translate(bounds_.x, bounds_.y);
 
   // Draw the paragraph text
   const float paragraphHeight = lastTextFieldHeight_;
-  const float offsetY = std::round(bounds_.y + (bounds_.height - paragraphHeight) / 2.0f + 0.5f);
-  const float offsetX = bounds_.x + params_.padding.left;
+  const float offsetY = std::round((bounds_.height - paragraphHeight) / 2.0f + 0.5f);
+  const float offsetX = params_.padding.left;
 
   // SkRect clipRect = SkRect::MakeXYWH(textFieldX, textFieldY, textFieldWidth, textFieldHeight);
   // canvas->clipRect(clipRect);
@@ -86,8 +83,7 @@ void TextFieldRenderer::draw(SkCanvas* canvas) {
     lastBlinkTime_ = currentTime;
   }
 
-  // if (cursorVisible_ && hasFocus()) {
-  if (cursorVisible_) {
+  if (cursorVisible_ && hasFocus()) {
     SkPaint paint;
     paint.setColor(SK_ColorBLACK);
     paint.setStrokeWidth(1.5f);
@@ -117,7 +113,6 @@ void TextFieldRenderer::draw(SkCanvas* canvas) {
     float cursorBottom = offsetY + paragraphHeight;
 
     canvas->drawLine(cursorX, cursorTop, cursorX, cursorBottom, paint);
-    // }
   }
 
   canvas->restore();

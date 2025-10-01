@@ -37,7 +37,10 @@ class TextFieldRenderer : public UIComponent {
     lastBlinkTime_ = std::chrono::steady_clock::now();
     cursorVisible_ = true;
 
-    setTapListener([&](const UITapEvent& event) {});
+    setTapListener([&](const UITapEvent& event) {
+      fmt::println("{}: handled tap at bounds ({:.2f}, {:.2f})", __PRETTY_FUNCTION__, event.x, event.y);
+      setFocus(true);
+    });
   }
 
   void layout(UISize size) override;
@@ -128,47 +131,9 @@ inline void TextFieldRenderer::setCursorIndex(uint32_t index) noexcept {
 }
 
 inline bool TextFieldRenderer::processChildTaps(const UITapEvent& event) {
-  // First, let parent class handle child processing
-  bool childHandled = false;
-  // UIComponent::processChildTaps(event);
-
-  // If a child handled it, don't process this component
-  // if (childHandled) return true;
-
-  // DEBUG log (keep for now)
-  fmt::println("DEBUG: Tap at ({:.2f}, {:.2f}) | Bounds: x={:.2f} y={:.2f} w={:.2f} h={:.2f}",
-               event.x,
-               event.y,
-               bounds_.x,
-               bounds_.y,
-               bounds_.width,
-               bounds_.height);
-
-  // NEW: Hit test against bounds
-  if (bounds_.contains(event.x, event.y)) {
-    // Success: Use bounds for cursor/etc.
-    fmt::println("{}: handled tap at bounds ({:.2f}, {:.2f})", __PRETTY_FUNCTION__, event.x, event.y);
-    setFocus(true);
-    return true;
-  }
-
-  return false;
-
-  // NEW: Transform to local coords (assumes event in parent/ancestor space, bounds in same)
-  // float localX = event.x - bounds_.x;
-  // float localY = event.y - bounds_.y;
-  //
-  // // Hit test against local [0, w] x [0, h]
-  // if (localX >= 0.0f && localX <= bounds_.width && localY >= 0.0f && localY <= bounds_.height) {
-  //   // Success: Use local for cursor/etc.
-  //   setFocus(true);
-  //   // Update cursorIndex_ based on localX (as in previous bonus)
-  //   fmt::println("{}: handled tap at local ({:.2f}, {:.2f})", __PRETTY_FUNCTION__, localX, localY);
-  //   return true;
-  // }
-  //
-  // fmt::println("{}: tap missed", __PRETTY_FUNCTION__);
-  // return false;
+  auto result = onTap(event, bounds_);
+  setFocus(result);
+  return result;
 }
 
 inline void TextFieldRenderer::debugFillProperties(std::ostringstream& os, int indent) const {
