@@ -20,6 +20,13 @@ class ParagraphBuilder {
 
   void debugFillProperties(std::ostringstream& os, int indent) const;
 
+  std::vector<skia::textlayout::TextBox> getRectsForRange(unsigned start,
+                                                          unsigned end,
+                                                          skia::textlayout::RectHeightStyle rectHeightStyle,
+                                                          skia::textlayout::RectWidthStyle rectWidthStyle);
+
+  void setText(const std::string& newText);
+
  private:
   std::string text_;
   TextStyle params_;
@@ -31,4 +38,12 @@ class ParagraphBuilder {
 
 inline void ParagraphBuilder::debugFillProperties(std::ostringstream& os, int indent) const {
   std::string pad(indent, ' ');
+}
+
+inline std::vector<skia::textlayout::TextBox> ParagraphBuilder::getRectsForRange(
+    unsigned start,
+    unsigned end,
+    skia::textlayout::RectHeightStyle rectHeightStyle,
+    skia::textlayout::RectWidthStyle rectWidthStyle) {
+  return paragraph_->getRectsForRange(start, end, rectHeightStyle, rectWidthStyle);
 }

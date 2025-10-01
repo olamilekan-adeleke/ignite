@@ -18,7 +18,7 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string &tit
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  
+
   // Enable proper DPI scaling
   glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
   glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
@@ -40,13 +40,18 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string &tit
 
   glfwMakeContextCurrent(window);
   glfwSetWindowUserPointer(window, this);
-  
+
   // Get current content scale
   // glfwSetWindowContentScaleCallback(window, NULL);
   // glfwGetWindowContentScale(window, 1.0f, 1.0f);
   float xscale, yscale;
   glfwGetWindowContentScale(window, &xscale, &yscale);
-  
+
+  // Register new static callbacks
+  glfwSetKeyCallback(window, staticKeyCallback);
+  glfwSetCursorPosCallback(window, staticCursorPosCallback);
+  glfwSetCharCallback(window, staticCharCallback);
+
   // Log the current content scale for debugging
   std::cout << "Window content scale: " << xscale << ", " << yscale << std::endl;
 
@@ -133,5 +138,38 @@ void GLFWWindowManager::windowRefreshCallback(GLFWwindow *window) {
   if (manager && manager->renderCallback) {
     manager->renderCallback();
     glfwSwapBuffers(window);
+  }
+}
+
+void GLFWWindowManager::setKeyCallback(KeyCallback callback) { this->keyCallback = std::move(callback); }
+
+void GLFWWindowManager::setCursorPosCallback(CursorPosCallback callback) {
+  this->cursorPosCallback = std::move(callback);
+}
+
+void GLFWWindowManager::setCharCallback(CharCallback callback) {  // New: implementation
+  this->charCallback = std::move(callback);
+}
+
+// Static key callback implementation
+void GLFWWindowManager::staticKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+  GLFWWindowManager *manager = static_cast<GLFWWindowManager *>(glfwGetWindowUserPointer(window));
+  if (manager && manager->keyCallback) {
+    manager->keyCallback(key, scancode, action, mods);
+  }
+}
+
+// Static cursor position callback implementation
+void GLFWWindowManager::staticCursorPosCallback(GLFWwindow *window, double xpos, double ypos) {
+  GLFWWindowManager *manager = static_cast<GLFWWindowManager *>(glfwGetWindowUserPointer(window));
+  if (manager && manager->cursorPosCallback) {
+    manager->cursorPosCallback(xpos, ypos);
+  }
+}
+
+void GLFWWindowManager::staticCharCallback(GLFWwindow *window, unsigned int codepoint) {
+  GLFWWindowManager *manager = static_cast<GLFWWindowManager *>(glfwGetWindowUserPointer(window));
+  if (manager && manager->charCallback) {
+    manager->charCallback(codepoint);
   }
 }

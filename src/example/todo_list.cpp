@@ -1,82 +1,143 @@
+#include <fmt/base.h>
+
 #include <memory>
+#include <vector>
+
+#include "elements/text_field_renderer.hpp"
+#include "interactive_components/stateful_component.hpp"
 #include "layout/flex_box.hpp"
 #include "text_style.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
-#include "interactive_components/stateful_component.hpp"
 #include "ui_edge_insets.hpp"
+
+struct Todo {
+  std::string text;
+  bool done = false;
+
+  Todo(std::string text) : text(text) {}
+
+  void updateDone(bool value) { done = value; }
+};
+
+class TodoItemData {
+  std::vector<Todo> items;
+
+ public:
+  TodoItemData() = default;
+
+  void addTodoItem(std::string text) { items.push_back(Todo(text)); }
+
+  std::vector<Todo> getItems() { return items; }
+
+  void markDone(int index, bool value) { items[index].updateDone(value); }
+};
 
 class TodoListWidget : public StatefulComponent {
  public:
-  TodoListWidget() {}
+  TodoListWidget() {
+    data.addTodoItem("Buy more coffee and monster");
+    data.addTodoItem("Finish C++ project");
+    data.addTodoItem("Call dad");
+  }
 
   std::shared_ptr<UIComponent> body() override {
-    const std::shared_ptr<FlexBox> itemList = UI::UIFlexBox({
-        .spacing = 12,
-        .axis = Axis::VERTICAL,
+    auto header = UI::VFlexBox({
         .children =
             {
-                makeTodoItem("Buy more coffec and monster"),
-                makeTodoItem("Finish C++ project"),
-                makeTodoItem("Call dad"),
-                makeTodoItem("Read 30 pages of a book"),
-                makeTodoItem("Don't forget to ragebait hb"),
+
+                UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
+                UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
             },
     });
 
-    const auto button = UI::UIButton({
-        .child = UI::Text("Reset All Item", {.color = Color::White(), .fontSize = 16}),
-        .onTap = [this](const UITapEvent& e) { markDirty(); },
-    });
-
     return UI::UIView({
-        .insets = UIEdgeInsets::horizonal(20) + UIEdgeInsets::vertical(30),
+        .insets = UIEdgeInsets::horizontal(20) + UIEdgeInsets::vertical(30),
         .child = UI::VFlexBox({
-            .spacing = 6,
+            .spacing = 20,
             .crossAxisAlignment = CrossAxisAlignment::START,
             .children =
                 {
-                    UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
-                    UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
+                    header,
+                    UI::UIView({.insets = UIEdgeInsets::all(10), .child = itemList()}),
 
-                    UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                    itemList,
-
-                    UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    makeTextField(),
                     button,
-
-                    UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                    UI::UIView({.margin = UIEdgeInsets::horizonal(100), .child = makePara()}),
                 },
+
         }),
     });
   }
 
  private:
-  std::shared_ptr<UIComponent> makeTodoItem(const std::string& label) {
+  TodoItemData data = TodoItemData();
+  std::string textFieldValue = "";
+
+  const std::shared_ptr<UIComponent> makeTodoItem(int index, const std::string &label, bool done) {
     return UI::UIFlexBox({
         .spacing = 12,
         .axis = Axis::HORIZONTAL,
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .children =
             {
-                UI::UICheckBox({.size = {24, 24}}),
-                UI::Text(label, {.color = Color::Black(), .fontSize = 18}),
+                UI::UICheckBox({
+                    .enable = done,
+                    .size = {24, 24},
+                    .onTap =
+                        [&, index](const UITapEvent &e) {
+                          data.markDone(index, !done);
+                          markDirty();
+                        },
+                }),
+                UI::Text(label,
+                         {
+                             .color = Color::Black(),
+                             .fontSize = 18,
+                             .decoration = done ? TextDecoration::strikethrough : TextDecoration::none,
+                         }),
             },
     });
   }
 
-  std::shared_ptr<UIComponent> makePara() {
-    auto text =
-        "Hello, world! 🙂🚀🔥🍕❤️🎉🐱🌍✨  This is a long test string with multiple languages and emojis. العربية: "
-        "مرحبًا بك في الاختبار، كيف حالك اليوم؟ 中文 : 你好，世界！这是一个文本渲染测试字符串。 हिन्दी : नमस्ते, यह एक "
-        "लंबा परीक्षण स्ट्रिंग है। Русский : Привет, это строка для тестирования рендеринга текста.日本語 : "
-        "こんにちは、これはテキストレンダリングのテストです。  Yorùbá: Bawo ni, ayé! Èyí jẹ́ ìdánwò pípa ọrọ́. "
-        "Accents & combining marks: é ã ö ů n̄ ṡ ž  Mixed directions: hello שלום مرحبا world 🌍  Numbers & symbols : "
-        " 1234567890 @ #$ % ^&*()[]{ } < > / ? End of test ✅✨🔥 ";
-    // text = "Hello word, this is a test";
+  const std::shared_ptr<FlexBox> itemList() {
+    auto buildChildren = [this]() {
+      std::vector<std::shared_ptr<UIComponent>> children;
+      for (int i = 0; i < data.getItems().size(); i++) {
+        auto item = data.getItems()[i];
+        children.push_back(makeTodoItem(i, item.text, item.done));
+      }
+      return children;
+    };
 
-    const TextStyle params{.color = Color::Black(), .fontSize = 18};
-    return std::make_shared<TextRenderer>(text, params);
+    return UI::UIFlexBox({
+        .spacing = 12,
+        .axis = Axis::VERTICAL,
+        .children = buildChildren(),
+    });
+  }
+
+  const std::shared_ptr<UIComponent> button = UI::UIButton({
+      .child = UI::Text("Add Todo", {.color = Color::White(), .fontSize = 16}),
+      .insets = UIEdgeInsets::horizontal(10) + UIEdgeInsets::vertical(10),
+      .fillColor = Color::Blue(),
+      .onTap =
+          [this](const UITapEvent &e) {
+            if (textFieldValue.empty()) return;
+
+            data.addTodoItem(textFieldValue);
+            textFieldValue.clear();
+            markDirty();
+          },
+  });
+
+  auto onTextFieldChanged(std::string &value) {
+    fmt::println("onTextFieldChanged: {}", value);
+    textFieldValue = value;
+  }
+  const std::shared_ptr<UIComponent> makeTextField() {
+    return std::make_shared<TextFieldRenderer>(UITextFieldParams{
+        .width = 0,
+        .onChanged = [this](std::string value) { onTextFieldChanged(value); },
+    });
   }
 };

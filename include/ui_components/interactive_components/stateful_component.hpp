@@ -29,5 +29,29 @@ class StatefulComponent : public UIComponent {
  private:
   bool isDirty_;
   std::shared_ptr<UIComponent> cachedBody_;
-  mutable std::vector<std::shared_ptr<UIComponent>> statefulChildren_;
+  mutable std::vector<std::shared_ptr<UIComponent>> childrenCache_;
 };
+
+inline const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::children() const {
+  if (cachedBody_) {
+    if (childrenCache_.empty() || childrenCache_[0] != cachedBody_) {
+      childrenCache_.clear();
+      childrenCache_.push_back(cachedBody_);
+    }
+    return childrenCache_;
+  }
+  static const std::vector<std::shared_ptr<UIComponent>> empty;
+  return empty;
+}
+
+inline bool StatefulComponent::processChildTaps(const UITapEvent &event) {
+  const auto child = getChild();
+  if (child) {
+    UITapEvent localEvent = event;
+    localEvent.x -= bounds_.x;
+    localEvent.y -= bounds_.y;
+
+    return child->processTap(localEvent);
+  }
+  return false;
+}

@@ -6,6 +6,9 @@
 
 using TapListener = std::function<void(const UITapEvent& event)>;
 
+template <typename T>
+using ValueChangedListener = std::function<void(const T& newValue)>;
+
 class UITapHandler {
  public:
   UITapHandler() : tappable_(true) {}

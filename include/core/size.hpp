@@ -30,7 +30,14 @@ struct UISize {
     };
   }
 
-  std::string toString() const noexcept { return fmt::format("UISize{ w: {}, h: {} }", width, height); }
+  UISize combine(float width, float height) const noexcept {
+    return {
+        this->width + width,
+        this->height + height,
+    };
+  }
+
+  std::string toString() const noexcept { return fmt::format("UISize ( w: {}, h: {} )", width, height); }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const UISize &size) noexcept {

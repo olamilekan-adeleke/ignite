@@ -1,8 +1,9 @@
 #pragma once
 
 #include <fmt/format.h>
-#include <string>
+
 #include <sstream>
+#include <string>
 
 struct UIEdgeInsets {
   float top = 0.0f;
@@ -10,13 +11,11 @@ struct UIEdgeInsets {
   float bottom = 0.0f;
   float right = 0.0f;
 
-  static UIEdgeInsets horizonal(float horizonalSpace) {
-    return UIEdgeInsets{.left = horizonalSpace, .right = horizonalSpace};
-  }
+  static UIEdgeInsets horizontal(float horizontalSpace) { return UIEdgeInsets{.left = horizontalSpace, .right = horizontalSpace}; }
 
-  static UIEdgeInsets vertical(float verticalSpace) {
-    return UIEdgeInsets{.top = verticalSpace, .bottom = verticalSpace};
-  }
+  static UIEdgeInsets vertical(float verticalSpace) { return UIEdgeInsets{.top = verticalSpace, .bottom = verticalSpace}; }
+
+  static UIEdgeInsets all(float space) { return UIEdgeInsets{.top = space, .left = space, .bottom = space, .right = space}; }
 
   float horizonal() const { return left + right; }
 

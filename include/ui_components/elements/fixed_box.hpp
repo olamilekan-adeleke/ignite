@@ -19,6 +19,8 @@ class FixedBox : public UIComponent {
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
+  const std::vector<std::shared_ptr<UIComponent>> &children() const override;
+
  protected:
   void debugFillProperties(std::ostringstream &os, int indent) const override;
 

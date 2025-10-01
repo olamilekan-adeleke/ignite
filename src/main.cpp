@@ -14,9 +14,13 @@
 #include "example/example.cpp"
 #include "example/counnter_app.cpp"
 #include "example/todo_list.cpp"
+#include "example/paragraph_test.cpp"
+
+using std::string;
 
 using boost::asio::async_write;
 using boost::asio::buffer;
+using boost::asio::ip::tcp;
 using boost::system::error_code;
 
 UIManager& uiManager = UIManager::instance();
@@ -48,8 +52,10 @@ int main() {
 
     auto counter_example = std::make_shared<CounterComponent>();
     auto todoList = std::make_shared<TodoListWidget>();
+    auto paragraphTest = std::make_shared<ParagraphTestWidget>();
     // std::shared_ptr<UIComponent> rootUI = counter_example;
     std::shared_ptr<UIComponent> rootUI = todoList;
+    // std::shared_ptr<UIComponent> rootUI = paragraphTest;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
 
     // FPS tracking variables
@@ -97,30 +103,36 @@ int main() {
       // std::this_thread::sleep_for(std::chrono::milliseconds(16));
     });
 
+    windowManager.setKeyCallback([&](int key, int scancode, int action, int mods) {
+      // Set the key callback
+      uiManager.sendKeyEvent(key, scancode, action, mods);
+    });
+
+    windowManager.setCursorPosCallback([&](double xpos, double ypos) {
+      // Set the cursor position callback
+      uiManager.sendMouseEvent(xpos, ypos);
+    });
+
+    windowManager.setCharCallback([&](unsigned int codepoint) {
+      // Set the character callback
+      uiManager.sendCharEvent(codepoint);
+    });
+
     // start server
     server.start();
-    server.setMessageHandler(
-        [](std::shared_ptr<boost::asio::ip::tcp::socket> socket, const std::string& msg, const std::string& addr) {
-          // std::string response = "Echoing your message: " + msg;
-          std::string logs = lastLog + "\n";
-          async_write(*socket, buffer(logs), [socket](const error_code& error, size_t bytes_transferred) {
-            if (error) {
-              std::cerr << "Write error in lambda: " << error.message() << std::endl;
-            } else {
-              fmt::println("Sent {} bytes back to client.", bytes_transferred);
-            }
-          });
-        });
+    server.setMessageHandler([](std::shared_ptr<tcp::socket> socket, const string& msg, const string& addr) {
+      string logs = lastLog + "\n";
+      async_write(*socket, buffer(logs), [socket](const error_code& error, size_t bytes_transferred) {
+        if (error) {
+          std::cerr << "Write error in lambda: " << error.message() << std::endl;
+        } else {
+          fmt::println("Sent {} bytes back to client.", bytes_transferred);
+        }
+      });
+    });
 
     // Run main loop
     windowManager.run();
-
-    // std::cout << "Press Enter to stop the server..." << std::endl;
-    // std::cin.get();
-
-    // Stop the server
-    // server.stop();
-
     return 0;
   } catch (const std::exception& e) {
     std::cerr << "Exception: " << e.what() << std::endl;

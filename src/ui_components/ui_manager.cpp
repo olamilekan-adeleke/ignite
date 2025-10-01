@@ -1,11 +1,11 @@
 #include "ui_manager.hpp"
 
 #include <fmt/base.h>
-#include <algorithm>
 #include <memory>
 #include <string>
 
 #include "core/logger.hpp"
+#include "keyboard_key_event.hpp"
 #include "tap_event.hpp"
 
 #if defined(SK_BUILD_FOR_MAC)
@@ -20,6 +20,10 @@ UIManager &UIManager::instance() {
 UIManager::UIManager() {
 #if defined(SK_BUILD_FOR_MAC)
   fontMgr_ = SkFontMgr_New_CoreText(nullptr);
+#elif defined(SK_BUILD_FOR_LINUX)
+  fontMgr_ = SkFontMgr_New_DirectWrite();
+#elif defined(SK_BUILD_FOR_WIN)
+  fontMgr_ = SkFontMgr_New_DirectWrite();
 #else
   fontMgr_ = SkFontMgr::RefEmpty();
   Logger::log("Warning: No platform-specific font manager available or configured.");
@@ -77,21 +81,12 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   previousTreeRoot_ = currentTreeRoot_;
 }
 
-// TODO: implement better diffing
 void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
                                const std::shared_ptr<UIComponent> &newNode,
                                float w,
                                float h,
                                bool needsResize) {
-  bool rebuild = true;  // shouldRebuild(oldNode, newNode);
-  if (rebuild || needsResize) {
-    // if (oldNode) {
-    //   fmt::println("Checking for rebuild: {} == {}", newNode->key().value(), oldNode->key().value());
-    // } else {
-    //   fmt::println("Checking for rebuild: {} == <null oldNode>", newNode->key().value());
-    // }
-    newNode->layout({w, h});
-  }
+  newNode->layout({w, h});
 
   auto oldChildren = oldNode ? oldNode->children() : std::vector<std::shared_ptr<UIComponent>>{};
   auto newChildren = newNode->children();
@@ -104,13 +99,78 @@ void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
   }
 }
 
-bool UIManager::shouldRebuild(const std::shared_ptr<UIComponent> &oldNode,
-                              const std::shared_ptr<UIComponent> &newNode) {
-  if (!oldNode || !newNode) {
-    return true;
-  } else if (oldNode->key() != newNode->key()) {
-    return true;
+void UIManager::sendKeyEvent(int key, int scancode, int action, int mods) {
+  if (!currentTreeRoot_ || scancode == 0) return;
+
+  KeyEvent event{static_cast<KeyboardKey>(key), static_cast<KeyAction>(action), mods};
+  if (event.action == KeyAction::RELEASE || event.action == KeyAction::REPEAT) {
+    // fmt::println("Key Event: key={}, scancode={}, action={}, mods={}", key, scancode, action, mods);
+    currentTreeRoot_->handleKeyEvent(event);
+  }
+}
+
+void UIManager::sendCharEvent(unsigned int codepoint) {
+  // Logger::log(fmt::format("Char Event: codepoint={} (char='{}')", codepoint, static_cast<char>(codepoint)).c_str());
+  if (currentTreeRoot_) {
+    std::string utf8Char = std::string(1, static_cast<char>(codepoint));
+    currentTreeRoot_->handleCharEvent(utf8Char);
+  }
+}
+
+void UIManager::sendMouseEvent(double xpos, double ypos) {
+  Logger::log(fmt::format("Mouse Event: xpos={}, ypos={}", xpos, ypos).c_str());
+
+  if (!currentTreeRoot_) return;
+  std::shared_ptr<UIComponent> newHoveredComponent = nullptr;
+
+  std::function<void(const std::shared_ptr<UIComponent> &)> findHovered =
+      [&](const std::shared_ptr<UIComponent> &component) {
+        if (component && component->getBounds().contains(xpos, ypos)) {
+          newHoveredComponent = component;
+
+          for (const auto &child : component->children()) {
+            findHovered(child);
+          }
+        }
+      };
+
+  findHovered(currentTreeRoot_);
+
+  if (newHoveredComponent != currentHoveredComponent_) {
+    if (currentHoveredComponent_) {
+      // currentHoveredComponent_->onHoverExit();
+    }
+    if (newHoveredComponent) {
+      // newHoveredComponent->onHoverEnter();
+    }
+    currentHoveredComponent_ = newHoveredComponent;
   }
 
-  return false;
+  if (currentHoveredComponent_) {
+    // currentHoveredComponent_->onHoverMove(xpos, ypos);
+  }
 }
+
+void UIManager::releaseAllFocus(std::optional<std::shared_ptr<UIComponent>> component) {
+  if (!component.has_value() && !currentTreeRoot_) return;
+
+  if (!component.has_value() && currentTreeRoot_) component = currentTreeRoot_;
+  const auto &children = component->get()->children();
+
+  if (children.empty() && component->get()->getChild()) {
+    component->get()->getChild()->setFocus(false);
+    releaseAllFocus(component->get()->getChild());
+  }
+
+  for (const auto &child : children) {
+    child->setFocus(false);
+    releaseAllFocus(child);
+  }
+}
+
+void UIManager::requestFocus(UIComponent &component) {
+  releaseAllFocus(std::nullopt);
+  component.setFocus(true);
+}
+
+void UIManager::releaseFocus(UIComponent &component) { component.setFocus(false); }

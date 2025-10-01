@@ -14,6 +14,14 @@ ParagraphBuilder::ParagraphBuilder(const std::string& text, const TextStyle& par
   buildParagraph();
 }
 
+void ParagraphBuilder::setText(const std::string& newText) {
+  if (text_ != newText) {
+    text_ = newText;
+    paragraph_.reset();
+    buildParagraph();
+  }
+}
+
 UISize ParagraphBuilder::getIntrinsicSize(UIConstraints constraints) noexcept {
   float layoutWidth = constraints.minWidth > 0 ? constraints.minWidth : 1000000.0f;
 

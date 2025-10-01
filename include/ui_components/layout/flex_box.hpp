@@ -60,9 +60,7 @@ inline bool FlexBox::processChildTaps(const UITapEvent& event) {
   localEvent.y = event.y - bounds_.y;
 
   for (auto& child : param_.children) {
-    if (child->processTap(localEvent)) {
-      return true;
-    }
+    if (child->processTap(localEvent)) return true;
   }
   return false;
 }
