@@ -1,13 +1,13 @@
 #include <fmt/base.h>
+
 #include <memory>
 
+#include "elements/text_renderer.hpp"
+#include "interactive_components/stateful_component.hpp"
 #include "text_style.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
 #include "ui_edge_insets.hpp"
-
-#include "interactive_components/stateful_component.hpp"
-#include "elements/text_renderer.hpp"
 
 class ParagraphTestWidget : public StatefulComponent {
  public:
@@ -15,20 +15,19 @@ class ParagraphTestWidget : public StatefulComponent {
 
   std::shared_ptr<UIComponent> body() override {
     return UI::UIView({
-        .insets = UIEdgeInsets::horizonal(20) + UIEdgeInsets::vertical(30),
+        .insets = UIEdgeInsets::horizontal(20) + UIEdgeInsets::vertical(30),
         .child = UI::VFlexBox({
             .spacing = 20,
             .crossAxisAlignment = CrossAxisAlignment::START,
             .children =
                 {
                     UI::Text("Paragraph Test", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
-                    UI::Text("Testing different paragraph styles and long texts",
-                             {.color = Color::Gray(), .fontSize = 18}),
+                    UI::Text("Testing different paragraph styles and long texts", {.color = Color::Gray(), .fontSize = 18}),
 
-                    UI::UIView({.margin = UIEdgeInsets::horizonal(100), .child = makePara()}),
-                    UI::UIView({.margin = UIEdgeInsets::horizonal(50), .child = makeStyledPara()}),
-                    UI::UIView({.margin = UIEdgeInsets::horizonal(20), .child = makeAnotherStyledPara()}),
-                    UI::UIView({.margin = UIEdgeInsets::horizonal(20), .child = makeDecoratedText()}),
+                    UI::UIView({.margin = UIEdgeInsets::horizontal(100), .child = makePara()}),
+                    UI::UIView({.margin = UIEdgeInsets::horizontal(50), .child = makeStyledPara()}),
+                    UI::UIView({.margin = UIEdgeInsets::horizontal(20), .child = makeAnotherStyledPara()}),
+                    UI::UIView({.margin = UIEdgeInsets::horizontal(20), .child = makeDecoratedText()}),
                 },
         }),
     });

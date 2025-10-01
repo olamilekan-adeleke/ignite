@@ -52,7 +52,7 @@ class TodoListWidget : public StatefulComponent {
     });
 
     return UI::UIView({
-        .insets = UIEdgeInsets::horizonal(20) + UIEdgeInsets::vertical(30),
+        .insets = UIEdgeInsets::horizontal(20) + UIEdgeInsets::vertical(30),
         .child = UI::VFlexBox({
             .spacing = 20,
             .crossAxisAlignment = CrossAxisAlignment::START,
@@ -118,7 +118,7 @@ class TodoListWidget : public StatefulComponent {
 
   const std::shared_ptr<UIComponent> button = UI::UIButton({
       .child = UI::Text("Add Todo", {.color = Color::White(), .fontSize = 16}),
-      .insets = UIEdgeInsets::horizonal(10) + UIEdgeInsets::vertical(10),
+      .insets = UIEdgeInsets::horizontal(10) + UIEdgeInsets::vertical(10),
       .fillColor = Color::Blue(),
       .onTap =
           [this](const UITapEvent &e) {
