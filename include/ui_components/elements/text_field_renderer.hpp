@@ -27,6 +27,7 @@ struct UITextFieldParams {
   TextStyle textStyle{.color = Color::Black(), .fontSize = 14.0f};
   float width = 120.0f;
   float minHeight = 20.0f;
+  bool multiline = false;
 };
 
 class TextFieldRenderer : public UIComponent {
@@ -130,7 +131,7 @@ inline void TextFieldRenderer::handleKeyEvent(KeyEvent& key) noexcept {
   } else if (key.key == KeyboardKey::RIGHT) {
     if (cursorIndex_ < buffer_.size()) setCursorIndex(cursorIndex_ + 1);
   } else if (key.key == KeyboardKey::ENTER) {
-    insertLetter("\n");
+    if (params_.multiline) insertLetter("\n");
   } else if (key.key == KeyboardKey::TAB) {
     insertLetter("\t");
   }

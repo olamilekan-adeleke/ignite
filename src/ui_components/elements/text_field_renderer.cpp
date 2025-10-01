@@ -21,7 +21,12 @@ UISize TextFieldRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
   const UISize& valueSize = textValueParagraph_.getIntrinsicSize(contentConstraints);
 
   float contentWidth = std::max(minWidth, std::max(placeHolderSize.width, valueSize.width));
-  float contentHeight = std::max(minHeight, std::max(placeHolderSize.height, valueSize.height));
+  float contentHeight;
+  if (params_.multiline) {
+    contentHeight = valueSize.height;
+  } else {
+    contentHeight = std::max(minHeight, std::max(placeHolderSize.height, valueSize.height));
+  }
 
   lastTextFieldHeight_ = std::max(placeHolderSize.height, valueSize.height);
 
@@ -109,8 +114,13 @@ void TextFieldRenderer::draw(SkCanvas* canvas) {
       if (!rects.empty()) cursorX = rects.front().rect.fLeft + offsetX;
     }
 
-    float cursorTop = offsetY - (offsetY * 0.2f);
+    float cursorTop = offsetY;
     float cursorBottom = offsetY + paragraphHeight;
+
+    if (!rects.empty()) {
+      cursorTop = rects.front().rect.fTop + offsetY;
+      cursorBottom = rects.front().rect.fBottom + offsetY;
+    }
 
     canvas->drawLine(cursorX, cursorTop, cursorX, cursorBottom, paint);
   }
