@@ -21,7 +21,10 @@ struct ViewParams {
 
 class View : public UIComponent {
  public:
-  View(const ViewParams &params = ViewParams());
+  View(const ViewParams &params = ViewParams()) : params_(params) {
+    setTapListener(params_.onTap);
+    if (params_.child) setChild(params_.child);
+  }
 
   View(const View &) = delete;
   View &operator=(const View &) = delete;
@@ -47,8 +50,6 @@ class View : public UIComponent {
     }
   }
 
-  const std::vector<std::shared_ptr<UIComponent>> &children() const override;
-
  protected:
   bool processChildTaps(const UITapEvent &event) override {
     if (params_.child) {
@@ -64,20 +65,9 @@ class View : public UIComponent {
 
   void debugFillProperties(std::ostringstream &os, int indent) const override;
 
-  void handleCharEvent(char letter) noexcept override;
-
-  void handleKeyEvent(KeyEvent &key) noexcept override;
-
+ private:
   ViewParams params_;
 };
-
-inline void View::handleCharEvent(char letter) noexcept {
-  if (params_.child) params_.child->handleCharEvent(letter);
-}
-
-inline void View::handleKeyEvent(KeyEvent &key) noexcept {
-  if (params_.child) params_.child->handleKeyEvent(key);
-}
 
 inline void View::debugFillProperties(std::ostringstream &os, int indent) const {
   UIComponent::debugFillProperties(os, indent);

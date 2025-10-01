@@ -39,6 +39,10 @@ class UIManager {
   void sendMouseEvent(double xpos, double ypos);
   void sendCharEvent(unsigned int codepoint);
 
+  void requestFocus(UIComponent &component);
+  void releaseFocus(UIComponent &component);
+  void releaseAllFocus(std::optional<std::shared_ptr<UIComponent>> component = std::nullopt);
+
  private:
   sk_sp<SkFontMgr> fontMgr_;
   sk_sp<SkTypeface> defaultTypeface_;
@@ -49,8 +53,6 @@ class UIManager {
   float width_ = 0;
   float height_ = 0;
   bool dirty_ = false;
-
-  bool shouldRebuild(const std::shared_ptr<UIComponent> &oldNode, const std::shared_ptr<UIComponent> &newNode);
 
   std::shared_ptr<UIComponent> currentHoveredComponent_ = nullptr;
   std::shared_ptr<UIComponent> currentFocusedComponent_ = nullptr;

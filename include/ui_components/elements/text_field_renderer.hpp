@@ -14,6 +14,7 @@
 
 #include "basic/ui_component.hpp"
 #include "elements/paragraph_builder.hpp"
+#include "ui_manager.hpp"
 
 struct UITextFieldParams {
   UIEdgeInsets padding{8.0f, 12.0f, 8.0f, 12.0f};
@@ -37,10 +38,7 @@ class TextFieldRenderer : public UIComponent {
     lastBlinkTime_ = std::chrono::steady_clock::now();
     cursorVisible_ = true;
 
-    setTapListener([&](const UITapEvent& event) {
-      fmt::println("{}: handled tap at bounds ({:.2f}, {:.2f})", __PRETTY_FUNCTION__, event.x, event.y);
-      setFocus(true);
-    });
+    setTapListener([&](const UITapEvent& event) { onTextFiedTap(); });
   }
 
   void layout(UISize size) override;
@@ -50,6 +48,8 @@ class TextFieldRenderer : public UIComponent {
 
  protected:
   std::string text() const { return std::string(buffer_.begin(), buffer_.end()); }
+
+  void onTextFiedTap() noexcept;
 
   void insertLetter(char letter) noexcept;
 
@@ -78,6 +78,8 @@ class TextFieldRenderer : public UIComponent {
   uint32_t cursorIndex_ = 0;
   std::vector<char> buffer_{};
 };
+
+inline void TextFieldRenderer::onTextFiedTap() noexcept { UIManager::instance().requestFocus(*this); }
 
 inline void TextFieldRenderer::insertLetter(char letter) noexcept {
   auto insertIdx = buffer_.begin() + cursorIndex_;

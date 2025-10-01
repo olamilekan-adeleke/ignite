@@ -34,6 +34,36 @@ class UIComponent : public UIRenderObject, public UITapHandler, public UITextInp
 
   virtual void markHasDirty(const UIMarkDirtyType &type, const UIMarkDirtyCaller &caller) noexcept {};
 
+  void handleCharEvent(char letter) noexcept override;
+
+  void handleKeyEvent(KeyEvent &key) noexcept override;
+
+  void setChild(std::shared_ptr<UIComponent> child) { child_ = child; }
+
+  std::shared_ptr<UIComponent> getChild() const { return child_; }
+
  protected:
   virtual bool processChildTaps(const UITapEvent &event) { return false; }
+
+  // NOTE: this was added because i don't know why the UI layout break if View override children()
+  // i have try debug it but i do not want to exhaust energy to fix it. This will do the job for now
+  std::shared_ptr<UIComponent> child_;
 };
+
+inline void UIComponent::handleCharEvent(char letter) noexcept {
+  const auto children = this->children();
+  for (auto &child : children) {
+    child->handleCharEvent(letter);
+  }
+
+  if (children.empty() && child_) child_->handleCharEvent(letter);
+}
+
+inline void UIComponent::handleKeyEvent(KeyEvent &key) noexcept {
+  const auto children = this->children();
+  for (auto &child : children) {
+    child->handleKeyEvent(key);
+  }
+
+  if (children.empty() && child_) child_->handleKeyEvent(key);
+}

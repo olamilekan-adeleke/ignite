@@ -32,41 +32,32 @@ class TodoListWidget : public StatefulComponent {
         .onTap = [this](const UITapEvent& e) { markDirty(); },
     });
 
-    return UI::UIView(
-        {
-            .insets = UIEdgeInsets::horizonal(20) + UIEdgeInsets::vertical(30),
-            .child =
-                UI::VFlexBox(
-                    {
-                        .spacing = 6,
-                        .crossAxisAlignment = CrossAxisAlignment::START,
-                        .children =
-                            {
-                                UI::Text("My Todo List",
-                                         {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
-                                UI::Text("List of today mini side quest to get done",
-                                         {.color = Color::Gray(), .fontSize = 18}),
+    return UI::UIView({
+        .insets = UIEdgeInsets::horizonal(20) + UIEdgeInsets::vertical(30),
+        .child = UI::VFlexBox({
+            .spacing = 20,
+            .crossAxisAlignment = CrossAxisAlignment::START,
+            .children =
+                {
+                    UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
+                    UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
 
-                                // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                                // itemList,
+                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    // itemList,
 
-                                UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                                button,
+                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    button,
 
-                                // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                                // UI::UIView({.margin = UIEdgeInsets::horizonal(100), .child = makePara()}),
+                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    // UI::UIView({.margin = UIEdgeInsets::horizonal(100), .child = makePara()}),
 
-                                UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
-                                UI::UIView(
-                                    {
-                                        // .insets = UIEdgeInsets::horizonal(10) + UIEdgeInsets::vertical(10),
-                                        // .backgroundColor = Color::Blue(),
-                                        .child = makeTextField(),
-                                    }),
-                                // makeTextField(),
-                            },
-                    }),
-        });
+                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    // UI::UIView({.insets = {.top = 20}, .child = UI::FixedBoxView({})}),
+                    UI::UIView({.child = makeTextField()}),
+                    makeTextField(),
+                },
+        }),
+    });
   }
 
  private:

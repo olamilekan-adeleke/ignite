@@ -5,8 +5,6 @@
 #include <include/core/SkRect.h>
 #include "size.hpp"
 
-View::View(const ViewParams &params) : params_(params) { setTapListener(params_.onTap); }
-
 UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
   UISize childSize{0.0f, 0.0f};
 
@@ -133,15 +131,4 @@ void View::draw(SkCanvas *canvas) {
     }
   }
   UIComponent::draw(canvas);
-}
-
-const std::vector<std::shared_ptr<UIComponent>> &View::children() const {
-  if (params_.child) return {params_.child};
-  // if (params_.child) {
-  //   static thread_local std::vector<std::shared_ptr<UIComponent>> singleChildCache;
-  //   singleChildCache.assign(1, params_.child);
-  //   return singleChildCache;
-  // }
-  static std::vector<std::shared_ptr<UIComponent>> cache;
-  return cache;
 }

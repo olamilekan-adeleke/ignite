@@ -26,15 +26,21 @@ class StatefulComponent : public UIComponent {
 
   std::string toString(int indent = 0) const override;
 
-  void handleCharEvent(char letter) noexcept override;
-
-  void handleKeyEvent(KeyEvent &key) noexcept override;
-
  private:
   bool isDirty_;
   std::shared_ptr<UIComponent> cachedBody_;
-  mutable std::vector<std::shared_ptr<UIComponent>> statefulChildren_;
+  mutable std::vector<std::shared_ptr<UIComponent>> childrenCache_;
 };
+
+inline const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::children() const {
+  if (cachedBody_) {
+    childrenCache_.clear();
+    childrenCache_.push_back(cachedBody_);
+    return childrenCache_;
+  }
+  static const std::vector<std::shared_ptr<UIComponent>> empty;
+  return empty;
+}
 
 inline bool StatefulComponent::processChildTaps(const UITapEvent &event) {
   const auto child = getChild();
@@ -46,12 +52,4 @@ inline bool StatefulComponent::processChildTaps(const UITapEvent &event) {
     return child->processTap(localEvent);
   }
   return false;
-}
-
-inline void StatefulComponent::handleCharEvent(char letter) noexcept {
-  if (cachedBody_) cachedBody_->handleCharEvent(letter);
-}
-
-inline void StatefulComponent::handleKeyEvent(KeyEvent &key) noexcept {
-  if (cachedBody_) cachedBody_->handleKeyEvent(key);
 }

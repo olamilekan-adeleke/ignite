@@ -26,7 +26,9 @@ std::shared_ptr<UIComponent> StatefulComponent::getChild() {
 void StatefulComponent::layout(UISize size) {
   const auto child = getChild();
   if (child) {
-    child->layout({size.width, size.height});
+    auto childSide = child->getIntrinsicSize(size.toUIConstraints());
+    child->layout(childSide);
+    // child->layout({size.width, size.height});
     const auto childBounds = child->getBounds();
     bounds_.width = childBounds.width;
     bounds_.height = childBounds.height;
@@ -40,12 +42,6 @@ void StatefulComponent::draw(SkCanvas *canvas) {
     canvas->translate(bounds_.x, bounds_.y);
     child->draw(canvas);
   }
-}
-
-const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::children() const {
-  statefulChildren_.clear();
-  if (cachedBody_) statefulChildren_.push_back(cachedBody_);
-  return statefulChildren_;
 }
 
 std::string StatefulComponent::toString(int indent) const {
