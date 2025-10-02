@@ -4,4 +4,9 @@
 
 using CursorPosCallback = std::function<void(double, double)>;
 
-class UIHoverHandler {};
+class UIHoverHandler {
+ public:
+  virtual void onHoverEnter() {}
+  virtual void onHoverExit() {}
+  virtual void onHoverMove(double xpos, double ypos) {}
+};

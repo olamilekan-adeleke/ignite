@@ -1,6 +1,7 @@
 #include "ui_manager.hpp"
 
 #include <fmt/base.h>
+
 #include <memory>
 #include <string>
 
@@ -81,11 +82,7 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   previousTreeRoot_ = currentTreeRoot_;
 }
 
-void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
-                               const std::shared_ptr<UIComponent> &newNode,
-                               float w,
-                               float h,
-                               bool needsResize) {
+void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode, const std::shared_ptr<UIComponent> &newNode, float w, float h, bool needsResize) {
   newNode->layout({w, h});
 
   auto oldChildren = oldNode ? oldNode->children() : std::vector<std::shared_ptr<UIComponent>>{};
@@ -118,21 +115,20 @@ void UIManager::sendCharEvent(unsigned int codepoint) {
 }
 
 void UIManager::sendMouseEvent(double xpos, double ypos) {
-  Logger::log(fmt::format("Mouse Event: xpos={}, ypos={}", xpos, ypos).c_str());
+  fmt::println("Mouse Event: xpos={}, ypos={}", xpos, ypos);
 
   if (!currentTreeRoot_) return;
   std::shared_ptr<UIComponent> newHoveredComponent = nullptr;
 
-  std::function<void(const std::shared_ptr<UIComponent> &)> findHovered =
-      [&](const std::shared_ptr<UIComponent> &component) {
-        if (component && component->getBounds().contains(xpos, ypos)) {
-          newHoveredComponent = component;
+  std::function<void(const std::shared_ptr<UIComponent> &)> findHovered = [&](const std::shared_ptr<UIComponent> &component) {
+    if (component && component->getBounds().contains(xpos, ypos)) {
+      newHoveredComponent = component;
 
-          for (const auto &child : component->children()) {
-            findHovered(child);
-          }
-        }
-      };
+      for (const auto &child : component->children()) {
+        findHovered(child);
+      }
+    }
+  };
 
   findHovered(currentTreeRoot_);
 

@@ -57,7 +57,7 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string &tit
 
   // Set up mouse callbacks
   glfwSetMouseButtonCallback(window, mouseButtonCallback);
-  glfwSetCursorPosCallback(window, mouseMoveCallback);
+
   glfwSetScrollCallback(window, scrollCallback);
 
   // Enable cursor position events
@@ -90,9 +90,7 @@ void GLFWWindowManager::run() {
   }
 }
 
-void GLFWWindowManager::getFramebufferSize(int &width, int &height) const {
-  glfwGetFramebufferSize(window, &width, &height);
-}
+void GLFWWindowManager::getFramebufferSize(int &width, int &height) const { glfwGetFramebufferSize(window, &width, &height); }
 
 void GLFWWindowManager::cleanup() {
   if (window) {
@@ -143,9 +141,7 @@ void GLFWWindowManager::windowRefreshCallback(GLFWwindow *window) {
 
 void GLFWWindowManager::setKeyCallback(KeyCallback callback) { this->keyCallback = std::move(callback); }
 
-void GLFWWindowManager::setCursorPosCallback(CursorPosCallback callback) {
-  this->cursorPosCallback = std::move(callback);
-}
+void GLFWWindowManager::setCursorPosCallback(CursorPosCallback callback) { this->cursorPosCallback = std::move(callback); }
 
 void GLFWWindowManager::setCharCallback(CharCallback callback) {  // New: implementation
   this->charCallback = std::move(callback);
