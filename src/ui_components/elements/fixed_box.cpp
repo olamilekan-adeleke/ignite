@@ -1,4 +1,5 @@
 #include "elements/fixed_box.hpp"
+
 #include <fmt/base.h>
 
 UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
@@ -16,9 +17,7 @@ const std::vector<std::shared_ptr<UIComponent>>& FixedBox::children() const {
     static std::vector<std::shared_ptr<UIComponent>> children = {params_.child};
     return children;
   }
-
-  static std::vector<std::shared_ptr<UIComponent>> empty;
-  return empty;
+  return UIComponent::children();
 }
 
 void FixedBox::layout(UISize size) {

@@ -1,13 +1,13 @@
-#include <fmt/base.h>
+#include "interactive_components/text_field_renderer.hpp"
 
+#include <fmt/base.h>
 #include <include/core/SkRRect.h>
+
 #include <algorithm>
 
 #include "rect.hpp"
 #include "size.hpp"
 #include "ui_manager.hpp"
-
-#include "elements/text_field_renderer.hpp"
 
 UISize TextFieldRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
   const float minHeight = params_.minHeight;
@@ -115,18 +115,12 @@ void TextFieldRenderer::draw(SkCanvas* canvas) {
     if (buffer_.empty() || cursorIndex_ == 0) {
       cursorX = offsetX;
     } else if (cursorIndex_ >= buffer_.size()) {
-      rects = textValueParagraph_.getRectsForRange(buffer_.size() - 1,
-                                                   buffer_.size(),
-                                                   skia::textlayout::RectHeightStyle::kTight,
-                                                   skia::textlayout::RectWidthStyle::kMax);
+      rects = textValueParagraph_.getRectsForRange(buffer_.size() - 1, buffer_.size(), skia::textlayout::RectHeightStyle::kTight, skia::textlayout::RectWidthStyle::kMax);
 
       if (!rects.empty()) cursorX = rects.front().rect.fRight + offsetX;
     } else {
       // Middle of text: get rect of character at cursor position
-      rects = textValueParagraph_.getRectsForRange(cursorIndex_,
-                                                   cursorIndex_ + 1,
-                                                   skia::textlayout::RectHeightStyle::kTight,
-                                                   skia::textlayout::RectWidthStyle::kMax);
+      rects = textValueParagraph_.getRectsForRange(cursorIndex_, cursorIndex_ + 1, skia::textlayout::RectHeightStyle::kTight, skia::textlayout::RectWidthStyle::kMax);
       if (!rects.empty()) cursorX = rects.front().rect.fLeft + offsetX;
     }
 

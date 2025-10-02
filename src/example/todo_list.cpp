@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "elements/text_field_renderer.hpp"
 #include "interactive_components/stateful_component.hpp"
 #include "layout/flex_box.hpp"
 #include "text_style.hpp"
@@ -136,7 +135,7 @@ class TodoListWidget : public StatefulComponent {
     textFieldValue = value;
   }
   const std::shared_ptr<UIComponent> makeTextField() {
-    return std::make_shared<TextFieldRenderer>(UITextFieldParams{
+    return UI::UITextField(UITextFieldParams{
         .width = 0,
         .onChanged = [this](std::string value) { onTextFieldChanged(value); },
     });
