@@ -1,6 +1,8 @@
 #pragma once
 
 #include <functional>
+
+#include "offset.hpp"
 #include "rect.hpp"
 #include "tap_event.hpp"
 
@@ -15,9 +17,9 @@ class UITapHandler {
   virtual ~UITapHandler() = default;
 
   // Override this method to customize hit detection logic
-  virtual bool hitTest(const UITapEvent& event, const UIRect& bounds) const {
-    return bounds.contains(event.x, event.y);
-  }
+  virtual bool hitTest(const UITapEvent& event, const UIRect& bounds) const { return bounds.contains(event.x, event.y); }
+
+  virtual bool hitTest(const Offset& offset, const UIRect& bounds) const { return bounds.contains(offset.x, offset.y); }
 
   bool onTap(const UITapEvent& event, const UIRect& bounds) {
     if (!tapListener_.has_value()) return false;

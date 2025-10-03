@@ -1,10 +1,13 @@
 #include "layout/flex_box.hpp"
-#include "debug/debug_assert.hpp"
+
 #include <fmt/base.h>
 #include <include/core/SkCanvas.h>
+
 #include <cmath>
 #include <memory>
 #include <vector>
+
+#include "debug/debug_assert.hpp"
 #include "rect.hpp"
 #include "size.hpp"
 
@@ -101,8 +104,7 @@ void FlexBox::layout(UISize size) {
   // Second pass: this is to size the flexible children.
   for (auto& child : param_.children) {
     if (child->wantsToFillMainAxis()) {
-      UISize sizedChild = isHorizontal ? UISize{.width = sizePerChild, .height = size.height}
-                                       : UISize{.width = size.width, .height = sizePerChild};
+      UISize sizedChild = isHorizontal ? UISize{.width = sizePerChild, .height = size.height} : UISize{.width = size.width, .height = sizePerChild};
       child->layout(sizedChild);
       maxChildCrossAxisSize = std::max(maxChildCrossAxisSize, getChildCrossAxisSize(child->getBounds()));
     }
@@ -133,6 +135,10 @@ void FlexBox::layout(UISize size) {
     }
     currentMain += mainAdvance;
     if (i + 1 != param_.children.size()) currentMain += spacing;
+  }
+
+  for (auto& child : param_.children) {
+    child->updateGlobalOffset({bounds_.x, bounds_.y});
   }
 }
 
