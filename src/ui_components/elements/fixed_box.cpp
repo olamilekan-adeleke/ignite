@@ -14,9 +14,14 @@ UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
 
 const std::vector<std::shared_ptr<UIComponent>>& FixedBox::children() const {
   if (params_.child) {
-    static std::vector<std::shared_ptr<UIComponent>> children = {params_.child};
-    return children;
+    if (cached_children_.empty() || cached_children_[0] != params_.child) {
+      cached_children_.clear();
+      cached_children_.push_back(params_.child);
+    }
+    return cached_children_;
   }
+
+  if (!cached_children_.empty()) cached_children_.clear();
   return UIComponent::children();
 }
 

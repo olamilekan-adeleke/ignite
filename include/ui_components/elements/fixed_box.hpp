@@ -1,8 +1,9 @@
 #pragma once
 
 #include <memory>
-#include <utility>
 #include <sstream>
+#include <utility>
+
 #include "basic/ui_component.hpp"
 
 struct FixedBoxParam {
@@ -31,6 +32,7 @@ class FixedBox : public UIComponent {
 
  private:
   FixedBoxParam params_;
+  mutable std::vector<std::shared_ptr<UIComponent>> cached_children_;
 };
 
 inline void FixedBox::debugFillProperties(std::ostringstream &os, int indent) const {
