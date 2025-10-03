@@ -1,8 +1,9 @@
 #include <memory>
+
+#include "interactive_components/stateful_component.hpp"
 #include "layout/flex_box.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
-#include "interactive_components/stateful_component.hpp"
 
 class CounterTextWidget : public StatefulComponent {
  public:

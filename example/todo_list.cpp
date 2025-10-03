@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "elements/text_field_renderer.hpp"
 #include "interactive_components/stateful_component.hpp"
 #include "layout/flex_box.hpp"
 #include "text_style.hpp"
@@ -84,7 +83,7 @@ class TodoListWidget : public StatefulComponent {
                     .enable = done,
                     .size = {24, 24},
                     .onTap =
-                        [&, index](const UITapEvent &e) {
+                        [&, index, done](const UITapEvent &e) {
                           data.markDone(index, !done);
                           markDirty();
                         },
@@ -109,11 +108,7 @@ class TodoListWidget : public StatefulComponent {
       return children;
     };
 
-    return UI::UIFlexBox({
-        .spacing = 12,
-        .axis = Axis::VERTICAL,
-        .children = buildChildren(),
-    });
+    return UI::UIFlexBox({.spacing = 12, .axis = Axis::VERTICAL, .children = buildChildren()});
   }
 
   const std::shared_ptr<UIComponent> button = UI::UIButton({
@@ -135,7 +130,7 @@ class TodoListWidget : public StatefulComponent {
     textFieldValue = value;
   }
   const std::shared_ptr<UIComponent> makeTextField() {
-    return std::make_shared<TextFieldRenderer>(UITextFieldParams{
+    return UI::UITextField(UITextFieldParams{
         .width = 0,
         .onChanged = [this](std::string value) { onTextFieldChanged(value); },
     });

@@ -1,6 +1,8 @@
 #include "elements/opacity.hpp"
+
 #include <include/core/SkCanvas.h>
 #include <include/core/SkRect.h>
+
 #include "debug_assert.hpp"
 #include "size.hpp"
 

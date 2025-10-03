@@ -1,8 +1,11 @@
+#include "interactive_components/stateful_component.hpp"
+
 #include <fmt/base.h>
+
 #include <memory>
 #include <sstream>
+
 #include "size.hpp"
-#include "interactive_components/stateful_component.hpp"
 
 void StatefulComponent::markDirty() { isDirty_ = true; }
 
@@ -30,6 +33,8 @@ void StatefulComponent::layout(UISize size) {
     const auto childBounds = child->getBounds();
     bounds_.width = childBounds.width;
     bounds_.height = childBounds.height;
+
+    child->updateGlobalOffset(getGlobalOffset());
   }
 }
 

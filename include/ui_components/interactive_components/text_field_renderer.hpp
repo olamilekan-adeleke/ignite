@@ -1,19 +1,19 @@
 #pragma once
 
 #include <fmt/base.h>
+
 #include <cstddef>
 #include <cstdint>
 #include <string>
 #include <vector>
 
+#include "basic/ui_component.hpp"
 #include "color.hpp"
+#include "elements/paragraph_builder.hpp"
 #include "keyboard_key_event.hpp"
 #include "text_style.hpp"
 #include "ui_edge_insets.hpp"
 #include "utils_helper.hpp"
-
-#include "basic/ui_component.hpp"
-#include "elements/paragraph_builder.hpp"
 
 struct UITextFieldParams {
   UIEdgeInsets padding{8.0f, 12.0f, 8.0f, 12.0f};
@@ -33,9 +33,7 @@ struct UITextFieldParams {
 class TextFieldRenderer : public UIComponent {
  public:
   TextFieldRenderer(const UITextFieldParams& params)
-      : params_(params),
-        textValueParagraph_(params_.value, params_.textStyle),
-        placeholderParagraph_(params_.placeholder, params_.placeholderStyle) {
+      : params_(params), textValueParagraph_(params_.value, params_.textStyle), placeholderParagraph_(params_.placeholder, params_.placeholderStyle) {
     if (!params_.value.empty()) {
       size_t position = 0;
       while (position < params_.value.size()) {
@@ -145,9 +143,7 @@ inline void TextFieldRenderer::handleKeyEvent(KeyEvent& key) noexcept {
   }
 }
 
-inline void TextFieldRenderer::setCursorIndex(uint32_t index) noexcept {
-  cursorIndex_ = std::min(index, static_cast<uint32_t>(buffer_.size()));
-}
+inline void TextFieldRenderer::setCursorIndex(uint32_t index) noexcept { cursorIndex_ = std::min(index, static_cast<uint32_t>(buffer_.size())); }
 
 inline void TextFieldRenderer::debugFillProperties(std::ostringstream& os, int indent) const {
   UIComponent::debugFillProperties(os, indent);

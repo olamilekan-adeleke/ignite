@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+
 #include "basic/ui_component.hpp"
 
 class StatefulComponent : public UIComponent {
@@ -40,8 +41,7 @@ inline const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::child
     }
     return childrenCache_;
   }
-  static const std::vector<std::shared_ptr<UIComponent>> empty;
-  return empty;
+  return UIComponent::children();
 }
 
 inline bool StatefulComponent::processChildTaps(const UITapEvent &event) {

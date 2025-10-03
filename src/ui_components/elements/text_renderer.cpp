@@ -1,10 +1,13 @@
 #include "elements/text_renderer.hpp"
+
 #include <fmt/base.h>
 #include <include/core/SkCanvas.h>
 #include <include/core/SkPoint.h>
+
 #include <algorithm>
 #include <sstream>
 #include <string>
+
 #include "elements/paragraph_builder.hpp"
 #include "size.hpp"
 

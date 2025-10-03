@@ -1,11 +1,13 @@
 #pragma once
 
 #include <include/core/SkCanvas.h>
+
+#include <sstream>
+
 #include "basic/ui_component.hpp"
 #include "color.hpp"
 #include "hash_helper.hpp"
 #include "size.hpp"
-#include <sstream>
 
 struct CheckBoxParams {
   bool enable = false;
@@ -22,8 +24,7 @@ struct CheckBoxParams {
   }
 
   uint64_t drawHashCode() const noexcept {
-    const auto key = fmt::format(
-        "{}-{}-{}-{}-{}", enable, fillColor.toString(), checkColor.toString(), inactiveBorderColor.toString(), radius);
+    const auto key = fmt::format("{}-{}-{}-{}-{}", enable, fillColor.toString(), checkColor.toString(), inactiveBorderColor.toString(), radius);
     return fnv1a(key);
   }
 };

@@ -1,10 +1,12 @@
+#include "elements/paragraph_builder.hpp"
+
 #include <fmt/base.h>
 #include <modules/skparagraph/include/ParagraphBuilder.h>
-#include "elements/paragraph_builder.hpp"
+
 #include "debug_assert.hpp"
+#include "rect.hpp"
 #include "size.hpp"
 #include "ui_manager.hpp"
-#include "rect.hpp"
 
 ParagraphBuilder::ParagraphBuilder(const std::string& text, const TextStyle& params) : text_(text), params_(params) {
   fontCollection_ = sk_make_sp<skia::textlayout::FontCollection>();

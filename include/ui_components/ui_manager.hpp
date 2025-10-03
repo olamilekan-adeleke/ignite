@@ -2,13 +2,14 @@
 
 #include <include/core/SkFont.h>
 #include <include/core/SkFontMgr.h>
-#include <include/core/SkTypeface.h>
 #include <include/core/SkImage.h>
 #include <include/core/SkSurface.h>
+#include <include/core/SkTypeface.h>
 
 #include <memory>
 
 #include "basic/ui_component.hpp"
+#include "offset.hpp"
 #include "rect.hpp"
 #include "tap_event.hpp"
 
@@ -34,6 +35,7 @@ class UIManager {
   const sk_sp<SkFontMgr> &fontManager() const;
 
   void sendTapEvent(const UITapEvent &event);
+  void setScrollCallback(const Offset &offset);
 
   void sendKeyEvent(int key, int scancode, int action, int mods);
   void sendMouseEvent(double xpos, double ypos);

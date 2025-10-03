@@ -1,7 +1,9 @@
 #include "elements/ui_view.hpp"
+
 #include <include/core/SkPaint.h>
 #include <include/core/SkRRect.h>
 #include <include/core/SkRect.h>
+
 #include "size.hpp"
 
 UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
@@ -25,52 +27,41 @@ void View::layout(UISize size) {
   const bool wantsToFillMainAxis = this->wantsToFillMainAxis();
 
   if (params_.child) {
-    // Calculate available space after removing margins
-    float availableWidth = size.width - params_.margin.horizonal();
-    float availableHeight = size.height - params_.margin.vertical();
+    float availableChildWidth = std::max(0.0f, size.width - params_.insets.horizonal());
+    float availableChildHeight = std::max(0.0f, size.height - params_.insets.vertical());
 
-    // Calculate child space after removing insets
-    float availableChildWidth = std::max(0.0f, availableWidth - params_.insets.horizonal());
-    float availableChildHeight = std::max(0.0f, availableHeight - params_.insets.vertical());
+    const auto& childIntrinsicSize = params_.child->getIntrinsicSize({availableChildWidth, availableChildHeight});
+    params_.child->layout({childIntrinsicSize.width, childIntrinsicSize.height});
 
-    // Layout child with the correct constrained size
-    params_.child->layout({availableChildWidth, availableChildHeight});
-
-    // Get child's actual bounds after layout
     float childActualWidth = params_.child->getBounds().width;
     float childActualHeight = params_.child->getBounds().height;
 
     if (wantsToFillMainAxis) {
-      // Use the full allocated size minus margins
-      bounds_.width = availableWidth;
-      bounds_.height = availableHeight;
+      bounds_.width = size.width;
+      bounds_.height = size.height;
 
-      // Center child within available space
-      float childX =
-          params_.margin.left + params_.insets.left + std::max(0.0f, (availableChildWidth - childActualWidth) / 2.0f);
-      float childY =
-          params_.margin.top + params_.insets.top + std::max(0.0f, (availableChildHeight - childActualHeight) / 2.0f);
-
+      float childX = params_.insets.left + std::max(0.0f, (availableChildWidth - childActualWidth) / 2.0f);
+      float childY = params_.insets.top + std::max(0.0f, (availableChildHeight - childActualHeight) / 2.0f);
       params_.child->setPosition(childX, childY);
     } else {
-      // Size to content plus padding
-      params_.child->setPosition(params_.margin.left + params_.insets.left, params_.margin.top + params_.insets.top);
-      bounds_.width = childActualWidth + params_.insets.horizonal() + params_.margin.horizonal();
-      bounds_.height = childActualHeight + params_.insets.vertical() + params_.margin.vertical();
+      bounds_.width = childActualWidth + params_.insets.horizonal();
+      bounds_.height = childActualHeight + params_.insets.vertical();
+      params_.child->setPosition(params_.insets.left, params_.insets.top);
     }
+
+    params_.child->updateGlobalOffset(getGlobalOffset());
   } else {
-    // No child case
     if (wantsToFillMainAxis) {
-      bounds_.width = size.width - params_.margin.horizonal();
-      bounds_.height = size.height - params_.margin.vertical();
+      bounds_.width = size.width;
+      bounds_.height = size.height;
     } else {
-      bounds_.width = params_.insets.horizonal() + params_.margin.horizonal();
-      bounds_.height = params_.insets.vertical() + params_.margin.vertical();
+      bounds_.width = params_.insets.horizonal();
+      bounds_.height = params_.insets.vertical();
     }
   }
 }
 
-void View::draw(SkCanvas *canvas) {
+void View::draw(SkCanvas* canvas) {
   if (params_.child) {
     // set up paint stuff and all
     SkPaint paint;

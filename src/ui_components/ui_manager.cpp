@@ -1,11 +1,13 @@
 #include "ui_manager.hpp"
 
 #include <fmt/base.h>
+
 #include <memory>
 #include <string>
 
 #include "core/logger.hpp"
 #include "keyboard_key_event.hpp"
+#include "offset.hpp"
 #include "tap_event.hpp"
 
 #if defined(SK_BUILD_FOR_MAC)
@@ -72,11 +74,18 @@ void UIManager::sendTapEvent(const UITapEvent &event) {
   }
 }
 
+void UIManager::setScrollCallback(const Offset &offset) {
+  if (currentTreeRoot_) {
+    currentTreeRoot_->setCursorPosCallback(offset);
+  }
+}
+
 void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float h, bool needsResize) {
   currentTreeRoot_ = tree;
   width_ = w;
   height_ = h;
 
+  currentTreeRoot_->updateGlobalOffset({0.0f, 0.0f});
   diffAndRebuild(previousTreeRoot_, currentTreeRoot_, w, h, needsResize);
   previousTreeRoot_ = currentTreeRoot_;
 }
@@ -118,16 +127,19 @@ void UIManager::sendCharEvent(unsigned int codepoint) {
 }
 
 void UIManager::sendMouseEvent(double xpos, double ypos) {
-  Logger::log(fmt::format("Mouse Event: xpos={}, ypos={}", xpos, ypos).c_str());
+  // fmt::println("Mouse Event: xpos={}, ypos={}", xpos, ypos);
 
   if (!currentTreeRoot_) return;
   std::shared_ptr<UIComponent> newHoveredComponent = nullptr;
 
   std::function<void(const std::shared_ptr<UIComponent> &)> findHovered =
       [&](const std::shared_ptr<UIComponent> &component) {
-        if (component && component->getBounds().contains(xpos, ypos)) {
-          newHoveredComponent = component;
+        if (component && component->getGobalBounds().contains(xpos, ypos)) {
+          if (!component || !component->getGobalBounds().contains(xpos, ypos)) {
+            return;
+          }
 
+          newHoveredComponent = component;
           for (const auto &child : component->children()) {
             findHovered(child);
           }
@@ -137,17 +149,14 @@ void UIManager::sendMouseEvent(double xpos, double ypos) {
   findHovered(currentTreeRoot_);
 
   if (newHoveredComponent != currentHoveredComponent_) {
-    if (currentHoveredComponent_) {
-      // currentHoveredComponent_->onHoverExit();
-    }
-    if (newHoveredComponent) {
-      // newHoveredComponent->onHoverEnter();
-    }
+    if (currentHoveredComponent_) currentHoveredComponent_->onHoverExit();
+    if (newHoveredComponent) newHoveredComponent->onHoverEnter();
     currentHoveredComponent_ = newHoveredComponent;
   }
 
   if (currentHoveredComponent_) {
-    // currentHoveredComponent_->onHoverMove(xpos, ypos);
+    Offset offset{static_cast<float>(xpos), static_cast<float>(ypos)};
+    currentHoveredComponent_->onHoverMove(offset);
   }
 }
 

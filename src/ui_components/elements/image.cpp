@@ -1,15 +1,18 @@
 #include "elements/image.hpp"
+
 #include <fmt/base.h>
 #include <include/core/SkData.h>
 #include <include/core/SkImage.h>
 #include <include/core/SkPaint.h>
 #include <include/core/SkStream.h>
 #include <include/core/SkSurface.h>
+
 #include <algorithm>
 #include <cstdint>
 #include <filesystem>
-#include <string>
 #include <sstream>
+#include <string>
+
 #include "size.hpp"
 #include "ui_manager.hpp"
 

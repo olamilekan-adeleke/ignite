@@ -1,5 +1,7 @@
 #include "color.hpp"
+
 #include <include/core/SkColor.h>
+
 #include <random>
 #include <sstream>
 

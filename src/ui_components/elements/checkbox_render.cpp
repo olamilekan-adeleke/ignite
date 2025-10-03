@@ -1,13 +1,16 @@
-#include "basic/ui_component.hpp"
-#include "size.hpp"
-#include "ui_manager.hpp"
 #include "elements/checkbox_render.hpp"
+
 #include <fmt/base.h>
 #include <include/core/SkCanvas.h>
 #include <include/core/SkPaint.h>
 #include <include/core/SkPath.h>
 #include <include/core/SkRRect.h>
+
 #include <cstdint>
+
+#include "basic/ui_component.hpp"
+#include "size.hpp"
+#include "ui_manager.hpp"
 
 UISize CheckBoxRender::getIntrinsicSize(UIConstraints constraints) noexcept { return params_.size; }
 

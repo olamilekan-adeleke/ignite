@@ -1,13 +1,13 @@
-#include <fmt/base.h>
+#include "interactive_components/text_field_renderer.hpp"
 
+#include <fmt/base.h>
 #include <include/core/SkRRect.h>
+
 #include <algorithm>
 
 #include "rect.hpp"
 #include "size.hpp"
 #include "ui_manager.hpp"
-
-#include "elements/text_field_renderer.hpp"
 
 UISize TextFieldRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
   const float minHeight = params_.minHeight;

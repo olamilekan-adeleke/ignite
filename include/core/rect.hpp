@@ -2,9 +2,10 @@
 
 #include <fmt/base.h>
 #include <fmt/format.h>
+#include <include/core/SkRect.h>
+
 #include <optional>
 #include <string>
-#include <include/core/SkRect.h>
 
 using optional_float = std::optional<float>;
 
@@ -31,7 +32,7 @@ struct UIRect {
   SkRect toSkRectHW() const noexcept { return SkRect::MakeWH(width, height); }
 
   bool contains(float x, float y) const noexcept {
-    return x >= this->x && y >= this->y && x <= this->x + this->width && y <= this->y + this->height;
+    return x >= this->x && y >= this->y && x < this->x + this->width && y < this->y + this->height;
   }
 
   UIRect copyWith(const UIRectParams &params) const noexcept {

@@ -57,7 +57,7 @@ bool GLFWWindowManager::initialize(int width, int height, const std::string &tit
 
   // Set up mouse callbacks
   glfwSetMouseButtonCallback(window, mouseButtonCallback);
-  glfwSetCursorPosCallback(window, mouseMoveCallback);
+
   glfwSetScrollCallback(window, scrollCallback);
 
   // Enable cursor position events
