@@ -10,10 +10,12 @@ class UIHoverHandler {
  public:
   virtual void onHoverEnter() noexcept { isHovered_ = true; }
   virtual void onHoverExit() noexcept { isHovered_ = false; }
-  virtual void onHoverMove(Offset &offset) noexcept {}
+  virtual void onHoverMove(Offset& offset) noexcept {}
 
   virtual bool shouldHandleHover() { return shouldHandleHover_; }
   virtual void setShouldHandleHover(bool shouldHandleHover) { shouldHandleHover_ = shouldHandleHover; }
+
+  virtual void setCursorPosCallback(Offset offset) noexcept {}
 
  private:
   bool isHovered_ = false;

@@ -74,6 +74,12 @@ void UIManager::sendTapEvent(const UITapEvent &event) {
   }
 }
 
+void UIManager::setScrollCallback(Offset &offset) {
+  if (currentTreeRoot_) {
+    currentTreeRoot_->setCursorPosCallback(offset);
+  }
+}
+
 void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float h, bool needsResize) {
   currentTreeRoot_ = tree;
   width_ = w;
@@ -84,7 +90,11 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   previousTreeRoot_ = currentTreeRoot_;
 }
 
-void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode, const std::shared_ptr<UIComponent> &newNode, float w, float h, bool needsResize) {
+void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
+                               const std::shared_ptr<UIComponent> &newNode,
+                               float w,
+                               float h,
+                               bool needsResize) {
   newNode->layout({w, h});
 
   auto oldChildren = oldNode ? oldNode->children() : std::vector<std::shared_ptr<UIComponent>>{};
@@ -122,18 +132,19 @@ void UIManager::sendMouseEvent(double xpos, double ypos) {
   if (!currentTreeRoot_) return;
   std::shared_ptr<UIComponent> newHoveredComponent = nullptr;
 
-  std::function<void(const std::shared_ptr<UIComponent> &)> findHovered = [&](const std::shared_ptr<UIComponent> &component) {
-    if (component && component->getGobalBounds().contains(xpos, ypos)) {
-      if (!component || !component->getGobalBounds().contains(xpos, ypos)) {
-        return;
-      }
+  std::function<void(const std::shared_ptr<UIComponent> &)> findHovered =
+      [&](const std::shared_ptr<UIComponent> &component) {
+        if (component && component->getGobalBounds().contains(xpos, ypos)) {
+          if (!component || !component->getGobalBounds().contains(xpos, ypos)) {
+            return;
+          }
 
-      newHoveredComponent = component;
-      for (const auto &child : component->children()) {
-        findHovered(child);
-      }
-    }
-  };
+          newHoveredComponent = component;
+          for (const auto &child : component->children()) {
+            findHovered(child);
+          }
+        }
+      };
 
   findHovered(currentTreeRoot_);
 

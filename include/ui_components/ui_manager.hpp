@@ -9,11 +9,12 @@
 #include <memory>
 
 #include "basic/ui_component.hpp"
+#include "offset.hpp"
 #include "rect.hpp"
 #include "tap_event.hpp"
 
 namespace Debug {
-inline bool ui_debug_mode = true;
+inline bool ui_debug_mode = false;
 }
 
 // just to maanger some UI Shit
@@ -23,13 +24,18 @@ class UIManager {
   static UIManager &instance();
 
   void setTree(const std::shared_ptr<UIComponent> tree, float w, float h, bool needsResize);
-  void diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode, const std::shared_ptr<UIComponent> &newNode, float w, float h, bool needsResize);
+  void diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
+                      const std::shared_ptr<UIComponent> &newNode,
+                      float w,
+                      float h,
+                      bool needsResize);
 
   const SkFont &defaultFont() const;
   const sk_sp<SkTypeface> &typeface() const;
   const sk_sp<SkFontMgr> &fontManager() const;
 
   void sendTapEvent(const UITapEvent &event);
+  void setScrollCallback(Offset &offset);
 
   void sendKeyEvent(int key, int scancode, int action, int mods);
   void sendMouseEvent(double xpos, double ypos);

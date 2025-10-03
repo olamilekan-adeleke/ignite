@@ -1,6 +1,8 @@
 
 #include "tap_event.hpp"
+
 #include <GLFW/glfw3.h>
+
 #include "ui_manager.hpp"
 
 void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
@@ -49,6 +51,6 @@ void scrollCallback(GLFWwindow *window, double xoffset, double yoffset) {
   float y = static_cast<float>(ypos) * yscale;
 
   fmt::println("Scroll at ({}, {}) - offset: ({}, {})", x, y, xoffset, yoffset);
-
-  // TODO: will come back and implement for scroll able view
+  Offset offset{static_cast<float>(xoffset), static_cast<float>(yoffset)};
+  UIManager::instance().setScrollCallback(offset);
 }
