@@ -53,9 +53,10 @@ int main() {
     auto counter_example = std::make_shared<CounterComponent>();
     auto todoList = std::make_shared<TodoListWidget>();
     auto paragraphTest = std::make_shared<ParagraphTestWidget>();
-    auto cscrollTest = std::make_shared<TestScrollWidget>();
+    auto scrollTest = std::make_shared<TestScrollWidget>();
     // std::shared_ptr<UIComponent> rootUI = counter_example;
-    std::shared_ptr<UIComponent> rootUI = todoList;
+    // std::shared_ptr<UIComponent> rootUI = todoList;
+    std::shared_ptr<UIComponent> rootUI = scrollTest;
     // std::shared_ptr<UIComponent> rootUI = paragraphTest;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
 

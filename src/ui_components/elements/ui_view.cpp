@@ -33,7 +33,8 @@ void View::layout(UISize size) {
     float availableChildWidth = std::max(0.0f, size.width - params_.insets.horizonal());
     float availableChildHeight = std::max(0.0f, size.height - params_.insets.vertical());
 
-    params_.child->layout({availableChildWidth, availableChildHeight});
+    const auto& childIntrinsicSize = params_.child->getIntrinsicSize({availableChildWidth, availableChildHeight});
+    params_.child->layout({childIntrinsicSize.width, childIntrinsicSize.height});
 
     float childActualWidth = params_.child->getBounds().width;
     float childActualHeight = params_.child->getBounds().height;
