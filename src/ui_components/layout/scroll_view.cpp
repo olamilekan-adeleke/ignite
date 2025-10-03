@@ -30,10 +30,14 @@ UISize ScrollView::getIntrinsicSize(UIConstraints constraints) noexcept {
 
 const std::vector<std::shared_ptr<UIComponent>>& ScrollView::children() const {
   if (params_.child) {
-    static const std::vector<std::shared_ptr<UIComponent>> children{params_.child};
-    return children;
+    if (cached_children_.empty() || cached_children_[0] != params_.child) {
+      cached_children_.clear();
+      cached_children_.push_back(params_.child);
+    }
+    return cached_children_;
   }
 
+  if (!cached_children_.empty()) cached_children_.clear();
   return UIComponent::children();
 }
 
@@ -57,6 +61,12 @@ void ScrollView::layout(UISize size) {
     targetScrollOffset_.x = std::clamp(targetScrollOffset_.x, 0.0f, maxScrollX);
     targetScrollOffset_.y = std::clamp(targetScrollOffset_.y, 0.0f, maxScrollY);
 
+    // Smooth scroll never converges.
+    //
+    // update() applies only a single interpolation step after layout(). Because it multiplies by smoothness_, the
+    // current offset asymptotically approaches the target but never reaches it without repeated calls (e.g. from a
+    // tick). After layout the draw still uses an outdated scrollOffset_. Either snap scrollOffset_ =
+    // targetScrollOffset_ here or drive update() from the render loop until convergence.
     update();
   }
 }

@@ -47,6 +47,7 @@ class ScrollView : public UIComponent {
   ScrollViewParam params_;
   float scrollSpeed_ = 2.0f;
   float smoothness_ = 0.2f;
+  mutable std::vector<std::shared_ptr<UIComponent>> cached_children_;
 };
 
 inline void ScrollView::update() {
