@@ -26,9 +26,6 @@ UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
 void View::layout(UISize size) {
   const bool wantsToFillMainAxis = this->wantsToFillMainAxis();
 
-  // bounds_.x = 0;
-  // bounds_.y = 0;
-
   if (params_.child) {
     float availableChildWidth = std::max(0.0f, size.width - params_.insets.horizonal());
     float availableChildHeight = std::max(0.0f, size.height - params_.insets.vertical());

@@ -37,7 +37,7 @@ class TodoListWidget : public StatefulComponent {
   TodoListWidget() {
     data.addTodoItem("Buy more coffee and monster");
     data.addTodoItem("Finish C++ project");
-    // data.addTodoItem("Call dad");
+    data.addTodoItem("Call dad");
   }
 
   std::shared_ptr<UIComponent> body() override {
@@ -84,7 +84,6 @@ class TodoListWidget : public StatefulComponent {
                     .size = {24, 24},
                     .onTap =
                         [&, index, done](const UITapEvent &e) {
-                          fmt::println("onTap: {}, {}", index, done);
                           data.markDone(index, !done);
                           markDirty();
                         },

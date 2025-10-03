@@ -79,13 +79,6 @@ class UIComponent : public UIRenderObject, public UITapHandler, public UITextInp
 
       if (hitTest(mousePosition, boundsUIRect)) {
         onHoverEnter();
-        fmt::println("shouldHandleHover is {} for {} | {} mouse: {}x{}",
-                     (*this).shouldHandleHover(),
-                     typeid(*this).name(),
-                     boundsUIRect.toStrin(),
-                     mousePosition.x,
-                     mousePosition.y);
-        // fmt::println("onHoverEnter");
       } else {
         onHoverExit();
       }
