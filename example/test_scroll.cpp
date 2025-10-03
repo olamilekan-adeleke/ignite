@@ -33,7 +33,7 @@ class TestScrollWidget : public StatefulComponent {
               .insets = UIEdgeInsets::all(50),
               .backgroundColor = i % 2 == 0 ? Color::Red() : Color::Blue(),
               .borderRadius = 10,
-              .onTap = [&](const UITapEvent e) { fmt::println("Tapped {}", i); },
+              .onTap = [&, i](const UITapEvent e) { fmt::println("Tapped {}", i); },
               .child = UI::Text(std::to_string(i + 1), {.color = Color::White()}),
           }));
         }

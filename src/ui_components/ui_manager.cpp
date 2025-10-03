@@ -74,7 +74,7 @@ void UIManager::sendTapEvent(const UITapEvent &event) {
   }
 }
 
-void UIManager::setScrollCallback(Offset &offset) {
+void UIManager::setScrollCallback(const Offset &offset) {
   if (currentTreeRoot_) {
     currentTreeRoot_->setCursorPosCallback(offset);
   }

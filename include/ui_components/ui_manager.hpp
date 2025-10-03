@@ -35,7 +35,7 @@ class UIManager {
   const sk_sp<SkFontMgr> &fontManager() const;
 
   void sendTapEvent(const UITapEvent &event);
-  void setScrollCallback(Offset &offset);
+  void setScrollCallback(const Offset &offset);
 
   void sendKeyEvent(int key, int scancode, int action, int mods);
   void sendMouseEvent(double xpos, double ypos);
