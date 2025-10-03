@@ -104,7 +104,8 @@ void FlexBox::layout(UISize size) {
   // Second pass: this is to size the flexible children.
   for (auto& child : param_.children) {
     if (child->wantsToFillMainAxis()) {
-      UISize sizedChild = isHorizontal ? UISize{.width = sizePerChild, .height = size.height} : UISize{.width = size.width, .height = sizePerChild};
+      UISize sizedChild = isHorizontal ? UISize{.width = sizePerChild, .height = size.height}
+                                       : UISize{.width = size.width, .height = sizePerChild};
       child->layout(sizedChild);
       maxChildCrossAxisSize = std::max(maxChildCrossAxisSize, getChildCrossAxisSize(child->getBounds()));
     }

@@ -1,12 +1,15 @@
+#include "elements/separator.hpp"
+
+#include <fmt/base.h>
+#include <include/core/SkRect.h>
+
+#include <cstdint>
+
 #include "basic/ui_component.hpp"
 #include "layout/flex_box.hpp"
 #include "rect.hpp"
 #include "size.hpp"
 #include "ui_manager.hpp"
-#include "elements/separator.hpp"
-#include <fmt/base.h>
-#include <include/core/SkRect.h>
-#include <cstdint>
 
 void Separator::markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller& caller) noexcept {
   const auto layoutHash{params_.layoutHashCode()};

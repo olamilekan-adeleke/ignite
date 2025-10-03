@@ -20,7 +20,9 @@ struct UIConstraints {
   float minWidth;
   float minHeight;
 
-  UIConstraints shrinkBy(float horizontal, float vertical) const noexcept { return {minWidth - horizontal, minHeight - vertical}; }
+  UIConstraints shrinkBy(float horizontal, float vertical) const noexcept {
+    return {minWidth - horizontal, minHeight - vertical};
+  }
 };
 
 struct UIRect {
@@ -29,7 +31,9 @@ struct UIRect {
   SkRect toSkRect() const noexcept { return SkRect::MakeXYWH(x, y, width, height); }
   SkRect toSkRectHW() const noexcept { return SkRect::MakeWH(width, height); }
 
-  bool contains(float x, float y) const noexcept { return x >= this->x && y >= this->y && x < this->x + this->width && y < this->y + this->height; }
+  bool contains(float x, float y) const noexcept {
+    return x >= this->x && y >= this->y && x < this->x + this->width && y < this->y + this->height;
+  }
 
   UIRect copyWith(const UIRectParams &params) const noexcept {
     UIRect newRect = *this;
@@ -41,6 +45,7 @@ struct UIRect {
     return newRect;
   }
 
-  std::string toString() const noexcept { return fmt::format("UIRect{ x: {}, y: {}, w: {}, h: {} }", x, y, width, height); }
-  std::string toStrin() const noexcept { return fmt::format("UIRect( x: {}, y: {}, w: {}, h: {} )", x, y, width, height); }
+  std::string toString() const noexcept {
+    return fmt::format("UIRect{ x: {}, y: {}, w: {}, h: {} }", x, y, width, height);
+  }
 };

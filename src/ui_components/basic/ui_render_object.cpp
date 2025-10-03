@@ -1,8 +1,10 @@
 
 #include "basic/ui_render_object.hpp"
+
+#include <sstream>
+
 #include "color.hpp"
 #include "ui_manager.hpp"
-#include <sstream>
 
 SkPaint UIRenderObject::debug_border_paint_;
 bool UIRenderObject::debug_paint_initialized_ = false;

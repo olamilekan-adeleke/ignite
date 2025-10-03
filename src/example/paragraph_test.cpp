@@ -22,7 +22,8 @@ class ParagraphTestWidget : public StatefulComponent {
             .children =
                 {
                     UI::Text("Paragraph Test", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
-                    UI::Text("Testing different paragraph styles and long texts", {.color = Color::Gray(), .fontSize = 18}),
+                    UI::Text("Testing different paragraph styles and long texts",
+                             {.color = Color::Gray(), .fontSize = 18}),
 
                     UI::UIView({.margin = UIEdgeInsets::horizontal(100), .child = makePara()}),
                     UI::UIView({.margin = UIEdgeInsets::horizontal(50), .child = makeStyledPara()}),

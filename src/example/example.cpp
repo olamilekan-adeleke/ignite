@@ -1,8 +1,10 @@
 #include <fmt/base.h>
+
 #include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
+
 #include "logger.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
