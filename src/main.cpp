@@ -5,13 +5,12 @@
 #include <iostream>
 #include <memory>
 
+#include "../example/counnter_app.cpp"
+#include "../example/paragraph_test.cpp"
+#include "../example/test_scroll.cpp"
+#include "../example/todo_list.cpp"
 #include "debug/debug_log_server.hpp"
 #include "debug/fps_tracker.hpp"
-#include "example/counnter_app.cpp"
-#include "example/example.cpp"
-#include "example/paragraph_test.cpp"
-#include "example/test_scroll.cpp"
-#include "example/todo_list.cpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"

@@ -49,7 +49,7 @@ void View::layout(UISize size) {
       params_.child->setPosition(params_.insets.left, params_.insets.top);
     }
 
-    params_.child->updateGlobalOffset({bounds_.x, bounds_.y});
+    params_.child->updateGlobalOffset(getGlobalOffset());
   } else {
     if (wantsToFillMainAxis) {
       bounds_.width = size.width;

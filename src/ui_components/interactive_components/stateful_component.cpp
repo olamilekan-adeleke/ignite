@@ -34,7 +34,7 @@ void StatefulComponent::layout(UISize size) {
     bounds_.width = childBounds.width;
     bounds_.height = childBounds.height;
 
-    child->updateGlobalOffset({bounds_.x, bounds_.y});
+    child->updateGlobalOffset(getGlobalOffset());
   }
 }
 
