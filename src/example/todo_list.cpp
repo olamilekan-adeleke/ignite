@@ -37,7 +37,7 @@ class TodoListWidget : public StatefulComponent {
   TodoListWidget() {
     data.addTodoItem("Buy more coffee and monster");
     data.addTodoItem("Finish C++ project");
-    data.addTodoItem("Call dad");
+    // data.addTodoItem("Call dad");
   }
 
   std::shared_ptr<UIComponent> body() override {
@@ -109,11 +109,7 @@ class TodoListWidget : public StatefulComponent {
       return children;
     };
 
-    return UI::UIFlexBox({
-        .spacing = 12,
-        .axis = Axis::VERTICAL,
-        .children = buildChildren(),
-    });
+    return UI::UIFlexBox({.spacing = 12, .axis = Axis::VERTICAL, .children = buildChildren()});
   }
 
   const std::shared_ptr<UIComponent> button = UI::UIButton({

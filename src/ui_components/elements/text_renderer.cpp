@@ -1,19 +1,19 @@
 #include "elements/text_renderer.hpp"
+
 #include <fmt/base.h>
 #include <include/core/SkCanvas.h>
 #include <include/core/SkPoint.h>
+
 #include <algorithm>
 #include <sstream>
 #include <string>
+
 #include "elements/paragraph_builder.hpp"
 #include "size.hpp"
 
-TextRenderer::TextRenderer(const std::string &text, const TextStyle &style)
-    : text_(text), paragraphBuilder_(ParagraphBuilder(text, style)) {}
+TextRenderer::TextRenderer(const std::string &text, const TextStyle &style) : text_(text), paragraphBuilder_(ParagraphBuilder(text, style)) {}
 
-UISize TextRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
-  return paragraphBuilder_.getIntrinsicSize(constraints);
-}
+UISize TextRenderer::getIntrinsicSize(UIConstraints constraints) noexcept { return paragraphBuilder_.getIntrinsicSize(constraints); }
 
 void TextRenderer::layout(UISize size) {
   UIConstraints constraints = {size.width, size.height};

@@ -1,20 +1,20 @@
 #include <fmt/base.h>
 
+#include <boost/asio.hpp>
 #include <cstdlib>
 #include <iostream>
-#include <boost/asio.hpp>
 #include <memory>
-#include "debug/fps_tracker.hpp"
 
 #include "debug/debug_log_server.hpp"
+#include "debug/fps_tracker.hpp"
+#include "example/counnter_app.cpp"
+#include "example/example.cpp"
+#include "example/paragraph_test.cpp"
+#include "example/test_scroll.cpp"
+#include "example/todo_list.cpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
-
-#include "example/example.cpp"
-#include "example/counnter_app.cpp"
-#include "example/todo_list.cpp"
-#include "example/paragraph_test.cpp"
 
 using std::string;
 
@@ -53,6 +53,7 @@ int main() {
     auto counter_example = std::make_shared<CounterComponent>();
     auto todoList = std::make_shared<TodoListWidget>();
     auto paragraphTest = std::make_shared<ParagraphTestWidget>();
+    auto cscrollTest = std::make_shared<TestScrollWidget>();
     // std::shared_ptr<UIComponent> rootUI = counter_example;
     std::shared_ptr<UIComponent> rootUI = todoList;
     // std::shared_ptr<UIComponent> rootUI = paragraphTest;
