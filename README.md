@@ -20,6 +20,8 @@ The project is organized to provide a clear separation of concerns:
 Ignite aims to provide a robust and flexible foundation for developing custom desktop UI applications with a focus on performance and modern design principles.
 
 ### UI Component Progress
+For detailed documentation on each UI component, please refer to the [UI Components Documentation](docs/UI_COMPONENTS.md).
+
 Here's a breakdown of the current UI component plans and current implementation status:
 
 #### Layout Components
