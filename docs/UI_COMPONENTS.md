@@ -340,6 +340,8 @@ auto myTextField = UI::TextFieldRenderer({
 
 **Description**: The `ScrollView` component enables its child content to be scrollable, either vertically or horizontally. It's designed to handle content larger than its visible area, providing a smooth scrolling experience.
 
+Note: Nested ScrollViews are not currently supported.
+
 **Parameters**:
 
 -   `child`: `std::shared_ptr<UIComponent>` representing the single child component that will be made scrollable.
