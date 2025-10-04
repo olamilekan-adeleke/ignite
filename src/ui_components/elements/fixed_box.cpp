@@ -35,7 +35,7 @@ void FixedBox::layout(UISize size) {
 
     const auto& childBounds = child->getBounds();
 
-    auto [x, y] = computeAlignedPosition(UIAlignment::Center, width, height, childBounds.width, childBounds.height);
+    auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childBounds.width, childBounds.height);
     child->setPosition(x, y);
   }
 

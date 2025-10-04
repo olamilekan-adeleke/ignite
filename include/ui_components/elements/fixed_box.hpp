@@ -5,10 +5,12 @@
 #include <utility>
 
 #include "basic/ui_component.hpp"
+#include "ui_alignment.hpp"
 
 struct FixedBoxParam {
   UISize size = {-1.f, -1.f};
   std::shared_ptr<UIComponent> child = nullptr;
+  UIAlignment alignment = UIAlignment::Center;
 };
 
 class FixedBox : public UIComponent {

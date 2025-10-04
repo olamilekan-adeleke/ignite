@@ -4,7 +4,6 @@
 #include <include/core/SkCanvas.h>
 #include <include/core/SkPoint.h>
 
-#include <algorithm>
 #include <sstream>
 #include <string>
 
@@ -15,15 +14,14 @@ TextRenderer::TextRenderer(const std::string &text, const TextStyle &style)
     : text_(text), paragraphBuilder_(ParagraphBuilder(text, style)) {}
 
 UISize TextRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
-  return paragraphBuilder_.getIntrinsicSize(constraints);
+  auto size = paragraphBuilder_.getIntrinsicSize(constraints);
+  return size;
 }
 
 void TextRenderer::layout(UISize size) {
-  UIConstraints constraints = {size.width, size.height};
-  UISize intrinsicSize = paragraphBuilder_.getIntrinsicSize(constraints);
-
-  bounds_.width = intrinsicSize.width;
-  bounds_.height = std::min(intrinsicSize.height, size.height);
+  paragraphBuilder_.layout(size.width);
+  bounds_.width = size.width;
+  bounds_.height = size.height;
 }
 
 void TextRenderer::draw(SkCanvas *canvas) {

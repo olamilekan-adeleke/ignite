@@ -1,3 +1,4 @@
+#pragma once
 #include <fmt/base.h>
 
 #include <memory>
@@ -44,7 +45,6 @@ class TodoListWidget : public StatefulComponent {
     auto header = UI::VFlexBox({
         .children =
             {
-
                 UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
                 UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
             },

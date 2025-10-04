@@ -1,6 +1,7 @@
 #pragma once
 
 #include <include/core/SkCanvas.h>
+
 #include "basic/diagnosable.hpp"
 #include "key.hpp"
 #include "rect.hpp"
@@ -38,7 +39,7 @@ class UIRenderObject : public Diagnosable {
   void initializeDebugPaint();
 
  protected:
-  UIRect bounds_;
+  UIRect bounds_{0, 0, 0, 0};
   UIKey key_;
 
   static SkPaint debug_border_paint_;

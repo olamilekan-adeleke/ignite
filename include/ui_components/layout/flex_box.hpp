@@ -1,12 +1,14 @@
 #pragma once
 
-#include <sstream>
 #include <fmt/base.h>
+
+#include <sstream>
+
+#include "axis.hpp"
 #include "basic/ui_component.hpp"
 #include "rect.hpp"
 #include "size.hpp"
 #include "ui_alignment.hpp"
-#include "axis.hpp"
 
 struct FlexParam {
   float spacing = 0.0f;
@@ -49,6 +51,7 @@ class FlexBox : public UIComponent {
 
  private:
   FlexParam param_;
+  mutable bool hasLoggedOverflow_ = false;
 };
 
 inline bool FlexBox::processChildTaps(const UITapEvent& event) {

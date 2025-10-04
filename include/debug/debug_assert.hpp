@@ -1,19 +1,61 @@
 #pragma once
 #include <cxxabi.h>
 #include <execinfo.h>
+#include <fmt/base.h>
 #include <unistd.h>
+
+#include <array>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
-#include <cstdio>
-#include <cstdlib>
-#include <array>
 
 #ifdef __APPLE__
-#include <mach-o/dyld.h>
 #include <libproc.h>
+#include <mach-o/dyld.h>
 #endif
+
+inline void printStackTraceTT() {
+  void* callstack[128];
+  int frames = backtrace(callstack, 128);
+  char** strs = backtrace_symbols(callstack, frames);
+
+  fmt::println("Stack trace:");
+  for (int i = 0; i < frames; ++i) {
+    // Demangle the symbol
+    char* demangled = nullptr;
+    for (char* p = strs[i]; *p; ++p) {
+      if (*p == '_' && *(p + 1) == 'Z') {
+        // Found mangled name, extract it
+        char* end = p;
+        while (*end && *end != ' ' && *end != '+') end++;
+
+        size_t len = end - p;
+        char* mangled = static_cast<char*>(malloc(len + 1));
+        strncpy(mangled, p, len);
+        mangled[len] = '\0';
+
+        int status;
+        demangled = abi::__cxa_demangle(mangled, nullptr, nullptr, &status);
+
+        if (status == 0 && demangled) {
+          fmt::println("  {}: {}", i, demangled);
+          free(demangled);
+        } else {
+          fmt::println("  {}: {}", i, strs[i]);
+        }
+        free(mangled);
+        break;
+      }
+    }
+    if (!demangled) {
+      fmt::println("  {}: {}", i, strs[i]);
+    }
+  }
+  free(strs);
+}
 
 // Helper to demangle C++ names
 inline std::string demangle(const char* name) {
