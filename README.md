@@ -33,7 +33,6 @@ Here's a breakdown of the current UI component plans and current implementation 
 #### Basic Elements
 - [x] Text - Text rendering with styling
 - [x] Image - Bitmap/vector image display
-- [x] Rectangle - Filled/stroked rectangles / Circle/Ellipse - Circular shapes
 - [x] Separator - Visual dividers (horizontal/vertical)
 
 #### Interactive Components
