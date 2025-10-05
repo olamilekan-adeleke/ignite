@@ -57,10 +57,7 @@ class NavTestWidget : public StatefulComponent {
   }
 
   std::shared_ptr<UIComponent> makeSideBar(std::string text) const noexcept {
-    return UI::UIView({
-        .insets = UIEdgeInsets::horizontal(6) + UIEdgeInsets::vertical(4),
-        .child = UI::Text(text, {.color = Color::Black()}),
-    });
+    return UI::Text(text, {.color = Color::Black()});
   }
 
   std::shared_ptr<UIComponent> makePara() {

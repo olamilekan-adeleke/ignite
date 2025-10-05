@@ -36,6 +36,9 @@ class TodoItemData {
 class TodoListWidget : public StatefulComponent {
  public:
   TodoListWidget() {
+    data.addTodoItem(
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     data.addTodoItem("Buy more coffee and monster");
     data.addTodoItem("Finish C++ project");
     data.addTodoItem("Call dad");

@@ -89,21 +89,14 @@ inline float FlexBox::getChildCrossAxisSize(UIRect bound) const {
 };
 
 inline UIRect FlexBox::setMainAxisSize(float contentSize, UIRect bound, UISize parentSize) const {
-  contentSize = std::fmax(0, contentSize);
+  contentSize = std::fmax(0.0f, contentSize);
+  const float rounded = std::ceil(contentSize);
 
   switch (param_.axis) {
     case Axis::HORIZONTAL:
-      // if (param_.mainAxisSize == MainAxisSize::FILL) {
-      //   return bound.copyWith({.width = parentSize.width});
-      // }
-
-      return bound.copyWith({.width = contentSize});
+      return bound.copyWith({.width = rounded});
     case Axis::VERTICAL:
-      // if (param_.mainAxisSize == MainAxisSize::FILL) {
-      //   return bound.copyWith({.height = parentSize.height});
-      // }
-
-      return bound.copyWith({.height = contentSize});
+      return bound.copyWith({.height = rounded});
   }
   return bound;
 }

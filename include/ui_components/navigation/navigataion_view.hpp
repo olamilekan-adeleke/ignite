@@ -8,7 +8,7 @@
 
 struct NavigationItem {
   std::shared_ptr<UIComponent> sidebarItem;
-  UIEdgeInsets sidebarItemPadding = UIEdgeInsets::vertical(6) + UIEdgeInsets::horizontal(8);
+  UIEdgeInsets sidebarItemPadding = UIEdgeInsets::vertical(6) + UIEdgeInsets::horizontal(12);
   std::shared_ptr<UIComponent> view;
   std::optional<VoidCallBack> onTap;
 };
@@ -25,19 +25,23 @@ class NavigationView : public StatefulComponent {
   NavigationView(const NavigationViewParam& params) : params_(params) {}
 
   std::shared_ptr<UIComponent> body() override {
-    return UI::HFlexBox({
+    return UI::VFlexBox({
         .children =
             {
-                UI::FixedBoxView({
-                    .child = UI::UIView({.insets = params_.sidebarPadding, .child = buildSidebar()}),
-                    .alignment = UIAlignment::TopLeft,
+                UI::UIView({
+                    .insets = UIEdgeInsets{.top = 20} + UIEdgeInsets::horizontal(10),
+                    .child = UI::UISeparator({.axis = Axis::HORIZONTAL}),
                 }),
 
-                UI::UISeparator({}),
-
-                buildView(),
+                UI::HFlexBox({
+                    .children =
+                        {
+                            UI::UIView({.insets = params_.sidebarPadding, .child = buildSidebar()}),
+                            UI::UISeparator({}),
+                            buildView(),
+                        },
+                }),
             },
-
     });
   }
 
@@ -59,9 +63,9 @@ class NavigationView : public StatefulComponent {
       };
 
       const auto child = UI::UIView({
-          .insets = navItems[i].sidebarItemPadding + UIEdgeInsets::horizontal(20),
-          .backgroundColor = Color::LightGray(),
-          .borderRadius = 10,
+          .insets = navItems[i].sidebarItemPadding + UIEdgeInsets{.top = 2.5},
+          .backgroundColor = selectedIndex_ == i ? Color::LightGray() : Color::Clear(),
+          .borderRadius = 6,
           .onTap = onTap,
           .child = navItems[i].sidebarItem,
       });

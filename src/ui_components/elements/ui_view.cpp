@@ -9,7 +9,6 @@
 
 UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
   UISize childSize{0.0f, 0.0f};
-
   const auto horizonalSpace = params_.margin.horizonal() + params_.insets.horizonal();
   const auto verticalSpace = params_.margin.vertical() + params_.insets.vertical();
 
@@ -22,6 +21,11 @@ UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
   if (params_.mainAxisSize == MainAxisSize::FIT) {
     size.width = childSize.width + horizonalSpace;
     size.height = childSize.height + verticalSpace;
+
+    // CRITICAL: Never exceed constraints
+    size.width = std::min(size.width, constraints.minWidth);
+    size.height = std::min(size.height, constraints.minHeight);
+
   } else if (params_.mainAxisSize == MainAxisSize::FILL) {
     size.width = 0 + horizonalSpace;
     size.height = 0 + verticalSpace;
@@ -56,8 +60,8 @@ void View::layout(UISize size) {
           params_.margin.top + params_.insets.top + std::max(0.0f, (availableChildHeight - childActualHeight) / 2.0f);
       params_.child->setPosition(childX, childY);
     } else {
-      bounds_.width = childActualWidth + horizonalSpace;
-      bounds_.height = childActualHeight + verticalSpace;
+      bounds_.width = std::min(childActualWidth + horizonalSpace, size.width);
+      bounds_.height = std::min(childActualHeight + verticalSpace, size.height);
 
       params_.child->setPosition(params_.margin.left + params_.insets.left, params_.margin.top + params_.insets.top);
     }
@@ -72,6 +76,9 @@ void View::layout(UISize size) {
       bounds_.height = verticalSpace;
     }
   }
+
+  bounds_.width = std::min(bounds_.width, size.width);
+  bounds_.height = std::min(bounds_.height, size.height);
 }
 
 void View::draw(SkCanvas* canvas) {
