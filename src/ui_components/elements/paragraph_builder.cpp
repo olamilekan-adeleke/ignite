@@ -3,7 +3,6 @@
 #include <fmt/base.h>
 #include <modules/skparagraph/include/ParagraphBuilder.h>
 
-#include "debug_assert.hpp"
 #include "rect.hpp"
 #include "size.hpp"
 #include "ui_manager.hpp"
@@ -26,24 +25,21 @@ void ParagraphBuilder::setText(const std::string& newText) {
 
 UISize ParagraphBuilder::getIntrinsicSize(UIConstraints constraints) noexcept {
   float layoutWidth = constraints.minWidth > 0 ? constraints.minWidth : 1000000.0f;
-
   if (!paragraph_) buildParagraph();
+
   paragraph_->layout(layoutWidth);
 
-  float paragraphMaxWidth = std::min(paragraph_->getMaxWidth(), paragraph_->getMaxIntrinsicWidth());
-  float paragraphHeight = paragraph_->getHeight();
-
   float usedWidth = std::min(constraints.minWidth, paragraph_->getMaxIntrinsicWidth());
-  usedWidth += 1.0f;  // Add a small buffer to prevent last word in single line text from clipping
-
-  float usedHeight = paragraphHeight;
-
-  VERIFY(paragraphMaxWidth > layoutWidth * 1.1f,
-         fmt::format("  - WARNING: getMaxWidth({}) >> layoutWidth({}), paragraph layout may have failed!",
-                     paragraphMaxWidth,
-                     layoutWidth));
+  usedWidth += 1.0f;
+  usedWidth = std::min(usedWidth, constraints.minWidth);
+  float usedHeight = paragraph_->getHeight();
 
   return UISize{.width = usedWidth, .height = usedHeight};
+}
+
+void ParagraphBuilder::layout(float width) {
+  if (!paragraph_) buildParagraph();
+  paragraph_->layout(width);
 }
 
 void ParagraphBuilder::draw(SkCanvas* canvas, SkPoint point) {

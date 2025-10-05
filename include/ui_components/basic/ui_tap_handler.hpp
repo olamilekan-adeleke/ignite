@@ -7,6 +7,7 @@
 #include "tap_event.hpp"
 
 using TapListener = std::function<void(const UITapEvent& event)>;
+using VoidCallBack = std::function<void()>;
 
 template <typename T>
 using ValueChangedListener = std::function<void(const T& newValue)>;
@@ -17,7 +18,9 @@ class UITapHandler {
   virtual ~UITapHandler() = default;
 
   // Override this method to customize hit detection logic
-  virtual bool hitTest(const UITapEvent& event, const UIRect& bounds) const { return bounds.contains(event.x, event.y); }
+  virtual bool hitTest(const UITapEvent& event, const UIRect& bounds) const {
+    return bounds.contains(event.x, event.y);
+  }
 
   virtual bool hitTest(const Offset& offset, const UIRect& bounds) const { return bounds.contains(offset.x, offset.y); }
 

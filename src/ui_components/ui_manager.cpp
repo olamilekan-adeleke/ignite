@@ -85,7 +85,9 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   width_ = w;
   height_ = h;
 
+  currentTreeRoot_->layout({w, h});
   currentTreeRoot_->updateGlobalOffset({0.0f, 0.0f});
+
   diffAndRebuild(previousTreeRoot_, currentTreeRoot_, w, h, needsResize);
   previousTreeRoot_ = currentTreeRoot_;
 }
@@ -95,7 +97,9 @@ void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
                                float w,
                                float h,
                                bool needsResize) {
-  newNode->layout({w, h});
+  if (!oldNode) {
+    // newNode->layout({w, h});
+  }
 
   auto oldChildren = oldNode ? oldNode->children() : std::vector<std::shared_ptr<UIComponent>>{};
   auto newChildren = newNode->children();
@@ -104,7 +108,7 @@ void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
     const auto &newChild = newChildren[i];
     const std::shared_ptr<UIComponent> oldChild = (i < oldChildren.size()) ? oldChildren[i] : nullptr;
 
-    diffAndRebuild(oldChild, newChild, w, h, needsResize);
+    diffAndRebuild(oldChild, newChild, 0, 0, needsResize);
   }
 }
 

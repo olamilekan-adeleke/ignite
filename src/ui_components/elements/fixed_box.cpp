@@ -2,15 +2,8 @@
 
 #include <fmt/base.h>
 
-UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
-  UISize size{};
-
-  if (params_.child) size = params_.child->getIntrinsicSize(constraints);
-
-  if (params_.size.width >= 0) size.width = params_.size.width;
-  if (params_.size.height >= 0) size.height = params_.size.height;
-  return size;
-}
+#include "rect.hpp"
+#include "ui_alignment.hpp"
 
 const std::vector<std::shared_ptr<UIComponent>>& FixedBox::children() const {
   if (params_.child) {
@@ -25,6 +18,27 @@ const std::vector<std::shared_ptr<UIComponent>>& FixedBox::children() const {
   return UIComponent::children();
 }
 
+UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
+  UISize size{};
+
+  UIConstraints preferredConstraint = constraints;
+  if (params_.size.width >= 0) {
+    preferredConstraint.minWidth = preferredConstraint.minWidth = params_.size.width;
+  }
+  if (params_.size.height >= 0) {
+    preferredConstraint.minHeight = preferredConstraint.minWidth = params_.size.height;
+  }
+
+  if (params_.child) {
+    size = params_.child->getIntrinsicSize(preferredConstraint);
+  } else {
+    size.width = preferredConstraint.minWidth;
+    size.height = preferredConstraint.minHeight;
+  }
+
+  return size;
+}
+
 void FixedBox::layout(UISize size) {
   float width = params_.size.width >= 0 ? params_.size.width : size.width;
   float height = params_.size.height >= 0 ? params_.size.height : size.height;
@@ -35,7 +49,7 @@ void FixedBox::layout(UISize size) {
 
     const auto& childBounds = child->getBounds();
 
-    auto [x, y] = computeAlignedPosition(UIAlignment::Center, width, height, childBounds.width, childBounds.height);
+    auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childBounds.width, childBounds.height);
     child->setPosition(x, y);
   }
 
