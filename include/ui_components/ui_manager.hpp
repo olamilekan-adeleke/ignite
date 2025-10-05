@@ -6,9 +6,13 @@
 #include <include/core/SkSurface.h>
 #include <include/core/SkTypeface.h>
 
+#include <filesystem>
+#include <iostream>
 #include <memory>
 
 #include "basic/ui_component.hpp"
+#include "include/core/SkFontMgr.h"
+#include "include/core/SkTypeface.h"
 #include "offset.hpp"
 #include "rect.hpp"
 #include "tap_event.hpp"
@@ -102,4 +106,47 @@ class UICacheManager {
 
   std::unordered_map<uint64_t, sk_sp<SkSurface>> cache_;
   std::unordered_map<uint64_t, UIRect> layoutCache_;
+};
+
+class UIFontManager {
+ public:
+  static UIFontManager &instance() {
+    static UIFontManager instance;
+    return instance;
+  }
+
+  UIFontManager(const UIFontManager &) = delete;
+  void operator=(const UIFontManager &) = delete;
+
+  sk_sp<SkTypeface> getTypeface(const std::string &fontPath = "icon_pack/Material_Icons_Regular.ttf") {
+    std::filesystem::path fullPath = std::filesystem::current_path() / fontPath;
+
+    auto it = cache_.find(fontPath);
+    if (it != cache_.end()) {
+      // std::cout << "[UIFontManager] Font found in cache: " << fontPath << "\n";
+      return it->second;
+    }
+
+    // Use real font manager
+    auto fontMgr = UIManager::instance().fontManager();
+    sk_sp<SkTypeface> typeface = fontMgr->makeFromFile(fullPath.string().c_str());
+
+    if (!typeface) {
+      std::cout << "[UIFontManager] Failed to load font from: " << fullPath << "\n";
+    } else {
+      std::cout << "[UIFontManager] Successfully loaded font: " << fontPath << "\n";
+      cache_[fontPath] = typeface;
+    }
+
+    return typeface;
+  }
+
+  void removeTypeface(const std::string &fontPath) { cache_.erase(fontPath); }
+
+  void clear() { cache_.clear(); }
+
+ private:
+  UIFontManager() = default;
+
+  std::unordered_map<std::string, sk_sp<SkTypeface>> cache_;
 };
