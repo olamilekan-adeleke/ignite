@@ -30,7 +30,7 @@ class View : public UIComponent {
   View(const View &) = delete;
   View &operator=(const View &) = delete;
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;

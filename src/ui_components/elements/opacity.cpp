@@ -19,7 +19,7 @@ UISize Opacity::getIntrinsicSize(UIConstraints constraints) noexcept {
   return UISize{.width = 0, .height = 0};
 }
 
-void Opacity::layout(UISize size) {
+void Opacity::layout(UIConstraints size) {
   if (param_.child) {
     param_.child->layout({size.width, size.height});
   }

@@ -23,7 +23,7 @@ void CheckBoxRender::markHasDirty(const UIMarkDirtyType &type, const UIMarkDirty
   }
 }
 
-void CheckBoxRender::layout(UISize size) {
+void CheckBoxRender::layout(UIConstraints size) {
   setSize(params_.size.width, params_.size.height);
   // setSize(size.width, size.height);
 }

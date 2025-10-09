@@ -87,7 +87,7 @@ UISize UIImage::getIntrinsicSize(UIConstraints constraints) noexcept {
   return UISize{.width = width, .height = height};
 }
 
-void UIImage::layout(UISize size) {
+void UIImage::layout(UIConstraints size) {
   const uint64_t currentLayoutHash{params_.layoutHashCode()};
   const auto cacheIt = UICacheManager::instance().getLayoutCached(currentLayoutHash);
   if (cacheIt.has_value()) {

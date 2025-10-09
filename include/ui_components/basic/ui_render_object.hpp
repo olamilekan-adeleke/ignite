@@ -13,7 +13,7 @@ class UIRenderObject : public Diagnosable {
   virtual ~UIRenderObject() = default;
 
   // Required overrides for concrete implementations
-  virtual void layout(UISize availableSize) = 0;
+  virtual void layout(UIConstraints availableSize) = 0;
   virtual void draw(SkCanvas* canvas) = 0;
 
   // New intrinsic size method - returns preferred size without constraints

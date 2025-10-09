@@ -26,7 +26,7 @@ class Separator : public UIComponent {
  public:
   Separator(const SeparatorParams& param = {}) : params_(param) {}
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas* canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;

@@ -18,7 +18,7 @@ UISize TextRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
   return size;
 }
 
-void TextRenderer::layout(UISize size) {
+void TextRenderer::layout(UIConstraints size) {
   paragraphBuilder_.layout(size.width);
   bounds_.width = size.width;
   bounds_.height = size.height;

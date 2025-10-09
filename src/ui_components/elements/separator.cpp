@@ -42,7 +42,7 @@ UISize Separator::getIntrinsicSize(UIConstraints constraints) noexcept {
   return size;
 }
 
-void Separator::layout(UISize size) {
+void Separator::layout(UIConstraints size) {
   const uint64_t layoutHash{params_.layoutHashCode()};
   const auto cacheIt = UICacheManager::instance().getLayoutCached(layoutHash);
   if (cacheIt) {

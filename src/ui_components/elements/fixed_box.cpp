@@ -39,7 +39,7 @@ UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
   return size;
 }
 
-void FixedBox::layout(UISize size) {
+void FixedBox::layout(UIConstraints size) {
   float width = params_.size.width >= 0 ? params_.size.width : size.width;
   float height = params_.size.height >= 0 ? params_.size.height : size.height;
 
@@ -48,7 +48,6 @@ void FixedBox::layout(UISize size) {
     child->layout({width, height});
 
     const auto& childBounds = child->getBounds();
-
     auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childBounds.width, childBounds.height);
     child->setPosition(x, y);
   }

@@ -49,7 +49,7 @@ class TextFieldRenderer : public UIComponent {
     setTapListener([this](const UITapEvent& event) { onTextFieldTap(); });
   }
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas* canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;

@@ -14,7 +14,7 @@ class TextRenderer : public UIComponent {
   TextRenderer &operator=(const TextRenderer &) = delete;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
 
  protected:

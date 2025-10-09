@@ -26,7 +26,7 @@ std::shared_ptr<UIComponent> StatefulComponent::getChild() {
   return cachedBody_;
 }
 
-void StatefulComponent::layout(UISize size) {
+void StatefulComponent::layout(UIConstraints size) {
   const auto child = getChild();
   if (child) {
     child->layout({size.width, size.height});

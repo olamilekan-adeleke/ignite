@@ -34,7 +34,7 @@ UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
   return size;
 }
 
-void View::layout(UISize size) {
+void View::layout(UIConstraints size) {
   const bool wantsToFillMainAxis = this->wantsToFillMainAxis();
 
   const float horizonalSpace = params_.margin.horizonal() + params_.insets.horizonal();

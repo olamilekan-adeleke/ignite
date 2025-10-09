@@ -52,7 +52,7 @@ UISize TextFieldRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
 
 void TextFieldRenderer::onTextFieldTap() noexcept { UIManager::instance().requestFocus(*this); }
 
-void TextFieldRenderer::layout(UISize size) { setSize(size.width, size.height); }
+void TextFieldRenderer::layout(UIConstraints size) { setSize(size.width, size.height); }
 
 void TextFieldRenderer::draw(SkCanvas* canvas) {
   SkPaint backgroundPaint;

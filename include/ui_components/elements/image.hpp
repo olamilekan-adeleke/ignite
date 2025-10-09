@@ -29,7 +29,7 @@ class UIImage : public UIComponent {
  public:
   UIImage(const ImageParams& params = {});
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas* canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;

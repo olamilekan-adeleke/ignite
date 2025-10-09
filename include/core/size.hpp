@@ -10,6 +10,7 @@ struct LayoutConstraints {
   UIAlignment alignment = UIAlignment::Center;
 };
 
+// struct [[deprecated("Use UISizing instead of UISize")]] UISize {
 struct UISize {
   float width = 0.0f;
   float height = 0.0f;
@@ -71,4 +72,92 @@ inline constexpr UISize operator/(const UISize &lhs, float rhs) noexcept {
 
 inline bool almostEqual(const UISize &a, const UISize &b, float eps = 1e-5f) {
   return std::fabs(a.width - b.width) <= eps && std::fabs(a.height - b.height) <= eps;
+}
+
+struct UISizing {
+  enum class Type { Fixed, Grow, Fit };
+
+  float width = 0.0f;
+  float height = 0.0f;
+  Type typeW = Type::Fixed;
+  Type typeH = Type::Fixed;
+
+  operator UISize() const { return UISize{.width = width, .height = height}; }
+
+  // ────── Constructors / Factories ──────
+  constexpr UISizing() = default;
+
+  constexpr UISizing(float w, float h, Type wType = Type::Fixed, Type hType = Type::Fixed) noexcept
+      : width(w), height(h), typeW(wType), typeH(hType) {}
+
+  static constexpr UISizing Fixed(float w, float h) noexcept { return UISizing{w, h, Type::Fixed, Type::Fixed}; }
+
+  static constexpr UISizing Grow() noexcept { return UISizing{0, 0, Type::Grow, Type::Grow}; }
+
+  static constexpr UISizing Fit() noexcept { return UISizing{0, 0, Type::Fit, Type::Fit}; }
+
+  static constexpr UISizing GrowWidth(float h = 0.0f) noexcept { return UISizing{0, h, Type::Grow, Type::Fixed}; }
+
+  static constexpr UISizing GrowHeight(float w = 0.0f) noexcept { return UISizing{w, 0, Type::Fixed, Type::Grow}; }
+
+  static constexpr UISizing Square(float size) noexcept { return UISizing{size, size, Type::Fixed, Type::Fixed}; }
+
+  static constexpr UISizing Zero() noexcept { return UISizing{0, 0, Type::Fixed, Type::Fixed}; }
+
+  // ────── Query Helpers ──────
+  constexpr bool isGrowWidth() const noexcept { return typeW == Type::Grow; }
+  constexpr bool isGrowHeight() const noexcept { return typeH == Type::Grow; }
+  constexpr bool isFitWidth() const noexcept { return typeW == Type::Fit; }
+  constexpr bool isFitHeight() const noexcept { return typeH == Type::Fit; }
+  constexpr bool isFixed() const noexcept { return typeW == Type::Fixed && typeH == Type::Fixed; }
+
+  // ────── Utility ──────
+  constexpr UISizing scale(float factor) const noexcept {
+    return UISizing{width * factor, height * factor, typeW, typeH};
+  }
+
+  constexpr UISizing clamp(float minW, float minH, float maxW, float maxH) const noexcept {
+    return UISizing{std::clamp(width, minW, maxW), std::clamp(height, minH, maxH), typeW, typeH};
+  }
+
+  std::string toString() const noexcept {
+    return fmt::format("UISizing(w: {}, h: {}, typeW: {}, typeH: {})",
+                       width,
+                       height,
+                       static_cast<int>(typeW),
+                       static_cast<int>(typeH));
+  }
+};
+
+// ───────────────────────────── Operators ─────────────────────────────
+inline std::ostream &operator<<(std::ostream &os, const UISizing &s) noexcept { return os << s.toString(); }
+
+constexpr bool operator==(const UISizing &lhs, const UISizing &rhs) noexcept {
+  return lhs.width == rhs.width && lhs.height == rhs.height && lhs.typeW == rhs.typeW && lhs.typeH == rhs.typeH;
+}
+
+constexpr bool operator!=(const UISizing &lhs, const UISizing &rhs) noexcept { return !(lhs == rhs); }
+
+constexpr UISizing operator+(const UISizing &lhs, const UISizing &rhs) noexcept {
+  return UISizing{lhs.width + rhs.width, lhs.height + rhs.height, lhs.typeW, lhs.typeH};
+}
+
+constexpr UISizing operator-(const UISizing &lhs, const UISizing &rhs) noexcept {
+  return UISizing{lhs.width - rhs.width, lhs.height - rhs.height, lhs.typeW, lhs.typeH};
+}
+
+constexpr UISizing operator*(const UISizing &lhs, float rhs) noexcept {
+  return UISizing{lhs.width * rhs, lhs.height * rhs, lhs.typeW, lhs.typeH};
+}
+
+constexpr UISizing operator*(float lhs, const UISizing &rhs) noexcept { return rhs * lhs; }
+
+constexpr UISizing operator/(const UISizing &lhs, float rhs) noexcept {
+  return (rhs != 0.0f) ? UISizing{lhs.width / rhs, lhs.height / rhs, lhs.typeW, lhs.typeH}
+                       : UISizing{lhs.width, lhs.height, lhs.typeW, lhs.typeH};
+}
+
+inline bool almostEqual(const UISizing &a, const UISizing &b, float eps = 1e-5f) noexcept {
+  return std::fabs(a.width - b.width) <= eps && std::fabs(a.height - b.height) <= eps && a.typeW == b.typeW &&
+         a.typeH == b.typeH;
 }

@@ -23,7 +23,7 @@ class FlexBox : public UIComponent {
 
   void addChild(std::shared_ptr<UIComponent> child);
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas* canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;

@@ -35,7 +35,7 @@ class CheckBoxRender : public UIComponent {
     if (params_.onTap != nullptr) setTapListener(params_.onTap);
   }
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;

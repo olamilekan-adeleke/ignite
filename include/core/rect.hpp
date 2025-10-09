@@ -4,6 +4,7 @@
 #include <fmt/format.h>
 #include <include/core/SkRect.h>
 
+#include <cmath>
 #include <optional>
 #include <string>
 
@@ -18,10 +19,31 @@ struct UIRectParams {
 
 struct UIConstraints {
   float minWidth;
+  float maxWidth;
   float minHeight;
+  float maxHeight;
+
+  float width = minWidth;
+  float height = minHeight;
 
   UIConstraints shrinkBy(float horizontal, float vertical) const noexcept {
-    return {minWidth - horizontal, minHeight - vertical};
+    return {.minWidth = minWidth - horizontal,.minHeight= minHeight - vertical};
+  }
+
+  static UIConstraints verticallyLose(float minWidth, float maxWidth) noexcept {
+    return {minWidth, maxWidth, 0.0f, INFINITY};
+  }
+
+  static UIConstraints horizontallyLose(float minHeight, float maxHeight) noexcept {
+    return {0.0f, INFINITY, minHeight, maxHeight};
+  }
+
+  static UIConstraints lose(float minWidth, float maxWidth, float minHeight, float maxHeight) noexcept {
+    return {minWidth, maxWidth, minHeight, maxHeight};
+  }
+
+  static UIConstraints fitted(float width, float height) noexcept {
+    return {width, width, height, height};
   }
 };
 

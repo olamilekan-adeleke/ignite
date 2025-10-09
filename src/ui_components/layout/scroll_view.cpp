@@ -41,7 +41,7 @@ const std::vector<std::shared_ptr<UIComponent>>& ScrollView::children() const {
   return UIComponent::children();
 }
 
-void ScrollView::layout(UISize size) {
+void ScrollView::layout(UIConstraints size) {
   setSize(size.width, size.height);
   if (params_.child) {
     params_.child->setPosition(bounds_.x, bounds_.y);

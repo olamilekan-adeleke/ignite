@@ -8,6 +8,7 @@
 
 #include "interactive_components/stateful_component.hpp"
 #include "layout/scroll_view.hpp"
+#include "size.hpp"
 #include "ui.hpp"
 #include "ui_edge_insets.hpp"
 
@@ -44,7 +45,7 @@ class TestScrollWidget : public StatefulComponent {
       }
     }
 
-    children.push_back(UI::FixedBoxView({.size = {.height = 40}}));
+    children.push_back(UI::FixedBoxView({.size = UISizing::GrowWidth(40)}));
 
     return UI::UIView({
         .insets = UIEdgeInsets::horizontal(20) + UIEdgeInsets{.top = 20},

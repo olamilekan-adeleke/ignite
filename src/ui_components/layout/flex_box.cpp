@@ -53,7 +53,7 @@ UISize FlexBox::getIntrinsicSize(UIConstraints constraints) noexcept {
   return size;
 }
 
-void FlexBox::layout(UISize size) {
+void FlexBox::layout(UIConstraints size) {
   if (param_.children.empty()) {
     bounds_ = bounds_.copyWith({.width = 0, .height = 0});
     return;
@@ -72,7 +72,7 @@ void FlexBox::layout(UISize size) {
 
   const bool isHorizontal = param_.axis == Axis::HORIZONTAL;
 
-  UIConstraints availableUIConstraints = size.toUIConstraints();
+  UIConstraints availableUIConstraints = size;
   // We pass in the parent size to allow child to size it self freely
   for (auto& child : param_.children) {
     auto childIntrinsicSize = child->getIntrinsicSize(availableUIConstraints);
@@ -81,7 +81,7 @@ void FlexBox::layout(UISize size) {
         .width = std::min(childIntrinsicSize.width, availableUIConstraints.minWidth),
         .height = std::min(childIntrinsicSize.height, availableUIConstraints.minHeight),
     };
-    child->layout(clamped);
+    child->layout(clamped.toUIConstraints());
 
     const float childMainAxis = isHorizontal ? clamped.width : clamped.height;
     const float childCrossAxisSize = isHorizontal ? clamped.height : clamped.width;
@@ -150,14 +150,14 @@ void FlexBox::layout(UISize size) {
   // Set the flex box main axis size - but NEVER exceed the size given by parent
   const float totalContentSize = totalSpacing + fittedMainSize + (sizePerChild * flexibleChildCount);
   const float clampedContentSize = std::min(totalContentSize, availableMainAxisSize);
-  bounds_ = setMainAxisSize(clampedContentSize, bounds_, size);
+  bounds_ = setMainAxisSize(clampedContentSize, bounds_, UISize{ size.width, size.height });
 
   // Second pass: this is to size the flexible children.
   for (auto& child : param_.children) {
     if (child->wantsToFillMainAxis()) {
       UISize sizedChild = isHorizontal ? UISize{.width = sizePerChild, .height = size.height}
                                        : UISize{.width = size.width, .height = sizePerChild};
-      child->layout(sizedChild);
+      child->layout(sizedChild.toUIConstraints());
       maxChildCrossAxisSize = std::max(maxChildCrossAxisSize, getChildCrossAxisSize(child->getBounds()));
     }
   }

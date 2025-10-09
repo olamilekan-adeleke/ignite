@@ -16,7 +16,7 @@ class Opacity : public UIComponent {
   Opacity(const Opacity&) = delete;
   Opacity& operator=(const Opacity&) = delete;
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas* canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;

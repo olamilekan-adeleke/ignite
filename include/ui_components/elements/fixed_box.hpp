@@ -5,10 +5,11 @@
 #include <utility>
 
 #include "basic/ui_component.hpp"
+#include "size.hpp"
 #include "ui_alignment.hpp"
 
 struct FixedBoxParam {
-  UISize size = {-1.f, -1.f};
+  UISizing size = UISizing::Grow();
   std::shared_ptr<UIComponent> child = nullptr;
   UIAlignment alignment = UIAlignment::Center;
 };
@@ -17,7 +18,7 @@ class FixedBox : public UIComponent {
  public:
   FixedBox(FixedBoxParam param = {}) : params_(std::move(param)) {};
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
@@ -31,6 +32,9 @@ class FixedBox : public UIComponent {
     if (params_.child) return params_.child->processTap(event);
     return false;
   }
+
+  bool wantsToFillMainAxis() const override { return params_.size.isGrowHeight(); }
+  bool wantsToFillCrossAxis() const override { return params_.size.isGrowWidth(); }
 
  private:
   FixedBoxParam params_;

@@ -13,7 +13,7 @@ class ScrollView : public UIComponent {
  public:
   ScrollView(const ScrollViewParam& param = {}) : params_(param) { setShouldHandleHover(true); }
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas* canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;

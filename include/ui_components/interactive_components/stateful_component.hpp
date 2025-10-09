@@ -16,7 +16,7 @@ class StatefulComponent : public UIComponent {
 
   std::shared_ptr<UIComponent> getChild();
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;

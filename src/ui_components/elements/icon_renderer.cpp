@@ -5,10 +5,12 @@
 #include "include/core/SkFontMgr.h"
 #include "include/core/SkTypeface.h"
 #include "size.hpp"
+#include "ui_manager.hpp"
+
 
 UISize IconRenderer::getIntrinsicSize(UIConstraints constraints) noexcept { return {params_.size, params_.size}; }
 
-void IconRenderer::layout(UISize size) { setSize(params_.size, params_.size); }
+void IconRenderer::layout(UIConstraints size) { setSize(params_.size, params_.size); }
 
 void IconRenderer::draw(SkCanvas* canvas) {
   sk_sp<SkTypeface> iconTypeface = UIFontManager::instance().getTypeface();
