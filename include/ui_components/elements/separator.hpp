@@ -1,10 +1,10 @@
 #pragma once
 
 #include <fmt/format.h>
+
 #include "basic/ui_component.hpp"
 #include "color.hpp"
 #include "hash_helper.hpp"
-#include "layout/flex_box.hpp"
 
 struct SeparatorParams {
   Axis axis = Axis::VERTICAL;

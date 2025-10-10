@@ -29,6 +29,8 @@ class UIRenderObject : public Diagnosable {
     bounds_.height = h;
   }
 
+  UISizing getSize() const noexcept { return UISizing::Fixed(bounds_.width, bounds_.height); }
+
   UIKey key() const { return key_; }
   void setKey(UIKey key) { key_ = std::move(key); }
 

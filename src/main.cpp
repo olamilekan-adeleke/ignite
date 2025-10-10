@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "../example/counnter_app.cpp"
+#include "../example/layout/fitted_boxes.hpp"
 #include "../example/nav_test.cpp"
 #include "../example/paragraph_test.cpp"
 #include "../example/test_scroll.cpp"
@@ -55,12 +56,14 @@ int main() {
     auto paragraphTest = std::make_shared<ParagraphTestWidget>();
     auto scrollTest = std::make_shared<TestScrollWidget>();
     auto navText = std::make_shared<NavTestWidget>();
+
     // std::shared_ptr<UIComponent> rootUI = counter_example;
     // std::shared_ptr<UIComponent> rootUI = todoList;
     // std::shared_ptr<UIComponent> rootUI = scrollTest;
     // std::shared_ptr<UIComponent> rootUI = paragraphTest;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
-    std::shared_ptr<UIComponent> rootUI = navText;
+    // std::shared_ptr<UIComponent> rootUI = navText;
+    std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::body();
 
     // FPS tracking variables
     FpsTracker fpsTracker;

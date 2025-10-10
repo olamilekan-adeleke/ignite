@@ -7,6 +7,9 @@
 #include <cmath>
 #include <optional>
 #include <string>
+#include <tuple>
+
+#include "axis.hpp"
 
 using optional_float = std::optional<float>;
 
@@ -26,10 +29,6 @@ struct UIConstraints {
   float width = minWidth;
   float height = minHeight;
 
-  UIConstraints shrinkBy(float horizontal, float vertical) const noexcept {
-    return {.minWidth = minWidth - horizontal,.minHeight= minHeight - vertical};
-  }
-
   static UIConstraints verticallyLose(float minWidth, float maxWidth) noexcept {
     return {minWidth, maxWidth, 0.0f, INFINITY};
   }
@@ -42,8 +41,30 @@ struct UIConstraints {
     return {minWidth, maxWidth, minHeight, maxHeight};
   }
 
-  static UIConstraints fitted(float width, float height) noexcept {
-    return {width, width, height, height};
+  static UIConstraints fitted(float width, float height) noexcept { return {width, width, height, height}; }
+
+  UIConstraints shrinkBy(float horizontal, float vertical) const noexcept {
+    return {.minWidth = minWidth - horizontal, .minHeight = minHeight - vertical};
+  }
+
+  std::tuple<float, float> mainAxisSize(const Axis& axis) const noexcept {
+    switch (axis) {
+      case Axis::HORIZONTAL:
+        return std::make_tuple(width, height);
+      case Axis::VERTICAL:
+        return std::make_tuple(height, width);
+    }
+    return std::make_tuple(0.0f, 0.0f);
+  }
+
+  std::tuple<float, float> crossAxisSize(const Axis& axis) const noexcept {
+    switch (axis) {
+      case Axis::HORIZONTAL:
+        return std::make_tuple(height, width);
+      case Axis::VERTICAL:
+        return std::make_tuple(width, height);
+    }
+    return std::make_tuple(0.0f, 0.0f);
   }
 };
 
@@ -57,7 +78,7 @@ struct UIRect {
     return x >= this->x && y >= this->y && x < this->x + this->width && y < this->y + this->height;
   }
 
-  UIRect copyWith(const UIRectParams &params) const noexcept {
+  UIRect copyWith(const UIRectParams& params) const noexcept {
     UIRect newRect = *this;
     if (params.x) newRect.x = *params.x;
     if (params.y) newRect.y = *params.y;

@@ -4,7 +4,6 @@
 
 #include <sstream>
 
-#include "axis.hpp"
 #include "basic/ui_component.hpp"
 #include "rect.hpp"
 #include "size.hpp"

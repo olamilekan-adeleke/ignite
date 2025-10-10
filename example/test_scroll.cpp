@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-#include "interactive_components/stateful_component.hpp"
 #include "layout/scroll_view.hpp"
 #include "size.hpp"
 #include "ui.hpp"

@@ -8,6 +8,7 @@
 #include "core/logger.hpp"
 #include "keyboard_key_event.hpp"
 #include "offset.hpp"
+#include "rect.hpp"
 #include "tap_event.hpp"
 
 #if defined(SK_BUILD_FOR_MAC)
@@ -85,7 +86,7 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   width_ = w;
   height_ = h;
 
-  currentTreeRoot_->layout({w, h});
+  currentTreeRoot_->layout(UIConstraints::fitted(w, h));
   currentTreeRoot_->updateGlobalOffset({0.0f, 0.0f});
 
   diffAndRebuild(previousTreeRoot_, currentTreeRoot_, w, h, needsResize);
