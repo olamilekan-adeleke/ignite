@@ -1,6 +1,14 @@
-#include "basic/ui_component.hpp"
+#include <sstream>
+#include <vector>
 
-struct LayoutBoxParam {};
+#include "basic/ui_component.hpp"
+#include "size.hpp"
+
+struct LayoutBoxParam {
+  Axis axis = Axis::VERTICAL;
+  float childGap = 0;
+  std::vector<std ::shared_ptr<UIComponent>> children;
+};
 
 class LayoutBox : public UIComponent {
  public:
@@ -8,8 +16,6 @@ class LayoutBox : public UIComponent {
 
   void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
-
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
@@ -24,7 +30,17 @@ class LayoutBox : public UIComponent {
   bool wantsToFillMainAxis() const override { return false; }
   bool wantsToFillCrossAxis() const override { return false; }
 
+  float getMainAxisSize(const UISizing &size) const noexcept;
+  float getCrossAxisSize(const UISizing &size) const noexcept;
+
  private:
   LayoutBoxParam params_;
-  mutable std::vector<std::shared_ptr<UIComponent>> cached_children_;
 };
+
+inline void LayoutBox::debugFillProperties(std::ostringstream &os, int indent) const {
+  UIComponent::debugFillProperties(os, indent);
+  std::string pad(indent, ' ');
+  os << pad << "axis: " << axisToString(params_.axis) << "\n";
+  os << pad << "children: " << params_.children.size() << "\n";
+  os << pad << "childGap: " << params_.childGap << "\n";
+}
