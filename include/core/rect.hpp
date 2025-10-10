@@ -29,6 +29,8 @@ struct UIConstraints {
   float width = minWidth;
   float height = minHeight;
 
+  static UIConstraints maxSize(float width, float height) noexcept { return {0.0f, width, 0.0f, height}; }
+
   static UIConstraints verticallyLose(float minWidth, float maxWidth) noexcept {
     return {minWidth, maxWidth, 0.0f, INFINITY};
   }
@@ -50,9 +52,9 @@ struct UIConstraints {
   std::tuple<float, float> mainAxisSize(const Axis& axis) const noexcept {
     switch (axis) {
       case Axis::HORIZONTAL:
-        return std::make_tuple(width, height);
+        return std::make_tuple(minWidth, maxWidth);
       case Axis::VERTICAL:
-        return std::make_tuple(height, width);
+        return std::make_tuple(minHeight, maxHeight);
     }
     return std::make_tuple(0.0f, 0.0f);
   }
@@ -60,9 +62,9 @@ struct UIConstraints {
   std::tuple<float, float> crossAxisSize(const Axis& axis) const noexcept {
     switch (axis) {
       case Axis::HORIZONTAL:
-        return std::make_tuple(height, width);
+        return std::make_tuple(minHeight, maxHeight);
       case Axis::VERTICAL:
-        return std::make_tuple(width, height);
+        return std::make_tuple(minWidth, maxWidth);
     }
     return std::make_tuple(0.0f, 0.0f);
   }
