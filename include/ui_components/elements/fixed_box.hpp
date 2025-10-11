@@ -5,7 +5,6 @@
 #include <utility>
 
 #include "basic/ui_component.hpp"
-#include "color.hpp"
 #include "size.hpp"
 #include "ui_alignment.hpp"
 
@@ -13,7 +12,6 @@ struct FixedBoxParam {
   UISizing size = UISizing::Fixed(0, 0);
   std::shared_ptr<UIComponent> child = nullptr;
   UIAlignment alignment = UIAlignment::Center;
-  Color color = Color::White();
 };
 
 class FixedBox : public UIComponent {
@@ -22,8 +20,6 @@ class FixedBox : public UIComponent {
 
   void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
-
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 

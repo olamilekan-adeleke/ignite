@@ -21,27 +21,6 @@ const std::vector<std::shared_ptr<UIComponent>>& FixedBox::children() const {
   return UIComponent::children();
 }
 
-UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
-  UISize size{};
-
-  UIConstraints preferredConstraint = constraints;
-  if (params_.size.width >= 0) {
-    preferredConstraint.minWidth = preferredConstraint.minWidth = params_.size.width;
-  }
-  if (params_.size.height >= 0) {
-    preferredConstraint.minHeight = preferredConstraint.minWidth = params_.size.height;
-  }
-
-  if (params_.child) {
-    size = params_.child->getIntrinsicSize(preferredConstraint);
-  } else {
-    size.width = preferredConstraint.minWidth;
-    size.height = preferredConstraint.minHeight;
-  }
-
-  return size;
-}
-
 float FixedBox::computeWidth() const noexcept {
   if (params_.size.isGrowWidth() && params_.size.width <= 0) return INFINITY;
   return params_.size.width;
@@ -58,7 +37,7 @@ void FixedBox::layout(UIConstraints size) {
 
   const auto& child = params_.child;
   if (child) {
-    child->layout(UIConstraints::fitted(width, height));
+    child->layout(UIConstraints::maxSize(width, height));
     const auto& childSize = child->getSize();
 
     auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childSize.width, childSize.height);
@@ -68,13 +47,6 @@ void FixedBox::layout(UIConstraints size) {
 }
 
 void FixedBox::draw(SkCanvas* canvas) {
-  SkPaint paint;
-  paint.setColor(params_.color);
-  paint.setStyle(SkPaint::kFill_Style);
-
-  SkRect bounds = SkRect::MakeXYWH(bounds_.x, bounds_.y, bounds_.width, bounds_.height);
-  canvas->drawRect(bounds, paint);
-
   if (params_.child) {
     canvas->save();
     canvas->translate(bounds_.x, bounds_.y);
