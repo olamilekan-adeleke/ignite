@@ -19,9 +19,9 @@ UISize TextRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
 }
 
 void TextRenderer::layout(UIConstraints size) {
-  paragraphBuilder_.layout(size.width);
-  bounds_.width = size.width;
-  bounds_.height = size.height;
+  auto childSize = paragraphBuilder_.getIntrinsicSize(size);
+  paragraphBuilder_.layout(childSize.width);
+  setSize(childSize);
 }
 
 void TextRenderer::draw(SkCanvas *canvas) {

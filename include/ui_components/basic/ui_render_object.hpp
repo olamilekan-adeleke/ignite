@@ -28,6 +28,10 @@ class UIRenderObject : public Diagnosable {
     bounds_.width = w;
     bounds_.height = h;
   }
+  void setSize(const UISize& size) {
+    bounds_.width = size.width;
+    bounds_.height = size.height;
+  }
 
   UISizing getSize() const noexcept { return UISizing::Fixed(bounds_.width, bounds_.height); }
 
@@ -36,6 +40,7 @@ class UIRenderObject : public Diagnosable {
 
   virtual bool wantsToFillMainAxis() const { return false; }
   virtual bool wantsToFillCrossAxis() const { return false; }
+  virtual bool wantsToFill() const { return wantsToFillMainAxis() || wantsToFillCrossAxis(); }
 
  private:
   void initializeDebugPaint();
