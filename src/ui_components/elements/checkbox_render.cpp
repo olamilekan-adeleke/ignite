@@ -46,15 +46,15 @@ void CheckBoxRender::draw(SkCanvas *canvas) {
   auto drawBoxAndCheck = [&](SkCanvas *canvas) {
     SkPaint boxPaint;
     boxPaint.setAntiAlias(true);
-    boxPaint.setColor(params_.enable ? params_.fillColor : params_.inactiveBorderColor);
-    boxPaint.setStyle(params_.enable ? SkPaint::kFill_Style : SkPaint::kStroke_Style);
-    if (!params_.enable) boxPaint.setStrokeWidth(1.0f);
+    boxPaint.setColor(params_.checked ? params_.fillColor : params_.inactiveBorderColor);
+    boxPaint.setStyle(params_.checked ? SkPaint::kFill_Style : SkPaint::kStroke_Style);
+    if (!params_.checked) boxPaint.setStrokeWidth(1.0f);
 
     SkRRect rrect;
     rrect.setRectXY(SkRect::MakeWH(static_cast<SkScalar>(w), static_cast<SkScalar>(h)), params_.radius, params_.radius);
 
     canvas->drawRRect(rrect, boxPaint);
-    if (params_.enable) drawCheckBox(canvas);
+    if (params_.checked) drawCheckBox(canvas);
   };
 
   if (surface) {

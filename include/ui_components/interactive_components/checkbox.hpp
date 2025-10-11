@@ -1,5 +1,5 @@
-#include "stateful_component.hpp"
 #include "elements/checkbox_render.hpp"
+#include "stateful_component.hpp"
 
 class CheckBox : public StatefulComponent {
  public:
@@ -11,7 +11,7 @@ class CheckBox : public StatefulComponent {
     CheckBoxParams current{param_};
     current.onTap = [this, originalOnTap](const UITapEvent& e) {
       fmt::println("CheckBox tapped!");
-      param_.enable = !param_.enable;
+      param_.checked = !param_.checked;
       markDirty();
 
       if (originalOnTap != nullptr) originalOnTap(e);

@@ -83,7 +83,7 @@ class TodoListWidget : public StatefulComponent {
         .children =
             {
                 UI::UICheckBox({
-                    .enable = done,
+                    .checked = done,
                     .size = {24, 24},
                     .onTap =
                         [&, index, done](const UITapEvent &e) {

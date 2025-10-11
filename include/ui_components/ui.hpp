@@ -69,15 +69,15 @@ inline std::shared_ptr<UIComponent> UITextField(const UITextFieldParams &params 
 // }
 
 // Fluent UI builder namespaces
-// namespace Flex {
-//   inline std::shared_ptr<FlexBox> column(const std::vector<std::shared_ptr<UIComponent>> &children) {
-//     return UI::VFlexBox({.children = children});
-//   }
+namespace Flex {
+inline std::shared_ptr<FlexBox> column(const std::vector<std::shared_ptr<UIComponent>> &children) {
+  return UI::VFlexBox({.children = children});
+}
 
-//   inline std::shared_ptr<FlexBox> row(const std::vector<std::shared_ptr<UIComponent>> &children) {
-//     return UI::HFlexBox({.children = children});
-//   }
-// }
+inline std::shared_ptr<FlexBox> row(const std::vector<std::shared_ptr<UIComponent>> &children) {
+  return UI::HFlexBox({.children = children});
+}
+}  // namespace Flex
 
 // namespace Text {
 //   inline std::shared_ptr<TextRenderer> create(const std::string &text, const TextStyle &style = TextStyle()) {

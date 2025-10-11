@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sstream>
 #include <vector>
 
@@ -15,7 +17,7 @@ struct LayoutBoxParam {
 
 class LayoutBox : public UIComponent {
  public:
-  LayoutBox(LayoutBoxParam param = {}) : params_(std::move(param)) {};
+  LayoutBox(const LayoutBoxParam &param = {}) : params_(std::move(param)) {};
 
   void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
