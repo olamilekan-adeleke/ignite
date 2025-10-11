@@ -3,8 +3,8 @@
 #include <fmt/base.h>
 
 #include <algorithm>
+#include <cmath>
 
-#include "color.hpp"
 #include "rect.hpp"
 #include "ui_alignment.hpp"
 
@@ -42,16 +42,26 @@ UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
   return size;
 }
 
+float FixedBox::computeWidth() const noexcept {
+  if (params_.size.isGrowWidth() && params_.size.width <= 0) return INFINITY;
+  return params_.size.width;
+}
+
+float FixedBox::computeHeight() const noexcept {
+  if (params_.size.isGrowHeight() && params_.size.height <= 0) return INFINITY;
+  return params_.size.height;
+}
+
 void FixedBox::layout(UIConstraints size) {
-  float width = std::clamp(params_.size.width, size.minWidth, size.maxWidth);
-  float height = std::clamp(params_.size.height, size.minHeight, size.maxHeight);
+  float width = std::clamp(computeWidth(), size.minWidth, size.maxWidth);
+  float height = std::clamp(computeHeight(), size.minHeight, size.maxHeight);
 
   const auto& child = params_.child;
   if (child) {
     child->layout(UIConstraints::fitted(width, height));
+    const auto& childSize = child->getSize();
 
-    const auto& childBounds = child->getBounds();
-    auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childBounds.width, childBounds.height);
+    auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childSize.width, childSize.height);
     child->setPosition(x, y);
   }
   setSize(width, height);

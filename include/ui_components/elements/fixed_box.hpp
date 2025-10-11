@@ -38,6 +38,9 @@ class FixedBox : public UIComponent {
   bool wantsToFillMainAxis() const override { return params_.size.isGrowHeight(); }
   bool wantsToFillCrossAxis() const override { return params_.size.isGrowWidth(); }
 
+  float computeWidth() const noexcept;
+  float computeHeight() const noexcept;
+
  private:
   FixedBoxParam params_;
   mutable std::vector<std::shared_ptr<UIComponent>> cached_children_;
