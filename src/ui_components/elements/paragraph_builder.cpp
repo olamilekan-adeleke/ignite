@@ -24,17 +24,15 @@ void ParagraphBuilder::setText(const std::string& newText) {
 }
 
 UISize ParagraphBuilder::getIntrinsicSize(UIConstraints constraints) noexcept {
-  float layoutWidth = constraints.minWidth > 0 ? constraints.minWidth : 1000000.0f;
   if (!paragraph_) buildParagraph();
 
+  const float desiredWidth = paragraph_->getMaxIntrinsicWidth() + 1.0f;
+  const float layoutWidth = std::clamp(desiredWidth, constraints.minWidth, constraints.maxWidth);
   paragraph_->layout(layoutWidth);
 
-  float usedWidth = std::min(constraints.minWidth, paragraph_->getMaxIntrinsicWidth());
-  usedWidth += 1.0f;
-  usedWidth = std::min(usedWidth, constraints.minWidth);
-  float usedHeight = paragraph_->getHeight();
-
-  return UISize{.width = usedWidth, .height = usedHeight};
+  float layoutHeight = paragraph_->getHeight();
+  float actualWidth = paragraph_->getLongestLine();
+  return UISize{.width = layoutWidth, .height = layoutHeight};
 }
 
 void ParagraphBuilder::layout(float width) {

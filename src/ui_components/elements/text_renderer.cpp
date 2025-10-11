@@ -11,7 +11,7 @@
 #include "size.hpp"
 
 TextRenderer::TextRenderer(const std::string &text, const TextStyle &style)
-    : text_(text), paragraphBuilder_(ParagraphBuilder(text, style)) {}
+    : text_(std::move(text)), paragraphBuilder_(ParagraphBuilder(text, style)) {}
 
 UISize TextRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
   auto size = paragraphBuilder_.getIntrinsicSize(constraints);
