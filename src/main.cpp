@@ -63,7 +63,7 @@ int main() {
     // std::shared_ptr<UIComponent> rootUI = paragraphTest;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
     // std::shared_ptr<UIComponent> rootUI = navText;
-    std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::body();
+    std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::flexibleBody();
 
     // FPS tracking variables
     FpsTracker fpsTracker;
