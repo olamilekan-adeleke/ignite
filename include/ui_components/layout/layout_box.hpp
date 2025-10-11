@@ -3,9 +3,12 @@
 
 #include "basic/ui_component.hpp"
 #include "size.hpp"
+#include "ui_alignment.hpp"
 
 struct LayoutBoxParam {
   Axis axis = Axis::VERTICAL;
+  CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment::START;
+  MainAxisSize sizing = MainAxisSize::FIT;
   float childGap = 0;
   std::vector<std ::shared_ptr<UIComponent>> children;
 };
@@ -23,15 +26,26 @@ class LayoutBox : public UIComponent {
   void debugFillProperties(std::ostringstream &os, int indent) const override;
 
   bool processChildTaps(const UITapEvent &event) override {
-    // if (params_.child) return params_.child->processTap(event);
+    if (!bounds_.contains(event.x, event.y)) return false;
+
+    UITapEvent localEvent = event;
+    localEvent.x = event.x - bounds_.x;
+    localEvent.y = event.y - bounds_.y;
+    for (auto &child : params_.children) {
+      if (child->processTap(localEvent)) return true;
+    }
     return false;
   }
 
   bool wantsToFillMainAxis() const override { return false; }
   bool wantsToFillCrossAxis() const override { return false; }
 
+  float distributeFlexSpace(float availableSize, uint numChildren, std::shared_ptr<UIComponent> child) const noexcept;
+
   float getMainAxisSize(const UISizing &size) const noexcept;
   float getCrossAxisSize(const UISizing &size) const noexcept;
+
+  float getCrossAxisPosition(const UISizing &size) const noexcept;
 
  private:
   LayoutBoxParam params_;
