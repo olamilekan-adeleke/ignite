@@ -14,8 +14,8 @@
 #include "interactive_components/button.hpp"
 #include "interactive_components/checkbox.hpp"
 #include "interactive_components/text_field_renderer.hpp"
-#include "layout/flex_box.hpp"
 #include "layout/h_flex_box.hpp"
+#include "layout/layout_box.hpp"
 #include "layout/v_flex_box.hpp"
 
 namespace UI {
@@ -24,15 +24,15 @@ inline std::shared_ptr<TextRenderer> Text(const std::string &str, const TextStyl
   return std::make_shared<TextRenderer>(str, style);
 }
 
-inline std::shared_ptr<FlexBox> UIFlexBox(const FlexParam &params = {}) { return std::make_shared<FlexBox>(params); }
-
-inline std::shared_ptr<FlexBox> HFlexBox(const HFlexParam &params = {}) {
-  return std::make_shared<FlexBox>(HFlexBox::create(params));
-}
-
-inline std::shared_ptr<FlexBox> VFlexBox(const VFlexParam &params = {}) {
-  return std::make_shared<FlexBox>(VFlexBox::create(params));
-}
+// inline std::shared_ptr<FlexBox> UIFlexBox(const FlexParam &params = {}) { return std::make_shared<FlexBox>(params); }
+//
+// inline std::shared_ptr<FlexBox> HFlexBox(const HFlexParam &params = {}) {
+//   return std::make_shared<FlexBox>(HFlexBox::create(params));
+// }
+//
+// inline std::shared_ptr<FlexBox> VFlexBox(const VFlexParam &params = {}) {
+//   return std::make_shared<FlexBox>(VFlexBox::create(params));
+// }
 
 inline std::shared_ptr<View> UIView(const ViewParams &params = {}) { return std::make_shared<View>(params); }
 
@@ -70,12 +70,12 @@ inline std::shared_ptr<UIComponent> UITextField(const UITextFieldParams &params 
 
 // Fluent UI builder namespaces
 namespace Flex {
-inline std::shared_ptr<FlexBox> column(const std::vector<std::shared_ptr<UIComponent>> &children) {
-  return UI::VFlexBox({.children = children});
+inline std::shared_ptr<UIComponent> column(const VFlexParam &params = {}) {
+  return std::make_shared<LayoutBox>(VFlexBox::create(params));
 }
 
-inline std::shared_ptr<FlexBox> row(const std::vector<std::shared_ptr<UIComponent>> &children) {
-  return UI::HFlexBox({.children = children});
+inline std::shared_ptr<LayoutBox> row(const HFlexParam &params = {}) {
+  return std::make_shared<LayoutBox>(HFlexBox::create(params));
 }
 }  // namespace Flex
 

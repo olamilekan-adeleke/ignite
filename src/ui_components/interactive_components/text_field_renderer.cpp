@@ -9,50 +9,79 @@
 #include "size.hpp"
 #include "ui_manager.hpp"
 
-UISize TextFieldRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
-  const float minHeight = params_.minHeight;
+void TextFieldRenderer::onTextFieldTap() noexcept { UIManager::instance().requestFocus(*this); }
 
+// void TextFieldRenderer::layout(UIConstraints constraints) {
+//   float contentWidth = 0.0f;
+//
+//   if (params_.size.width > 0.0f) {
+//     contentWidth = params_.size.width - params_.padding.horizonal();
+//   } else {
+//     contentWidth = constraints.maxWidth - params_.padding.horizonal();
+//   }
+//
+//   UIConstraints contentConstraints{
+//       .minWidth = 0.0f,
+//       .maxWidth = constraints.maxWidth - params_.padding.horizonal(),
+//   };
+//
+//   const UISize& placeHolderSize = placeholderParagraph_.getIntrinsicSize(contentConstraints);
+//   const UISize& valueSize = textValueParagraph_.getIntrinsicSize(contentConstraints);
+//
+//   float finalWidth = std::max(placeHolderSize.width, valueSize.width) + params_.padding.horizonal();
+//   contentConstraints.minWidth = finalWidth;
+//
+//   float contentHeight;
+//   if (params_.multiline) {
+//     contentHeight = valueSize.height;
+//   } else {
+//     contentHeight = std::max(params_.size.height, std::max(placeHolderSize.height, valueSize.height));
+//   }
+//
+//   lastTextFieldHeight_ = std::max(placeHolderSize.height, valueSize.height);
+//   setSize(constraints.maxWidth, contentHeight + params_.padding.vertical());
+// }
+
+void TextFieldRenderer::layout(UIConstraints constraints) {
   float contentWidth = 0.0f;
-  if (params_.width > 0.0f) {
-    contentWidth = params_.width - params_.padding.horizonal();
-  } else if (constraints.minWidth > 0.0f) {
-    contentWidth = constraints.minWidth - params_.padding.horizonal();
+
+  if (params_.size.width > 0.0f) {
+    contentWidth = params_.size.width - params_.padding.horizonal();
+  } else {
+    contentWidth = constraints.maxWidth - params_.padding.horizonal();
   }
 
-  UIConstraints contentConstraints = {
-      .minWidth = std::max(0.0f, contentWidth),
+  // Create content constraints with proper width
+  UIConstraints contentConstraints{
+      .minWidth = contentWidth,  // Set minWidth to prevent wrapping
+      .maxWidth = contentWidth,  // Match maxWidth to minWidth for single-line
   };
+
+  // If multiline, allow flexible width
+  if (params_.multiline) {
+    contentConstraints.minWidth = 0.0f;
+    contentConstraints.maxWidth = constraints.maxWidth - params_.padding.horizonal();
+  }
 
   const UISize& placeHolderSize = placeholderParagraph_.getIntrinsicSize(contentConstraints);
   const UISize& valueSize = textValueParagraph_.getIntrinsicSize(contentConstraints);
-
-  float finalWidth;
-  if (params_.width > 0.0f) {
-    finalWidth = params_.width;
-  } else if (constraints.minWidth > 0.0f) {
-    finalWidth = constraints.minWidth;
-  } else {
-    finalWidth = std::max(placeHolderSize.width, valueSize.width) + params_.padding.horizonal();
-  }
 
   float contentHeight;
   if (params_.multiline) {
     contentHeight = valueSize.height;
   } else {
-    contentHeight = std::max(minHeight, std::max(placeHolderSize.height, valueSize.height));
+    contentHeight = std::max(params_.size.height, std::max(placeHolderSize.height, valueSize.height));
   }
 
   lastTextFieldHeight_ = std::max(placeHolderSize.height, valueSize.height);
 
-  return UISize{
-      finalWidth,
-      contentHeight + params_.padding.vertical(),
-  };
+  // Use the actual content width (not max from constraints)
+  float finalWidth = params_.size.width > 0.0f
+                         ? params_.size.width
+                         : std::max(placeHolderSize.width, valueSize.width) + params_.padding.horizonal();
+
+  setSize(finalWidth, contentHeight + params_.padding.vertical());
 }
-
-void TextFieldRenderer::onTextFieldTap() noexcept { UIManager::instance().requestFocus(*this); }
-
-void TextFieldRenderer::layout(UIConstraints size) { setSize(size.width, size.height); }
 
 void TextFieldRenderer::draw(SkCanvas* canvas) {
   SkPaint backgroundPaint;

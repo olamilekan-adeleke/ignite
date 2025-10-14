@@ -51,7 +51,7 @@ int main() {
     bool needsLayout = true;
     bool needsRedraw = true;  // New flag for redraw
 
-    auto counter_example = std::make_shared<CounterComponent>();
+    // auto counter_example = std::make_shared<CounterComponent>();
     auto todoList = std::make_shared<TodoListWidget>();
     auto paragraphTest = std::make_shared<ParagraphTestWidget>();
     auto scrollTest = std::make_shared<TestScrollWidget>();
@@ -62,10 +62,10 @@ int main() {
     // std::shared_ptr<UIComponent> rootUI = scrollTest;
     // std::shared_ptr<UIComponent> rootUI = paragraphTest;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
-    // std::shared_ptr<UIComponent> rootUI = navText;
+    std::shared_ptr<UIComponent> rootUI = navText;
     // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::body();
     // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::flexibleBody();
-    std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::sizingBody();
+    // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::sizingBody();
 
     // FPS tracking variables
     FpsTracker fpsTracker;

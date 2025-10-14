@@ -3,8 +3,10 @@
 #include <include/core/SkFontStyle.h>
 #include <modules/skparagraph/include/DartTypes.h>
 #include <modules/skparagraph/include/TextStyle.h>
+
 #include <iostream>
 #include <sstream>
+
 #include "color.hpp"
 
 /**
@@ -25,6 +27,17 @@ struct FontWeight {
         return SkFontStyle(SkFontStyle::kBold_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant);
       case Light:
         return SkFontStyle(SkFontStyle::kLight_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant);
+    }
+  }
+
+  std::string toString() const noexcept {
+    switch (value) {
+      case Normal:
+        return "SkFontStyle(SkFontStyle::kNormal_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant)";
+      case Bold:
+        return "SkFontStyle(SkFontStyle::kBold_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant)";
+      case Light:
+        return "SkFontStyle(SkFontStyle::kLight_Weight, SkFontStyle::kNormal_Width, SkFontStyle::kUpright_Slant)";
     }
   }
 };
@@ -59,6 +72,19 @@ struct TextAlignment {
         return skia::textlayout::TextAlign::kRight;
       case justified:
         return skia::textlayout::TextAlign::kJustify;
+    }
+  }
+
+  std::string toString() const noexcept {
+    switch (value) {
+      case left:
+        return "skia::textlayout::TextAlign::kLeft";
+      case center:
+        return "skia::textlayout::TextAlign::kCenter";
+      case right:
+        return "skia::textlayout::TextAlign::kRight";
+      case justified:
+        return "skia::textlayout::TextAlign::kJustify";
     }
   }
 };

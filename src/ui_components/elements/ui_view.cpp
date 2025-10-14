@@ -4,6 +4,9 @@
 #include <include/core/SkRRect.h>
 #include <include/core/SkRect.h>
 
+#include <algorithm>
+
+#include "rect.hpp"
 #include "size.hpp"
 #include "ui_alignment.hpp"
 
@@ -18,18 +21,18 @@ UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
   }
 
   UISize size;
-  if (params_.mainAxisSize == MainAxisSize::FIT) {
-    size.width = childSize.width + horizonalSpace;
-    size.height = childSize.height + verticalSpace;
-
-    // CRITICAL: Never exceed constraints
-    size.width = std::min(size.width, constraints.minWidth);
-    size.height = std::min(size.height, constraints.minHeight);
-
-  } else if (params_.mainAxisSize == MainAxisSize::FILL) {
-    size.width = 0 + horizonalSpace;
-    size.height = 0 + verticalSpace;
-  }
+  // if (params_.mainAxisSize == MainAxisSize::FIT) {
+  //   size.width = childSize.width + horizonalSpace;
+  //   size.height = childSize.height + verticalSpace;
+  //
+  //   // CRITICAL: Never exceed constraints
+  //   size.width = std::min(size.width, constraints.minWidth);
+  //   size.height = std::min(size.height, constraints.minHeight);
+  //
+  // } else if (params_.mainAxisSize == MainAxisSize::FILL) {
+  //   size.width = 0 + horizonalSpace;
+  //   size.height = 0 + verticalSpace;
+  // }
 
   return size;
 }
@@ -37,36 +40,50 @@ UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
 void View::layout(UIConstraints size) {
   const bool wantsToFillMainAxis = this->wantsToFillMainAxis();
 
-  const float horizonalSpace = params_.margin.horizonal() + params_.insets.horizonal();
-  const float verticalSpace = params_.margin.vertical() + params_.insets.vertical();
+  const auto& margin = params_.margin;
+  const auto& insets = params_.insets;
+  const float horizonalSpace = margin.horizonal() + insets.horizonal();
+  const float verticalSpace = margin.vertical() + insets.vertical();
 
-  if (params_.child) {
-    float availableChildWidth = std::max(0.0f, size.width - horizonalSpace);
-    float availableChildHeight = std::max(0.0f, size.height - verticalSpace);
+  const auto& child = params_.child;
+  if (child) {
+    float availableChildWidth = std::max(0.0f, size.maxWidth - horizonalSpace);
+    float availableChildHeight = std::max(0.0f, size.maxHeight - verticalSpace);
 
-    const auto& childIntrinsicSize = params_.child->getIntrinsicSize({availableChildWidth, availableChildHeight});
-    params_.child->layout({childIntrinsicSize.width, childIntrinsicSize.height});
+    // const auto& childIntrinsicSize = params_.child->getIntrinsicSize({availableChildWidth, availableChildHeight});
+    // params_.child->layout({childIntrinsicSize.width, childIntrinsicSize.height});
 
-    float childActualWidth = params_.child->getBounds().width;
-    float childActualHeight = params_.child->getBounds().height;
+    child->layout(UIConstraints::maxSize(availableChildWidth, availableChildHeight));
+    const auto childSize = child->getSize();
 
-    if (wantsToFillMainAxis) {
-      bounds_.width = size.width;
-      bounds_.height = size.height;
+    setSize(childSize.width + horizonalSpace, childSize.height + verticalSpace);
 
-      float childX =
-          params_.margin.left + params_.insets.left + std::max(0.0f, (availableChildWidth - childActualWidth) / 2.0f);
-      float childY =
-          params_.margin.top + params_.insets.top + std::max(0.0f, (availableChildHeight - childActualHeight) / 2.0f);
-      params_.child->setPosition(childX, childY);
-    } else {
-      bounds_.width = std::min(childActualWidth + horizonalSpace, size.width);
-      bounds_.height = std::min(childActualHeight + verticalSpace, size.height);
+    // float childActualWidth = childSize.width;
+    // float childActualHeight = childSize.height;
 
-      params_.child->setPosition(params_.margin.left + params_.insets.left, params_.margin.top + params_.insets.top);
-    }
+    float childX = margin.left + insets.left;
+    float childY = margin.top + insets.top;
+    params_.child->setPosition(childX, childY);
 
-    params_.child->updateGlobalOffset(getGlobalOffset());
+    // if (wantsToFillMainAxis) {
+    //   bounds_.width = size.width;
+    //   bounds_.height = size.height;
+    //
+    //   float childX =
+    //       params_.margin.left + params_.insets.left + std::max(0.0f, (availableChildWidth - childActualWidth)
+    //       / 2.0f);
+    //   float childY =
+    //       params_.margin.top + params_.insets.top + std::max(0.0f, (availableChildHeight - childActualHeight)
+    //       / 2.0f);
+    //   params_.child->setPosition(childX, childY);
+    // } else {
+    //   bounds_.width = std::min(childActualWidth + horizonalSpace, size.width);
+    //   bounds_.height = std::min(childActualHeight + verticalSpace, size.height);
+    //
+    //   params_.child->setPosition(params_.margin.left + params_.insets.left, params_.margin.top + params_.insets.top);
+    // }
+
+    params_.child->updateGlobalOffset({getGlobalOffset().x + childX, getGlobalOffset().y + childY});
   } else {
     if (wantsToFillMainAxis) {
       bounds_.width = size.width;
@@ -77,8 +94,8 @@ void View::layout(UIConstraints size) {
     }
   }
 
-  bounds_.width = std::min(bounds_.width, size.width);
-  bounds_.height = std::min(bounds_.height, size.height);
+  // bounds_.width = std::clamp(bounds_.width, size.minWidth, size.maxWidth);
+  // bounds_.height = std::clamp(bounds_.height, size.minHeight, size.maxHeight);
 }
 
 void View::draw(SkCanvas* canvas) {

@@ -1,11 +1,9 @@
-
+#pragma once
 #include <fmt/format.h>
 
 #include <memory>
 
 #include "basic/ui_component.hpp"
-#include "elements/fixed_box.hpp"
-#include "layout/layout_box.hpp"
 #include "size.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
@@ -13,40 +11,40 @@
 class LayoutBoxFixedBoxes {
  public:
   static std::shared_ptr<UIComponent> body() {
-    LayoutBoxParam param{
-        .axis = Axis::VERTICAL,
+    // UI::Flex::row({
+    //     .childGap = 10,
+    //     .children =
+    //         {
+    //             UI::Text("Kepp Me Alive", TextStyle{.fontSize = 18}),
+    //             UI::UICheckBox({.checked = true}),
+    //         },
+    // }),
+
+    const auto& flex = UI::Flex::column({
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .childGap = 10,
         .children =
             {
-                box(100, 100),
-                box(150, 200),
-                box(200, 50),
+                box(100, 100), box(150, 200), box(200, 50),
 
-                std::make_shared<LayoutBox>(LayoutBoxParam{
-                    .axis = Axis::HORIZONTAL,
-                    .childGap = 10,
-                    .children =
-                        {
-                            UI::Text("Kepp Me Alive", TextStyle{.fontSize = 18}),
-                            UI::UICheckBox({.checked = true}),
-                        },
-                }),
-
-                std::make_shared<LayoutBox>(LayoutBoxParam{
-                    .axis = Axis::HORIZONTAL,
-                    .crossAxisAlignment = CrossAxisAlignment::CENTER,
-                    .childGap = 20,
-                    .children = {box(100, 100), box(100, 50), box(100, 120)},
-                }),
+                // UI::Flex::row({
+                //     .childGap = 20,
+                //     .crossAxisAlignment = CrossAxisAlignment::CENTER,
+                //     .children = {box(100, 100), box(100, 50), box(100, 120)},
+                // }),
             },
-    };
-    return std::make_shared<LayoutBox>(param);
+
+    });
+
+    return UI::UIView({
+        .margin = UIEdgeInsets::all(20),
+        .backgroundColor = Color::Red(),
+        .child = flex,
+    });
   }
 
   static std::shared_ptr<UIComponent> flexibleBody() {
-    LayoutBoxParam param{
-        .axis = Axis::VERTICAL,
+    return UI::Flex::column({
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .childGap = 10,
         .children =
@@ -57,10 +55,9 @@ class LayoutBoxFixedBoxes {
                 flexBox(UISizing::GrowHeight(150)),
                 box(150, 100),
 
-                std::make_shared<LayoutBox>(LayoutBoxParam{
-                    .axis = Axis::HORIZONTAL,
-                    .crossAxisAlignment = CrossAxisAlignment::CENTER,
+                UI::Flex::row({
                     .childGap = 20,
+                    .crossAxisAlignment = CrossAxisAlignment::CENTER,
                     .children =
                         {
                             box(150, 100),
@@ -71,13 +68,11 @@ class LayoutBoxFixedBoxes {
                         },
                 }),
             },
-    };
-    return std::make_shared<LayoutBox>(param);
+    });
   }
 
   static std::shared_ptr<UIComponent> sizingBody() {
-    LayoutBoxParam param{
-        .axis = Axis::VERTICAL,
+    return UI::Flex::column({
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         // .sizing = MainAxisSize::FILL,
         .childGap = 10,
@@ -87,7 +82,7 @@ class LayoutBoxFixedBoxes {
                 box(100, 100),
                 UI::Text(fmt::format("This is Just A Random Text")),
                 box(150, 200),
-                std::make_shared<FixedBox>(FixedBoxParam{
+                UI::FixedBoxView({
                     .size = UISizing::GrowHeight(400),
                     .child = UI::Text(
                         fmt::format("That’s the hardest part of parsing Nigerian bank statements ⚡ — every bank has "
@@ -99,22 +94,14 @@ class LayoutBoxFixedBoxes {
                 }),
                 box(200, 50),
 
-                std::make_shared<LayoutBox>(LayoutBoxParam{
-                    .axis = Axis::HORIZONTAL,
-                    .crossAxisAlignment = CrossAxisAlignment::CENTER,
-                    // .sizing = MainAxisSize::FILL,
+                UI::Flex::row({
                     .childGap = 20,
-                    .children =
-                        {
-                            // flexBox(UISizing::GrowWidth(100)),
-                            box(100, 100),
-                            box(100, 50),
-                            box(100, 120),
-                        },
+                    .crossAxisAlignment = CrossAxisAlignment::CENTER,
+                    .children = {box(100, 100), box(100, 50), box(100, 120)},
                 }),
+
             },
-    };
-    return std::make_shared<LayoutBox>(param);
+    });
   }
 
  private:

@@ -4,14 +4,16 @@
 #include <include/core/SkCanvas.h>
 #include <include/core/SkPoint.h>
 
+#include <cstdint>
 #include <sstream>
 #include <string>
 
 #include "elements/paragraph_builder.hpp"
 #include "size.hpp"
+#include "surface_cache_helper.hpp"
 
 TextRenderer::TextRenderer(const std::string &text, const TextStyle &style)
-    : text_(std::move(text)), paragraphBuilder_(ParagraphBuilder(text, style)) {}
+    : text_(std::move(text)), style_(style), paragraphBuilder_(ParagraphBuilder(text, style)) {}
 
 UISize TextRenderer::getIntrinsicSize(UIConstraints constraints) noexcept {
   auto size = paragraphBuilder_.getIntrinsicSize(constraints);
@@ -25,12 +27,12 @@ void TextRenderer::layout(UIConstraints size) {
 }
 
 void TextRenderer::draw(SkCanvas *canvas) {
-  canvas->save();
-  SkRect clipRect = SkRect::MakeXYWH(bounds_.x, bounds_.y, bounds_.width, bounds_.height);
-  canvas->clipRect(clipRect);
+  const uint64_t drawHash{drawHashCode()};
+  SkRect bounds = SkRect::MakeXYWH(bounds_.x, bounds_.y, bounds_.width, bounds_.height);
 
-  paragraphBuilder_.draw(canvas, SkPoint::Make(bounds_.x, bounds_.y));
-  canvas->restore();
+  SurfaceCacheHelper::drawCachedWithClip(canvas, drawHash, bounds, [&](SkCanvas *surfaceCanvas) {
+    paragraphBuilder_.draw(surfaceCanvas, SkPoint::Make(bounds_.x, bounds_.y));
+  });
 
   UIComponent::draw(canvas);
 }

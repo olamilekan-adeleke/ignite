@@ -56,7 +56,11 @@ class CheckBoxRender : public UIComponent {
 
 inline bool CheckBoxRender::processChildTaps(const UITapEvent &event) {
   if (params_.onTap == nullptr) return false;
-  return onTap(event, bounds_);
+
+  UITapEvent localEvent = event;
+  // localEvent.x -= bounds_.x;
+  // localEvent.y -= bounds_.y;
+  return onTap(localEvent, bounds_);
 }
 
 inline void CheckBoxRender::debugFillProperties(std::ostringstream &os, int indent) const {

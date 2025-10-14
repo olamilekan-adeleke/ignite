@@ -5,7 +5,6 @@
 #include "basic/ui_component.hpp"
 #include "color.hpp"
 #include "size.hpp"
-#include "ui_alignment.hpp"
 #include "ui_edge_insets.hpp"
 
 struct ViewParams {
@@ -16,7 +15,6 @@ struct ViewParams {
   bool antiAlias = true;
   bool tappable = true;
   TapListener onTap = nullptr;
-  MainAxisSize mainAxisSize = MainAxisSize::FIT;
   std::shared_ptr<UIComponent> child = nullptr;
 };
 
@@ -34,22 +32,6 @@ class View : public UIComponent {
   void draw(SkCanvas *canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
-
-  bool wantsToFillMainAxis() const override {
-    if (params_.child && params_.mainAxisSize == MainAxisSize::FIT) {
-      return params_.child->wantsToFillMainAxis();
-    } else {
-      return UIComponent::wantsToFillMainAxis();
-    }
-  }
-
-  bool wantsToFillCrossAxis() const override {
-    if (params_.child) {
-      return params_.child->wantsToFillCrossAxis();
-    } else {
-      return UIComponent::wantsToFillCrossAxis();
-    }
-  }
 
  protected:
   bool processChildTaps(const UITapEvent &event) override {

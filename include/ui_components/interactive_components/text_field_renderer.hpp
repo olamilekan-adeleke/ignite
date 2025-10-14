@@ -11,6 +11,7 @@
 #include "color.hpp"
 #include "elements/paragraph_builder.hpp"
 #include "keyboard_key_event.hpp"
+#include "size.hpp"
 #include "text_style.hpp"
 #include "ui_edge_insets.hpp"
 #include "utils_helper.hpp"
@@ -24,8 +25,7 @@ struct UITextFieldParams {
   TextStyle placeholderStyle{.color = Color::Gray(), .fontSize = 14.0f};
   std::string value;
   TextStyle textStyle{.color = Color::Black(), .fontSize = 14.0f};
-  float width = 120.0f;
-  float minHeight = 20.0f;
+  UISizing size = UISizing{};
   bool multiline = false;
   ValueChangedListener<std::string> onChanged = nullptr;
 };
@@ -33,7 +33,9 @@ struct UITextFieldParams {
 class TextFieldRenderer : public UIComponent {
  public:
   TextFieldRenderer(const UITextFieldParams& params)
-      : params_(params), textValueParagraph_(params_.value, params_.textStyle), placeholderParagraph_(params_.placeholder, params_.placeholderStyle) {
+      : params_(params),
+        textValueParagraph_(params_.value, params_.textStyle),
+        placeholderParagraph_(params_.placeholder, params_.placeholderStyle) {
     if (!params_.value.empty()) {
       size_t position = 0;
       while (position < params_.value.size()) {
@@ -51,8 +53,6 @@ class TextFieldRenderer : public UIComponent {
 
   void layout(UIConstraints size) override;
   void draw(SkCanvas* canvas) override;
-
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
  protected:
   std::string text() const {
@@ -100,8 +100,6 @@ inline void TextFieldRenderer::insertLetter(std::string letter) noexcept {
 
   std::string newText = text();
   textValueParagraph_.setText(newText);
-  // fmt::println("DEBUG: New text: {}", text());
-
   if (params_.onChanged) params_.onChanged(text());
 }
 
@@ -114,8 +112,6 @@ inline void TextFieldRenderer::deleteLetter(uint32_t index) noexcept {
 
   const std::string& newText = text();
   textValueParagraph_.setText(newText);
-  // fmt::println("DEBUG: New text: {}", text());
-
   if (params_.onChanged) params_.onChanged(text());
 }
 
@@ -143,7 +139,9 @@ inline void TextFieldRenderer::handleKeyEvent(KeyEvent& key) noexcept {
   }
 }
 
-inline void TextFieldRenderer::setCursorIndex(uint32_t index) noexcept { cursorIndex_ = std::min(index, static_cast<uint32_t>(buffer_.size())); }
+inline void TextFieldRenderer::setCursorIndex(uint32_t index) noexcept {
+  cursorIndex_ = std::min(index, static_cast<uint32_t>(buffer_.size()));
+}
 
 inline void TextFieldRenderer::debugFillProperties(std::ostringstream& os, int indent) const {
   UIComponent::debugFillProperties(os, indent);

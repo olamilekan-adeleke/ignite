@@ -18,9 +18,9 @@ class ParagraphTestWidget : public StatefulComponent {
   std::shared_ptr<UIComponent> body() override {
     return UI::UIView({
         .insets = UIEdgeInsets::horizontal(20) + UIEdgeInsets::vertical(30),
-        .child = UI::VFlexBox({
-            .spacing = 20,
+        .child = UI::Flex::column({
             .crossAxisAlignment = CrossAxisAlignment::START,
+            .childGap = 20,
             .children =
                 {
                     UI::Text("Paragraph Test", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),

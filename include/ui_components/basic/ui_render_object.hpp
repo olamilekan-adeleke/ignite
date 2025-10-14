@@ -40,7 +40,7 @@ class UIRenderObject : public Diagnosable {
 
   virtual bool wantsToFillMainAxis() const { return false; }
   virtual bool wantsToFillCrossAxis() const { return false; }
-  virtual bool wantsToFill() const { return wantsToFillMainAxis() || wantsToFillCrossAxis(); }
+  virtual bool wantsToFill() const { return wantsToFillMainAxis() && wantsToFillCrossAxis(); }
 
  private:
   void initializeDebugPaint();

@@ -14,6 +14,7 @@
 #include <string>
 
 #include "size.hpp"
+#include "surface_cache_helper.hpp"
 #include "ui_manager.hpp"
 
 struct ImageCacheManager {
@@ -104,30 +105,45 @@ void UIImage::layout(UIConstraints size) {
   markHasDirty(UIMarkDirtyType::DRAW, UIMarkDirtyCaller::NONE);
 }
 
+// void UIImage::draw(SkCanvas* canvas) {
+//   const uint64_t currentDrawHash{params_.drawHashCode()};
+//   sk_sp<SkSurface> cachedSurface = UICacheManager::instance().getCachedSurface(currentDrawHash);
+//
+//   if (cachedSurface) {
+//     canvas->drawImage(cachedSurface->makeImageSnapshot(), bounds_.x, bounds_.y);
+//     UIComponent::draw(canvas);
+//     return;
+//   }
+//
+//   if (!imageData_) return;
+//   SkImageInfo info = SkImageInfo::Make(bounds_.width, bounds_.height, kRGBA_8888_SkColorType, kOpaque_SkAlphaType);
+//   sk_sp<SkSurface> newSurface = SkSurfaces::Raster(info);
+//   if (!newSurface) return;
+//
+//   SkCanvas* surfaceCanvas = newSurface->getCanvas();
+//   SkPaint paint;
+//   paint.setAlphaf(params_.opacity);
+//
+//   SkRect dest = SkRect::MakeXYWH(0, 0, bounds_.width, bounds_.height);
+//   surfaceCanvas->drawImageRect(imageData_, dest, SkSamplingOptions(), &paint);
+//
+//   UICacheManager::instance().setCachedSurface(currentDrawHash, newSurface);
+//   canvas->drawImage(newSurface->makeImageSnapshot(), bounds_.x, bounds_.y);
+//   UIComponent::draw(canvas);
+// }
 void UIImage::draw(SkCanvas* canvas) {
-  const uint64_t currentDrawHash{params_.drawHashCode()};
-  sk_sp<SkSurface> cachedSurface = UICacheManager::instance().getCachedSurface(currentDrawHash);
-
-  if (cachedSurface) {
-    canvas->drawImage(cachedSurface->makeImageSnapshot(), bounds_.x, bounds_.y);
-    UIComponent::draw(canvas);
-    return;
-  }
-
   if (!imageData_) return;
-  SkImageInfo info = SkImageInfo::Make(bounds_.width, bounds_.height, kRGBA_8888_SkColorType, kOpaque_SkAlphaType);
-  sk_sp<SkSurface> newSurface = SkSurfaces::Raster(info);
-  if (!newSurface) return;
 
-  SkCanvas* surfaceCanvas = newSurface->getCanvas();
-  SkPaint paint;
-  paint.setAlphaf(params_.opacity);
+  const uint64_t drawHash{params_.drawHashCode()};
+  SkRect bounds = SkRect::MakeXYWH(bounds_.x, bounds_.y, bounds_.width, bounds_.height);
 
-  SkRect dest = SkRect::MakeXYWH(0, 0, bounds_.width, bounds_.height);
-  surfaceCanvas->drawImageRect(imageData_, dest, SkSamplingOptions(), &paint);
+  SurfaceCacheHelper::drawCached(canvas, drawHash, bounds, [&](SkCanvas* surfaceCanvas) {
+    SkPaint paint;
+    paint.setAlphaf(params_.opacity);
+    SkRect dest = SkRect::MakeXYWH(0, 0, bounds_.width, bounds_.height);
+    surfaceCanvas->drawImageRect(imageData_, dest, SkSamplingOptions(), &paint);
+  });
 
-  UICacheManager::instance().setCachedSurface(currentDrawHash, newSurface);
-  canvas->drawImage(newSurface->makeImageSnapshot(), bounds_.x, bounds_.y);
   UIComponent::draw(canvas);
 }
 

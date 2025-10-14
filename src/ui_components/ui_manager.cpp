@@ -98,10 +98,6 @@ void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
                                float w,
                                float h,
                                bool needsResize) {
-  if (!oldNode) {
-    // newNode->layout({w, h});
-  }
-
   auto oldChildren = oldNode ? oldNode->children() : std::vector<std::shared_ptr<UIComponent>>{};
   auto newChildren = newNode->children();
 

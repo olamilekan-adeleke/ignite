@@ -23,8 +23,6 @@ class StatefulComponent : public UIComponent {
 
   virtual bool processChildTaps(const UITapEvent &event) override;
 
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
-
   std::string toString(int indent = 0) const override;
 
  private:
@@ -48,8 +46,8 @@ inline bool StatefulComponent::processChildTaps(const UITapEvent &event) {
   const auto child = getChild();
   if (child) {
     UITapEvent localEvent = event;
-    localEvent.x -= bounds_.x;
-    localEvent.y -= bounds_.y;
+    // localEvent.x -= bounds_.x;
+    // localEvent.y -= bounds_.y;
 
     return child->processTap(localEvent);
   }

@@ -13,15 +13,10 @@ class ScrollView : public UIComponent {
  public:
   ScrollView(const ScrollViewParam& param = {}) : params_(param) { setShouldHandleHover(true); }
 
-  void layout(UIConstraints size) override;
+  void layout(UIConstraints constraints) override;
   void draw(SkCanvas* canvas) override;
 
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
-
   const std::vector<std::shared_ptr<UIComponent>>& children() const override;
-
-  // bool wantsToFillMainAxis() const override { return true; }
-  // bool wantsToFillCrossAxis() const override { return true; }
 
  protected:
   void update();
