@@ -23,9 +23,10 @@ void CheckBoxRender::markHasDirty(const UIMarkDirtyType &type, const UIMarkDirty
   }
 }
 
-void CheckBoxRender::layout(UIConstraints size) {
-  setSize(params_.size.width, params_.size.height);
-  // setSize(size.width, size.height);
+void CheckBoxRender::layout(UIConstraints constraints) {
+  const float width = std::clamp(params_.size.width, 0.0f, constraints.maxWidth);
+  const float height = std::clamp(params_.size.height, 0.0f, constraints.maxHeight);
+  setSize(width, height);
 }
 
 void CheckBoxRender::draw(SkCanvas *canvas) {
