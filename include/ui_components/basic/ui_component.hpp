@@ -43,24 +43,14 @@ class UIComponent : public UIRenderObject, public UITapHandler, public UITextInp
 
   std::shared_ptr<UIComponent> getChild() const { return child_; }
 
-  const Offset &getGlobalOffset() const { return globalOffset_; }
-  void setGlobalOffset(const Offset &offset) { globalOffset_ = offset; }
-
-  UIRect getGobalBounds() const {
-    return UIRect{
-        .x = globalOffset_.x,
-        .y = globalOffset_.y,
-        .width = bounds_.width,
-        .height = bounds_.height,
-    };
-  }
-
   virtual void updateGlobalOffset(const Offset &parentOffset) {
-    globalOffset_.x = parentOffset.x + bounds_.x;
-    globalOffset_.y = parentOffset.y + bounds_.y;
+    Offset globalOffset{0.0f, 0.0f};
+    globalOffset.x = parentOffset.x + bounds_.x;
+    globalOffset.y = parentOffset.y + bounds_.y;
 
+    setGlobalOffset(globalOffset);
     for (const auto &child : children()) {
-      child->updateGlobalOffset(globalOffset_);
+      child->updateGlobalOffset(globalOffset);
     }
   }
 
@@ -93,9 +83,6 @@ class UIComponent : public UIRenderObject, public UITapHandler, public UITextInp
   // NOTE: this was added because i don't know why the UI layout break if View override children()
   // i have try debug it but i do not want to exhaust energy to fix it. This will do the job for now
   std::shared_ptr<UIComponent> child_;
-
- private:
-  Offset globalOffset_{0.0f, 0.0f};
 };
 
 inline void UIComponent::handleCharEvent(std::string letter) noexcept {

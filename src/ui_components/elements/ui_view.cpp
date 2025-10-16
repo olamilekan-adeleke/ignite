@@ -10,32 +10,32 @@
 #include "size.hpp"
 #include "ui_alignment.hpp"
 
-UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
-  UISize childSize{0.0f, 0.0f};
-  const auto horizonalSpace = params_.margin.horizonal() + params_.insets.horizonal();
-  const auto verticalSpace = params_.margin.vertical() + params_.insets.vertical();
-
-  if (params_.child) {
-    auto constraintsShrinked = constraints.shrinkBy(horizonalSpace, verticalSpace);
-    childSize = params_.child->getIntrinsicSize(constraintsShrinked);
-  }
-
-  UISize size;
-  // if (params_.mainAxisSize == MainAxisSize::FIT) {
-  //   size.width = childSize.width + horizonalSpace;
-  //   size.height = childSize.height + verticalSpace;
-  //
-  //   // CRITICAL: Never exceed constraints
-  //   size.width = std::min(size.width, constraints.minWidth);
-  //   size.height = std::min(size.height, constraints.minHeight);
-  //
-  // } else if (params_.mainAxisSize == MainAxisSize::FILL) {
-  //   size.width = 0 + horizonalSpace;
-  //   size.height = 0 + verticalSpace;
-  // }
-
-  return size;
-}
+// UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
+//   UISize childSize{0.0f, 0.0f};
+//   const auto horizonalSpace = params_.margin.horizonal() + params_.insets.horizonal();
+//   const auto verticalSpace = params_.margin.vertical() + params_.insets.vertical();
+//
+//   if (params_.child) {
+//     auto constraintsShrinked = constraints.shrinkBy(horizonalSpace, verticalSpace);
+//     childSize = params_.child->getIntrinsicSize(constraintsShrinked);
+//   }
+//
+//   UISize size;
+//   // if (params_.mainAxisSize == MainAxisSize::FIT) {
+//   //   size.width = childSize.width + horizonalSpace;
+//   //   size.height = childSize.height + verticalSpace;
+//   //
+//   //   // CRITICAL: Never exceed constraints
+//   //   size.width = std::min(size.width, constraints.minWidth);
+//   //   size.height = std::min(size.height, constraints.minHeight);
+//   //
+//   // } else if (params_.mainAxisSize == MainAxisSize::FILL) {
+//   //   size.width = 0 + horizonalSpace;
+//   //   size.height = 0 + verticalSpace;
+//   // }
+//
+//   return size;
+// }
 
 void View::layout(UIConstraints size) {
   const bool wantsToFillMainAxis = this->wantsToFillMainAxis();
@@ -50,40 +50,20 @@ void View::layout(UIConstraints size) {
     float availableChildWidth = std::max(0.0f, size.maxWidth - horizonalSpace);
     float availableChildHeight = std::max(0.0f, size.maxHeight - verticalSpace);
 
-    // const auto& childIntrinsicSize = params_.child->getIntrinsicSize({availableChildWidth, availableChildHeight});
-    // params_.child->layout({childIntrinsicSize.width, childIntrinsicSize.height});
-
     child->layout(UIConstraints::maxSize(availableChildWidth, availableChildHeight));
     const auto childSize = child->getSize();
 
     setSize(childSize.width + horizonalSpace, childSize.height + verticalSpace);
 
-    // float childActualWidth = childSize.width;
-    // float childActualHeight = childSize.height;
-
     float childX = margin.left + insets.left;
     float childY = margin.top + insets.top;
     params_.child->setPosition(childX, childY);
 
-    // if (wantsToFillMainAxis) {
-    //   bounds_.width = size.width;
-    //   bounds_.height = size.height;
-    //
-    //   float childX =
-    //       params_.margin.left + params_.insets.left + std::max(0.0f, (availableChildWidth - childActualWidth)
-    //       / 2.0f);
-    //   float childY =
-    //       params_.margin.top + params_.insets.top + std::max(0.0f, (availableChildHeight - childActualHeight)
-    //       / 2.0f);
-    //   params_.child->setPosition(childX, childY);
-    // } else {
-    //   bounds_.width = std::min(childActualWidth + horizonalSpace, size.width);
-    //   bounds_.height = std::min(childActualHeight + verticalSpace, size.height);
-    //
-    //   params_.child->setPosition(params_.margin.left + params_.insets.left, params_.margin.top + params_.insets.top);
-    // }
-
-    params_.child->updateGlobalOffset({getGlobalOffset().x + childX, getGlobalOffset().y + childY});
+    params_.child->updateGlobalOffset({
+        getGlobalOffset().x + childX,
+        getGlobalOffset().y + childY,
+    });
+    // params_.child->updateGlobalOffset(getGlobalOffset());
   } else {
     if (wantsToFillMainAxis) {
       bounds_.width = size.width;

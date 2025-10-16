@@ -13,6 +13,7 @@
 #include "../example/todo_list.cpp"
 #include "debug/debug_log_server.hpp"
 #include "debug/fps_tracker.hpp"
+#include "logger.hpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
@@ -63,6 +64,7 @@ int main() {
     // std::shared_ptr<UIComponent> rootUI = paragraphTest;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
     std::shared_ptr<UIComponent> rootUI = navText;
+    // std::shared_ptr<UIComponent> rootUI = TodoListWidget::bodyy();
     // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::body();
     // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::flexibleBody();
     // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::sizingBody();
@@ -108,7 +110,7 @@ int main() {
 
       const std::string logs = rootUI->toString(0);
       if (logs != lastLog) lastLog = logs;
-      // Logger::logToFile(logs);
+      Logger::logToFile(logs);
       // std::this_thread::sleep_for(std::chrono::milliseconds(16));
     });
 

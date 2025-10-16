@@ -43,7 +43,10 @@ void FixedBox::layout(UIConstraints size) {
     auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childSize.width, childSize.height);
     child->setPosition(x, y);
 
-    child->setGlobalOffset({getGlobalOffset().x + x, getGlobalOffset().y + y});
+    child->updateGlobalOffset({
+        getGlobalOffset().x + x,
+        getGlobalOffset().y + y,
+    });
   }
   setSize(width, height);
 }

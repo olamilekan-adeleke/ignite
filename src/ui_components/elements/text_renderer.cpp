@@ -37,9 +37,35 @@ void TextRenderer::draw(SkCanvas *canvas) {
   UIComponent::draw(canvas);
 }
 
+inline std::string escapeString(const std::string &str) {
+  std::string result;
+  for (char c : str) {
+    switch (c) {
+      case '\\':
+        result += "\\\\";
+        break;
+      case '\n':
+        result += "\\n";
+        break;
+      case '\r':
+        result += "\\r";
+        break;
+      case '\t':
+        result += "\\t";
+        break;
+      case '"':
+        result += "\\\"";
+        break;
+      default:
+        result += c;
+    }
+  }
+  return result;
+}
+
 void TextRenderer::debugFillProperties(std::ostringstream &os, int indent) const {
   UIComponent::debugFillProperties(os, indent);
   std::string pad(indent, ' ');
   paragraphBuilder_.debugFillProperties(os, indent);
-  os << pad << "text: " << fmt::format("\"{}\"", text_) << "\n";
+  os << pad << "text: " << fmt::format("\"{}\"", escapeString(text_)) << "\n";
 }

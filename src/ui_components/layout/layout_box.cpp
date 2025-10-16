@@ -196,6 +196,10 @@ void LayoutBox::layout(UIConstraints constraints) {
   // Position children
   float mainAxisStartPosition = 0;
   float spacing = params_.childGap;
+  const Offset &parentGlobalOffset = getGlobalOffset();
+
+  float containerGlobalX = getGlobalOffset().x;
+  float containerGlobalY = getGlobalOffset().y;
   for (size_t i = 0; i < params_.children.size(); ++i) {
     const auto &child = params_.children[i];
     const auto &childSize = child->getSize();
@@ -203,16 +207,31 @@ void LayoutBox::layout(UIConstraints constraints) {
     const float crossAxisPosition = getCrossAxisPosition(childSize);
 
     float childRelativeX, childRelativeY;
+    // float globalX, globalY;
     if (params_.axis == Axis::HORIZONTAL) {
       childRelativeX = mainAxisStartPosition;
       childRelativeY = crossAxisPosition;
+
+      // globalX = getGlobalOffset().x + mainAxisStartPosition;
+      // globalY = getGlobalOffset().y + crossAxisPosition;
     } else if (params_.axis == Axis::VERTICAL) {
       childRelativeX = crossAxisPosition;
       childRelativeY = mainAxisStartPosition;
+
+      // globalX = getGlobalOffset().x + crossAxisPosition;
+      // globalY = getGlobalOffset().y + mainAxisStartPosition;
     }
 
     child->setPosition(childRelativeX, childRelativeY);
-    child->setGlobalOffset({getGlobalOffset().x + childRelativeX, getGlobalOffset().y + childRelativeY});
+    child->updateGlobalOffset(parentGlobalOffset);
+
+    // child->updateGlobalOffset({
+    //     containerGlobalX + childRelativeX,
+    //     containerGlobalY + childRelativeY,
+    // });
+
+    // child->updateGlobalOffset({globalX, globalY});
+    // child->updateGlobalOffset({getGlobalOffset().x + childRelativeX, getGlobalOffset().y + childRelativeY});
 
     mainAxisStartPosition += mainAdvance;
     if (i + 1 != params_.children.size()) mainAxisStartPosition += spacing;
