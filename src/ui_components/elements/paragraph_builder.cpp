@@ -37,7 +37,6 @@ UISize ParagraphBuilder::getIntrinsicSize(UIConstraints constraints) noexcept {
   // }
 
   float layoutHeight = paragraph_->getHeight();
-  float actualWidth = paragraph_->getLongestLine();
   return UISize{.width = layoutWidth, .height = layoutHeight};
 }
 

@@ -23,7 +23,7 @@ class TextRenderer : public UIComponent {
 
  private:
   std::string text_;
-  const TextStyle &style_;
+  TextStyle style_;
   ParagraphBuilder paragraphBuilder_;
 
   uint64_t layoutHashCode() const noexcept {

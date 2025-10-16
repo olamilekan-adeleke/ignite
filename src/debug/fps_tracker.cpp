@@ -15,7 +15,7 @@ void FpsTracker::updateAndLogFps() {
   std::chrono::duration<double> timeSinceLastFpsUpdate = currentTime - lastFpsUpdateTime;
   if (timeSinceLastFpsUpdate.count() >= 1.0) {  // Update FPS every second
     fps = static_cast<double>(frameCount) / timeSinceLastFpsUpdate.count();
-    // fmt::println("FPS: {:.2f}", fps);
+    fmt::println("FPS: {:.2f}", fps);
     frameCount = 0;
     lastFpsUpdateTime = currentTime;
   }

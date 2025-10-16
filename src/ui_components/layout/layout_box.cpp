@@ -95,13 +95,8 @@ void LayoutBox::layout(UIConstraints constraints) {
 
   // second pass for flexible children
   const uint32_t flexibleGapCount = flexibleChildrenCount;
-  // const float flexibleTotalGapSize = flexibleGapCount * params_.childGap;
-  // const float mainAxisSizeLeftAvailable = std::clamp((maxMain - usedMainAxis - flexibleTotalGapSize), minMain,
-  // maxMain);
-
   const float mainAxisSizeLeftAvailable = std::max(0.0f, maxMain - usedMainAxis);
   const auto &[_, crossAxisSizeAvailable] = constraints.crossAxisSize(params_.axis);
-  // float spaceUsed =
 
   for (size_t i = 0; i < params_.children.size(); ++i) {
     auto &child = params_.children[i];
@@ -113,43 +108,15 @@ void LayoutBox::layout(UIConstraints constraints) {
 
     float mainAxisSizePerChild = distributeFlexSpace(mainAxisSizeLeftAvailable, flexibleGapCount, child);
 
-    if (params_.axis == Axis::HORIZONTAL && params_.children.size() >= 3) {
-      // fmt::println("[LayoutBox] Flexible Child count  ======> {}", flexibleGapCount);
-    }
     UIConstraints childConstraints{};
     if (params_.axis == Axis::HORIZONTAL) {
       childConstraints = UIConstraints::maxSize(mainAxisSizePerChild, crossAxisSizeAvailable);
-
-      if (params_.axis == Axis::HORIZONTAL && params_.children.size() >= 3) {
-        // fmt::println(
-        //     "[LayoutBox] Flexible Child {}: available={} perChild={} constraints=({}, {}) FlexChildcount  ======>
-        //     {}", fmt::format("{} - {} child[{}]", typeid(*child).name(), i, params_.children.size()),
-        //     mainAxisSizeLeftAvailable,
-        //     mainAxisSizePerChild,
-        //     mainAxisSizePerChild,
-        //     crossAxisSizeAvailable,
-        //     flexibleGapCount);
-      }
     } else if (params_.axis == Axis::VERTICAL) {
       childConstraints = UIConstraints::maxSize(crossAxisSizeAvailable, mainAxisSizePerChild);
-
-      // if (params_.axis == Axis::HORIZONTAL && params_.children.size() >= 3) {
-      //   fmt::println("[LayoutBox] Flexible Child {}: available={} perChild={} constraints=({}, {})",
-      //                i,
-      //                mainAxisSizeLeftAvailable,
-      //                mainAxisSizePerChild,
-      //                crossAxisSizeAvailable,
-      //                mainAxisSizePerChild);
-      // }
     }
 
     child->layout(childConstraints);
     UISizing childSize = child->getSize();
-
-    // if (params_.axis == Axis::HORIZONTAL && params_.children.size() >= 3) {
-    //   fmt::println(
-    //       "[LayoutBox] Flexible Child {} result size: width={}, height={}", i, childSize.width, childSize.height);
-    // }
   }
 
   // Set size for Layout Box
@@ -174,25 +141,6 @@ void LayoutBox::layout(UIConstraints constraints) {
     setSize(finalCrossAxisSize, finalMainAxisSize);
   }
 
-  // if (params_.axis == Axis::HORIZONTAL && params_.children.size() >= 3) {
-  //   fmt::println("[LayoutBox] Axis: HORIZONTAL With Constraints {} x {}", constraints.maxWidth,
-  //   constraints.maxHeight); fmt::println("[LayoutBox] Total children: {}", params_.children.size());
-  //   fmt::println("[LayoutBox] Used main axis: {}", usedMainAxis);
-  //   fmt::println("[LayoutBox] Max child cross axis: {}", maxChildCrossAxis);
-  //   fmt::println("[LayoutBox] Main axis size left available: {}", mainAxisSizeLeftAvailable);
-  //
-  //   for (size_t i = 0; i < params_.children.size(); ++i) {
-  //     const auto &child = params_.children[i];
-  //     const auto &childSize = child->getSize();
-  //     fmt::println("[LayoutBox] Child {} size: width={}, height={} out of {} | wantsToFill: {}",
-  //                  fmt::format("{} - {}", typeid(*child).name(), i),
-  //                  childSize.width,
-  //                  childSize.height,
-  //                  constraints.maxWidth,
-  //                  child->wantsToFill());
-  //   }
-  // }
-
   // Position children
   float mainAxisStartPosition = 0;
   float spacing = params_.childGap;
@@ -207,32 +155,20 @@ void LayoutBox::layout(UIConstraints constraints) {
     const float crossAxisPosition = getCrossAxisPosition(childSize);
 
     float childRelativeX, childRelativeY;
-    // float globalX, globalY;
     if (params_.axis == Axis::HORIZONTAL) {
       childRelativeX = mainAxisStartPosition;
       childRelativeY = crossAxisPosition;
-
-      // globalX = getGlobalOffset().x + mainAxisStartPosition;
-      // globalY = getGlobalOffset().y + crossAxisPosition;
     } else if (params_.axis == Axis::VERTICAL) {
       childRelativeX = crossAxisPosition;
       childRelativeY = mainAxisStartPosition;
-
-      // globalX = getGlobalOffset().x + crossAxisPosition;
-      // globalY = getGlobalOffset().y + mainAxisStartPosition;
     }
 
     child->setPosition(childRelativeX, childRelativeY);
-    child->updateGlobalOffset(parentGlobalOffset);
-
-    // child->updateGlobalOffset({
-    //     containerGlobalX + childRelativeX,
-    //     containerGlobalY + childRelativeY,
-    // });
-
-    // child->updateGlobalOffset({globalX, globalY});
-    // child->updateGlobalOffset({getGlobalOffset().x + childRelativeX, getGlobalOffset().y + childRelativeY});
-
+    // child->updateGlobalOffset(parentGlobalOffset);
+    child->updateGlobalOffset({
+        parentGlobalOffset.x + childRelativeX,
+        parentGlobalOffset.y + childRelativeY,
+    });
     mainAxisStartPosition += mainAdvance;
     if (i + 1 != params_.children.size()) mainAxisStartPosition += spacing;
   }

@@ -25,17 +25,14 @@ void View::layout(UIConstraints size) {
     child->layout(UIConstraints::maxSize(availableChildWidth, availableChildHeight));
     const auto childSize = child->getSize();
 
-    setSize(childSize.width + horizonalSpace, childSize.height + verticalSpace);
+    float finalWidth = std::clamp(childSize.width + horizonalSpace, size.minWidth, size.maxWidth);
+    float finalHeight = std::clamp(childSize.height + verticalSpace, size.minHeight, size.maxHeight);
+    setSize(finalWidth, finalHeight);
 
     float childX = margin.left + insets.left;
     float childY = margin.top + insets.top;
     params_.child->setPosition(childX, childY);
-
-    params_.child->updateGlobalOffset({
-        getGlobalOffset().x + childX,
-        getGlobalOffset().y + childY,
-    });
-    // params_.child->updateGlobalOffset(getGlobalOffset());
+    params_.child->updateGlobalOffset({getGlobalOffset().x + childX, getGlobalOffset().y + childY});
   } else {
     if (wantsToFillMainAxis) {
       bounds_.width = size.width;
@@ -46,8 +43,8 @@ void View::layout(UIConstraints size) {
     }
   }
 
-  // bounds_.width = std::clamp(bounds_.width, size.minWidth, size.maxWidth);
-  // bounds_.height = std::clamp(bounds_.height, size.minHeight, size.maxHeight);
+  bounds_.width = std::clamp(bounds_.width, size.minWidth, size.maxWidth);
+  bounds_.height = std::clamp(bounds_.height, size.minHeight, size.maxHeight);
 }
 
 void View::draw(SkCanvas* canvas) {

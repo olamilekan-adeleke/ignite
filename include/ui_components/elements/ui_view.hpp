@@ -32,10 +32,6 @@ class View : public UIComponent {
 
  protected:
   bool processChildTaps(const UITapEvent &event) override {
-    if (params_.onTap) {
-      return UIComponent::onTap(event, bounds_);
-    }
-
     if (params_.child) {
       UITapEvent localEvent = event;
       localEvent.x -= bounds_.x;
@@ -43,6 +39,7 @@ class View : public UIComponent {
       return params_.child->processTap(localEvent);
     }
 
+    if (params_.onTap) return UIComponent::onTap(event, bounds_);
     return false;
   }
 
