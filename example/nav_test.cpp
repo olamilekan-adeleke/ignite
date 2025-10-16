@@ -9,9 +9,12 @@
 #include "../example/todo_list.cpp"
 #include "basic/ui_component.hpp"
 #include "color.hpp"
+#include "elements/icon_renderer.hpp"
+#include "icons/icon_types.hpp"
 #include "interactive_components/stateful_component.hpp"
 #include "navigation/navigataion_view.hpp"
 #include "ui.hpp"
+#include "ui_alignment.hpp"
 #include "ui_edge_insets.hpp"
 
 class NavTestWidget : public StatefulComponent {
@@ -70,6 +73,29 @@ class NavTestWidget : public StatefulComponent {
         " 1234567890 @ #$ % ^&*()[]{ } < > / ? End of test ✅✨🔥 ";
 
     const TextStyle params{.color = Color::Black(), .fontSize = 18};
-    return std::make_shared<TextRenderer>(text, params);
+
+    std::vector<std::shared_ptr<UIComponent>> iconsList = {};
+    const auto icons = {
+        IconTypes::home(),
+        IconTypes::search(),
+        IconTypes::check(),
+        IconTypes::close(),
+        IconTypes::notifications(),
+    };
+
+    for (auto& icon : icons) {
+      auto child = std::make_shared<IconRenderer>(IconParam{.icon = icon, .size = 40});
+      iconsList.push_back(child);
+    }
+
+    return UI::VFlexBox({
+        .spacing = 20,
+        .crossAxisAlignment = CrossAxisAlignment::CENTER,
+        .children =
+            {
+                UI::HFlexBox({.spacing = 20, .children = iconsList}),
+                UI::Text(text, params),
+            },
+    });
   }
 };
