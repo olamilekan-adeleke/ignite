@@ -78,7 +78,32 @@ class UIComponent : public UIRenderObject, public UITapHandler, public UITextInp
   void setCursorPosCallback(Offset offset) noexcept override;
 
  protected:
-  virtual bool processChildTaps(const UITapEvent &event) { return false; }
+  virtual bool processChildTaps(const UITapEvent &event) {
+    const auto &children = this->children();
+
+    if (!children.empty() && children.size() > 1) {
+      // for (auto &child : children) {
+      // }
+    } else if (children.size() == 1) {
+      // return children[0]->processTap(event);
+      return children[0]->processTap(translateTapEventForChild(event));
+    } else if (children.empty() && child_) {
+      // return child_->processTap(event);
+      return child_->processTap(translateTapEventForChild(event));
+    }
+
+    return false;
+  }
+
+  // TODO: this is not used yet
+  virtual UITapEvent translateTapEventForChild(const UITapEvent &event) {
+    if (bounds_.x == 0 || bounds_.y == 0) return event;
+
+    UITapEvent localEvent = event;
+    localEvent.x -= bounds_.x;
+    localEvent.y -= bounds_.y;
+    return localEvent;
+  }
 
   // NOTE: this was added because i don't know why the UI layout break if View override children()
   // i have try debug it but i do not want to exhaust energy to fix it. This will do the job for now
