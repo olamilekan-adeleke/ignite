@@ -42,8 +42,17 @@ class UIRenderObject : public Diagnosable {
   virtual bool wantsToFillCrossAxis() const { return false; }
   virtual bool wantsToFill() const { return wantsToFillMainAxis() && wantsToFillCrossAxis(); }
 
+  const Offset& getGlobalOffset() const { return globalOffset_; }
+  void setGlobalOffset(const Offset& offset) { globalOffset_ = offset; }
+
+  UIRect getGobalBounds() const {
+    return UIRect{.x = globalOffset_.x, .y = globalOffset_.y, .width = bounds_.width, .height = bounds_.height};
+  }
+
  private:
   void initializeDebugPaint();
+
+  Offset globalOffset_{0.0f, 0.0f};
 
  protected:
   UIRect bounds_{0, 0, 0, 0};

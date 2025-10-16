@@ -4,6 +4,7 @@
 
 #include "offset.hpp"
 #include "rect.hpp"
+#include "size.hpp"
 #include "tap_event.hpp"
 
 using TapListener = std::function<void(const UITapEvent& event)>;
@@ -54,3 +55,14 @@ class UITapHandler {
   std::optional<TapListener> tapListener_;
   bool tappable_;
 };
+
+inline UITapEvent translateEvent(const UITapEvent& event, const Vec2& offset) {
+  return {event.x - offset.x, event.y - offset.y};
+}
+
+inline UITapEvent translateToLocal(const UITapEvent& event, const Offset& globalOffset) noexcept {
+  UITapEvent localEvent = event;
+  localEvent.x -= globalOffset.x;
+  localEvent.y -= globalOffset.y;
+  return localEvent;
+}

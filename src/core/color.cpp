@@ -85,11 +85,11 @@ Color Color::Random() {
 
 std::string Color::toString() const {
   std::ostringstream os;
-  os << "Color {";
+  os << "Color { ";
   os << "r: " << (int)r() << ", ";
   os << "g: " << (int)g() << ", ";
   os << "b: " << (int)b() << ", ";
   os << "a: " << (int)a();
-  os << "}";
+  os << " }";
   return os.str();
 }

@@ -1,8 +1,15 @@
 #pragma once
 
+#include <sstream>
+
 #include "offset.hpp"
 #include "rect.hpp"
 #include "ui_alignment.hpp"
+
+struct Vec2 {
+  float x;
+  float y;
+};
 
 /// LayoutConstraints
 struct LayoutConstraints {
@@ -38,7 +45,11 @@ struct UISize {
     };
   }
 
-  std::string toString() const noexcept { return fmt::format("UISize ( w: {}, h: {} )", width, height); }
+  std::string toString() const noexcept {
+    std::ostringstream os;
+    os << "UISize{ w: " << width << ", h: " << height << " }";
+    return os.str();
+  }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const UISize &size) noexcept {
@@ -121,11 +132,10 @@ struct UISizing {
   }
 
   std::string toString() const noexcept {
-    return fmt::format("UISizing(w: {}, h: {}, typeW: {}, typeH: {})",
-                       width,
-                       height,
-                       static_cast<int>(typeW),
-                       static_cast<int>(typeH));
+    std::ostringstream os;
+    os << "UISizing{ w: " << width << ", h: " << height << ", typeW: " << static_cast<int>(typeW)
+       << ", typeH: " << static_cast<int>(typeH) << " }";
+    return os.str();
   }
 };
 

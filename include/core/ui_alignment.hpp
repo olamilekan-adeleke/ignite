@@ -40,6 +40,39 @@ enum class UIAlignment : std::uint8_t {
   BottomRight,
 };
 
+inline std::ostream& operator<<(std::ostream& os, const UIAlignment& alignment) {
+  switch (alignment) {
+    case UIAlignment::TopLeft:
+      os << "TopLeft";
+      break;
+    case UIAlignment::TopCenter:
+      os << "TopCenter";
+      break;
+    case UIAlignment::TopRight:
+      os << "TopRight";
+      break;
+    case UIAlignment::CenterLeft:
+      os << "CenterLeft";
+      break;
+    case UIAlignment::Center:
+      os << "Center";
+      break;
+    case UIAlignment::CenterRight:
+      os << "CenterRight";
+      break;
+    case UIAlignment::BottomLeft:
+      os << "BottomLeft";
+      break;
+    case UIAlignment::BottomCenter:
+      os << "BottomCenter";
+      break;
+    case UIAlignment::BottomRight:
+      os << "BottomRight";
+      break;
+  }
+  return os;
+}
+
 inline std::pair<float, float> computeAlignedPosition(
     UIAlignment alignment, float width, float height, float childWidth, float childHeight) {
   float x = 0.0F;

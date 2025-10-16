@@ -22,13 +22,14 @@ class NavTestWidget : public StatefulComponent {
  public:
   NavTestWidget() {
     items_.push_back(NavigationItem{
-        .sidebarItem = makeSideBar(IconTypes::home(), "Paragraph Test"),
-        .view = std::make_shared<ParagraphTestWidget>(),
+        .sidebarItem = makeSideBar(IconTypes::check(), "Todo List"),
+        // .view = std::make_shared<TodoListWidget>(),
+        .view = TodoListWidget::bodyy(),
     });
 
     items_.push_back(NavigationItem{
-        .sidebarItem = makeSideBar(IconTypes::check(), "Todo List"),
-        .view = std::make_shared<TodoListWidget>(),
+        .sidebarItem = makeSideBar(IconTypes::home(), "Paragraph Test"),
+        .view = std::make_shared<ParagraphTestWidget>(),
     });
 
     items_.push_back(NavigationItem{
@@ -36,20 +37,20 @@ class NavTestWidget : public StatefulComponent {
         .view = std::make_shared<TestScrollWidget>(),
     });
 
-    items_.push_back(NavigationItem{
-        .sidebarItem = makeSideBar(IconTypes::add(), "Text Four"),
-        .view = UI::UIView({.child = makePara()}),
-    });
-
-    items_.push_back(NavigationItem{
-        .sidebarItem = makeSideBar(IconTypes::settings(), "Layout Box one"),
-        .view = UI::UIView({.child = LayoutBoxFixedBoxes::flexibleBody()}),
-    });
-
-    items_.push_back(NavigationItem{
-        .sidebarItem = makeSideBar(IconTypes::settings(), "Layout box two"),
-        .view = UI::UIView({.child = LayoutBoxFixedBoxes::sizingBody()}),
-    });
+    // items_.push_back(NavigationItem{
+    //     .sidebarItem = makeSideBar(IconTypes::add(), "Text Four"),
+    //     .view = UI::UIView({.child = makePara()}),
+    // });
+    //
+    // items_.push_back(NavigationItem{
+    //     .sidebarItem = makeSideBar(IconTypes::settings(), "Layout Box one"),
+    //     .view = UI::UIView({.child = LayoutBoxFixedBoxes::flexibleBody()}),
+    // });
+    //
+    // items_.push_back(NavigationItem{
+    //     .sidebarItem = makeSideBar(IconTypes::settings(), "Layout box two"),
+    //     .view = UI::UIView({.child = LayoutBoxFixedBoxes::sizingBody()}),
+    // });
   }
 
   std::shared_ptr<UIComponent> body() override {
@@ -61,13 +62,6 @@ class NavTestWidget : public StatefulComponent {
 
  private:
   std::vector<NavigationItem> items_;
-
-  // std::shared_ptr<UIComponent> makeBody(Color color) const noexcept {
-  //   return UI::UIView({
-  //       .insets = UIEdgeInsets::all(100),
-  //       .backgroundColor = color,
-  //   });
-  // }
 
   std::shared_ptr<UIComponent> makeSideBar(const IconData& iconData, std::string text) const noexcept {
     return UI::Flex::row({

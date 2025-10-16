@@ -47,4 +47,5 @@ inline void FixedBox::debugFillProperties(std::ostringstream &os, int indent) co
   std::string pad(indent, ' ');
   os << pad << "size: " << params_.size << "\n";
   os << pad << "hasChild: " << (params_.child ? "true" : "false") << "\n";
+  os << pad << "alignment: " << params_.alignment << "\n";
 }

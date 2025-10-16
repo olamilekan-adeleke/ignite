@@ -43,6 +43,40 @@ class TodoListWidget : public StatefulComponent {
     data.addTodoItem("Call dad");
   }
 
+  static std::shared_ptr<UIComponent> bodyy() {
+    auto header = UI::Flex::column({
+        .children =
+            {
+                UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
+                UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
+            },
+    });
+
+    const std::shared_ptr<UIComponent> button = UI::UIButton({
+        .child = UI::Text("Add Todo", {.color = Color::White(), .fontSize = 16}),
+        .insets = UIEdgeInsets::horizontal(10) + UIEdgeInsets::vertical(10),
+        .fillColor = Color::Blue(),
+        .onTap = [&](const UITapEvent &e) { fmt::println("Add Todo"); },
+    });
+
+    return UI::UIView({
+        // .insets = UIEdgeInsets::horizontal(20) + UIEdgeInsets::vertical(30),
+        .child = UI::Flex::column({
+            .crossAxisAlignment = CrossAxisAlignment::START,
+            .childGap = 20,
+            .children =
+                {
+                    header,
+                    // UI::UIView({.insets = UIEdgeInsets::all(10), .child = itemList()}),
+
+                    // makeTextField(),
+                    button,
+                },
+
+        }),
+    });
+  }
+
   std::shared_ptr<UIComponent> body() override {
     auto header = UI::Flex::column({
         .children =

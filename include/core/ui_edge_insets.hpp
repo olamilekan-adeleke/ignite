@@ -11,11 +11,17 @@ struct UIEdgeInsets {
   float bottom = 0.0f;
   float right = 0.0f;
 
-  static UIEdgeInsets horizontal(float horizontalSpace) { return UIEdgeInsets{.left = horizontalSpace, .right = horizontalSpace}; }
+  static UIEdgeInsets horizontal(float horizontalSpace) {
+    return UIEdgeInsets{.left = horizontalSpace, .right = horizontalSpace};
+  }
 
-  static UIEdgeInsets vertical(float verticalSpace) { return UIEdgeInsets{.top = verticalSpace, .bottom = verticalSpace}; }
+  static UIEdgeInsets vertical(float verticalSpace) {
+    return UIEdgeInsets{.top = verticalSpace, .bottom = verticalSpace};
+  }
 
-  static UIEdgeInsets all(float space) { return UIEdgeInsets{.top = space, .left = space, .bottom = space, .right = space}; }
+  static UIEdgeInsets all(float space) {
+    return UIEdgeInsets{.top = space, .left = space, .bottom = space, .right = space};
+  }
 
   float horizonal() const { return left + right; }
 
@@ -25,7 +31,7 @@ struct UIEdgeInsets {
     std::ostringstream os;
     os << "UIEdgeInsets { ";
     os << fmt::format("top: {}, left: {}, bottom: {}, right: {}", top, left, bottom, right);
-    os << "}";
+    os << " }";
     return os.str();
   }
 };
