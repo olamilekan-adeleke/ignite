@@ -31,8 +31,6 @@ class View : public UIComponent {
   void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
 
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
-
  protected:
   bool processChildTaps(const UITapEvent &event) override {
     if (params_.child) {
