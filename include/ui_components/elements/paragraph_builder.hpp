@@ -1,12 +1,13 @@
 #pragma once
 
 #include <string>
-#include "size.hpp"
-#include "include/core/SkSurface.h"
+
 #include "include/core/SkCanvas.h"
 #include "include/core/SkPoint.h"
+#include "include/core/SkSurface.h"
 #include "modules/skparagraph/include/FontCollection.h"
 #include "modules/skparagraph/include/Paragraph.h"
+#include "size.hpp"
 #include "text_style.hpp"
 
 class ParagraphBuilder {
