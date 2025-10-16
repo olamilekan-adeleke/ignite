@@ -50,7 +50,7 @@ int main() {
 
     bool needsResize = false;
     bool needsLayout = true;
-    bool needsRedraw = true;  // New flag for redraw
+    bool needsRedraw = true;
 
     // auto counter_example = std::make_shared<CounterComponent>();
     auto todoList = std::make_shared<TodoListWidget>();
@@ -79,7 +79,7 @@ int main() {
       height = newHeight;
       needsResize = true;
       needsLayout = true;
-      needsRedraw = true;  // Redraw needed after resize
+      needsRedraw = true;
     });
 
     static std::string lastLog;
@@ -92,13 +92,10 @@ int main() {
         needsResize = false;
       }
 
-      // if (needsLayout) {
       uiManager.setTree(rootUI, width, height, needsResize);
       needsLayout = false;
-      needsRedraw = true;  // Redraw needed after layout
-                           // }
+      needsRedraw = true;
 
-      // if (needsRedraw) {
       skiaRenderer.beginFrame();
       auto canvas = skiaRenderer.getCanvas();
 
@@ -106,7 +103,6 @@ int main() {
 
       skiaRenderer.endFrame();
       needsRedraw = false;
-      // }
 
       const std::string logs = rootUI->toString(0);
       if (logs != lastLog) lastLog = logs;

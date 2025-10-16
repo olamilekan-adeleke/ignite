@@ -33,8 +33,6 @@ class LayoutBox : public UIComponent {
     UITapEvent localEvent = event;
     localEvent.x = event.x - bounds_.x;
     localEvent.y = event.y - bounds_.y;
-    // localEvent.x = event.x - getGlobalOffset().x;
-    // localEvent.y = event.y - getGlobalOffset().y;
     for (auto &child : params_.children) {
       if (child->processTap(localEvent)) return true;
     }

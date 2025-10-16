@@ -21,8 +21,6 @@ class StatefulComponent : public UIComponent {
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
-  virtual bool processChildTaps(const UITapEvent &event) override;
-
   std::string toString(int indent = 0) const override;
 
  private:
@@ -40,16 +38,4 @@ inline const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::child
     return childrenCache_;
   }
   return UIComponent::children();
-}
-
-inline bool StatefulComponent::processChildTaps(const UITapEvent &event) {
-  const auto child = getChild();
-  if (child) {
-    UITapEvent localEvent = event;
-    // localEvent.x -= bounds_.x;
-    // localEvent.y -= bounds_.y;
-
-    return child->processTap(localEvent);
-  }
-  return false;
 }

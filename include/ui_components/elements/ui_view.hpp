@@ -4,7 +4,6 @@
 
 #include "basic/ui_component.hpp"
 #include "color.hpp"
-#include "size.hpp"
 #include "ui_edge_insets.hpp"
 
 struct ViewParams {
@@ -33,11 +32,14 @@ class View : public UIComponent {
 
  protected:
   bool processChildTaps(const UITapEvent &event) override {
+    if (params_.onTap) {
+      return UIComponent::onTap(event, bounds_);
+    }
+
     if (params_.child) {
       UITapEvent localEvent = event;
       localEvent.x -= bounds_.x;
       localEvent.y -= bounds_.y;
-
       return params_.child->processTap(localEvent);
     }
 

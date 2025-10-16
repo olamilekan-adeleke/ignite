@@ -58,8 +58,8 @@ inline bool CheckBoxRender::processChildTaps(const UITapEvent &event) {
   if (params_.onTap == nullptr) return false;
 
   UITapEvent localEvent = event;
-  // localEvent.x -= bounds_.x;
-  // localEvent.y -= bounds_.y;
+  localEvent.x -= bounds_.x;
+  localEvent.y -= bounds_.y;
   return onTap(localEvent, bounds_);
 }
 

@@ -6,6 +6,7 @@
 
 #include "basic/ui_component.hpp"
 #include "size.hpp"
+#include "tap_event.hpp"
 #include "ui_alignment.hpp"
 
 struct FixedBoxParam {
@@ -27,7 +28,13 @@ class FixedBox : public UIComponent {
   void debugFillProperties(std::ostringstream &os, int indent) const override;
 
   bool processChildTaps(const UITapEvent &event) override {
-    if (params_.child) return params_.child->processTap(event);
+    if (params_.child) {
+      UITapEvent localEvent = event;
+      localEvent.x -= bounds_.x;
+      localEvent.y -= bounds_.y;
+
+      return params_.child->processTap(localEvent);
+    }
     return false;
   }
 
