@@ -8,34 +8,6 @@
 
 #include "rect.hpp"
 #include "size.hpp"
-#include "ui_alignment.hpp"
-
-// UISize View::getIntrinsicSize(UIConstraints constraints) noexcept {
-//   UISize childSize{0.0f, 0.0f};
-//   const auto horizonalSpace = params_.margin.horizonal() + params_.insets.horizonal();
-//   const auto verticalSpace = params_.margin.vertical() + params_.insets.vertical();
-//
-//   if (params_.child) {
-//     auto constraintsShrinked = constraints.shrinkBy(horizonalSpace, verticalSpace);
-//     childSize = params_.child->getIntrinsicSize(constraintsShrinked);
-//   }
-//
-//   UISize size;
-//   // if (params_.mainAxisSize == MainAxisSize::FIT) {
-//   //   size.width = childSize.width + horizonalSpace;
-//   //   size.height = childSize.height + verticalSpace;
-//   //
-//   //   // CRITICAL: Never exceed constraints
-//   //   size.width = std::min(size.width, constraints.minWidth);
-//   //   size.height = std::min(size.height, constraints.minHeight);
-//   //
-//   // } else if (params_.mainAxisSize == MainAxisSize::FILL) {
-//   //   size.width = 0 + horizonalSpace;
-//   //   size.height = 0 + verticalSpace;
-//   // }
-//
-//   return size;
-// }
 
 void View::layout(UIConstraints size) {
   const bool wantsToFillMainAxis = this->wantsToFillMainAxis();

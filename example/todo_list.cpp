@@ -109,20 +109,22 @@ class TodoListWidget : public StatefulComponent {
   std::string textFieldValue = "";
 
   const std::shared_ptr<UIComponent> makeTodoItem(int index, const std::string &label, bool done) {
+    const auto &checkBox = UI::UICheckBox({
+        .checked = done,
+        .size = {24, 24},
+        .onTap =
+            [&, index, done](const UITapEvent &e) {
+              data.markDone(index, !done);
+              markDirty();
+            },
+    });
+
     return UI::Flex::row({
         .childGap = 12,
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .children =
             {
-                UI::UICheckBox({
-                    .checked = done,
-                    .size = {24, 24},
-                    .onTap =
-                        [&, index, done](const UITapEvent &e) {
-                          data.markDone(index, !done);
-                          markDirty();
-                        },
-                }),
+                checkBox,
                 UI::Text(label,
                          {
                              .color = Color::Black(),
