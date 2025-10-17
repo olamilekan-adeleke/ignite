@@ -6,13 +6,10 @@
 #include <cstdint>
 
 #include "basic/ui_component.hpp"
-#include "layout/flex_box.hpp"
 #include "rect.hpp"
-#include "size.hpp"
 #include "ui_manager.hpp"
 
 void Separator::markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller& caller) noexcept {
-  const auto layoutHash{params_.layoutHashCode()};
   const auto drawHash{params_.drawHashCode()};
 
   if (type == UIMarkDirtyType::DRAW) {
@@ -21,29 +18,10 @@ void Separator::markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCalle
   }
 
   UICacheManager::instance().removeCachedSurface(drawHash);
-  UICacheManager::instance().removeLayoutCached(layoutHash);
 };
 
-UISize Separator::getIntrinsicSize(UIConstraints constraints) noexcept {
-  UISize size{0, 0};
-  if (params_.axis == Axis::VERTICAL) {
-    size = UISize{params_.thinkness, constraints.minHeight};
-  } else if (params_.axis == Axis::HORIZONTAL) {
-    size = UISize{constraints.minWidth, params_.thinkness};
-  }
-
-  const uint64_t layoutHash{params_.layoutHashCode()};
-  const std::optional<UIRect> cacheIt = UICacheManager::instance().getLayoutCached(layoutHash);
-
-  if (cacheIt.has_value() && size != UISize{.width = bounds_.width, .height = bounds_.height}) {
-    markHasDirty(UIMarkDirtyType::LAYOUT, UIMarkDirtyCaller::NONE);
-  }
-
-  return size;
-}
-
-void Separator::layout(UISize size) {
-  const uint64_t layoutHash{params_.layoutHashCode()};
+void Separator::layout(UIConstraints size) {
+  const uint64_t layoutHash{params_.layoutHashCode(size)};
   const auto cacheIt = UICacheManager::instance().getLayoutCached(layoutHash);
   if (cacheIt) {
     setSize(cacheIt->width, cacheIt->height);
@@ -51,9 +29,9 @@ void Separator::layout(UISize size) {
   }
 
   if (params_.axis == Axis::VERTICAL) {
-    setSize(params_.thinkness, size.height);
+    setSize(params_.thinkness, size.maxHeight);
   } else if (params_.axis == Axis::HORIZONTAL) {
-    setSize(size.width, params_.thinkness);
+    setSize(size.maxWidth, params_.thinkness);
   }
 
   UICacheManager::instance().setLayoutCached(layoutHash, bounds_);

@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "interactive_components/stateful_component.hpp"
+#include "size.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
 #include "ui_edge_insets.hpp"
@@ -25,24 +26,59 @@ class NavigationView : public StatefulComponent {
   NavigationView(const NavigationViewParam& params) : params_(params) {}
 
   std::shared_ptr<UIComponent> body() override {
-    return UI::VFlexBox({
+    const auto& headerLine = UI::UIView({
+        .insets = UIEdgeInsets{.top = 20} + UIEdgeInsets::horizontal(10),
+        .child = UI::UISeparator({.axis = Axis::HORIZONTAL}),
+    });
+
+    // const auto& page = UI::FixedBoxView({
+    //     // .size = UISizing::GrowWidth(),
+    //     .child = buildView(),
+    //     // .child = UI::UIView({
+    //     //     .insets = params_.contentPadding,
+    //     //     .backgroundColor = Color::Red(),
+    //     //     .child = UI::FixedBoxView({.size = UISizing::Fixed(20, 20)}),
+    //     // }),
+    //     .alignment = UIAlignment::TopLeft,
+    // });
+
+    // const auto& page = UI::UIView({
+    //     .insets = params_.contentPadding,
+    //     .backgroundColor = Color::Red(),
+    //     .child = UI::FixedBoxView({
+    //         .size = UISizing::Grow(),
+    //     }),
+    // });
+    //
+
+    // return UI::FixedBoxView({
+    //     .size = UISizing::Grow(),
+    //     .child = buildView(),
+    //     .alignment = UIAlignment::TopLeft,
+    // });
+
+    const auto& fullBody = UI::Flex::row({
+        .sizing = MainAxisSize::FILL,
         .children =
             {
-                UI::UIView({
-                    .insets = UIEdgeInsets{.top = 20} + UIEdgeInsets::horizontal(10),
-                    .child = UI::UISeparator({.axis = Axis::HORIZONTAL}),
+                UI::FixedBoxView({
+                    .size = UISizing::GrowHeight(220),
+                    .child = UI::UIView({
+                        .insets = params_.sidebarPadding,
+                        .child = buildSidebar(),
+                    }),
+                    .alignment = UIAlignment::TopLeft,
                 }),
-
-                UI::HFlexBox({
-                    .children =
-                        {
-                            UI::UIView({.insets = params_.sidebarPadding, .child = buildSidebar()}),
-                            UI::UISeparator({}),
-                            buildView(),
-                        },
+                UI::UISeparator({}),
+                UI::FixedBoxView({
+                    .size = UISizing::Grow(),
+                    .child = buildView(),
+                    .alignment = UIAlignment::TopLeft,
                 }),
             },
     });
+
+    return UI::Flex::column({.children = {headerLine, fullBody}});
   }
 
  private:
@@ -63,7 +99,7 @@ class NavigationView : public StatefulComponent {
       };
 
       const auto child = UI::UIView({
-          .insets = navItems[i].sidebarItemPadding + UIEdgeInsets{.top = 2.5},
+          .insets = navItems[i].sidebarItemPadding,
           .backgroundColor = selectedIndex_ == i ? Color::LightGray() : Color::Clear(),
           .borderRadius = 6,
           .onTap = onTap,
@@ -72,9 +108,9 @@ class NavigationView : public StatefulComponent {
 
       sidebarItems.push_back(child);
     }
-    return UI::VFlexBox({
-        .spacing = params_.sidebarSpacing,
+    return UI::Flex::column({
         .crossAxisAlignment = CrossAxisAlignment::START,
+        .childGap = params_.sidebarSpacing,
         .children = sidebarItems,
     });
   }

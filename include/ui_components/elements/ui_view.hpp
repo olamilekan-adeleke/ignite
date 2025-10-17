@@ -4,8 +4,6 @@
 
 #include "basic/ui_component.hpp"
 #include "color.hpp"
-#include "size.hpp"
-#include "ui_alignment.hpp"
 #include "ui_edge_insets.hpp"
 
 struct ViewParams {
@@ -16,7 +14,6 @@ struct ViewParams {
   bool antiAlias = true;
   bool tappable = true;
   TapListener onTap = nullptr;
-  MainAxisSize mainAxisSize = MainAxisSize::FIT;
   std::shared_ptr<UIComponent> child = nullptr;
 };
 
@@ -30,26 +27,8 @@ class View : public UIComponent {
   View(const View &) = delete;
   View &operator=(const View &) = delete;
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
-
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
-
-  bool wantsToFillMainAxis() const override {
-    if (params_.child && params_.mainAxisSize == MainAxisSize::FIT) {
-      return params_.child->wantsToFillMainAxis();
-    } else {
-      return UIComponent::wantsToFillMainAxis();
-    }
-  }
-
-  bool wantsToFillCrossAxis() const override {
-    if (params_.child) {
-      return params_.child->wantsToFillCrossAxis();
-    } else {
-      return UIComponent::wantsToFillCrossAxis();
-    }
-  }
 
  protected:
   bool processChildTaps(const UITapEvent &event) override {
@@ -57,10 +36,10 @@ class View : public UIComponent {
       UITapEvent localEvent = event;
       localEvent.x -= bounds_.x;
       localEvent.y -= bounds_.y;
-
       return params_.child->processTap(localEvent);
     }
 
+    if (params_.onTap) return UIComponent::onTap(event, bounds_);
     return false;
   }
 

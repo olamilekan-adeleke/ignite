@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "interactive_components/stateful_component.hpp"
-#include "layout/flex_box.hpp"
 #include "text_style.hpp"
 #include "ui.hpp"
 #include "ui_alignment.hpp"
@@ -36,16 +35,50 @@ class TodoItemData {
 class TodoListWidget : public StatefulComponent {
  public:
   TodoListWidget() {
-    // data.addTodoItem(
-    //     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    //     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    data.addTodoItem(
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     data.addTodoItem("Buy more coffee and monster");
     data.addTodoItem("Finish C++ project");
     data.addTodoItem("Call dad");
   }
 
+  static std::shared_ptr<UIComponent> bodyy() {
+    auto header = UI::Flex::column({
+        .children =
+            {
+                UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
+                UI::Text("List of today mini side quest to get done", {.color = Color::Gray(), .fontSize = 18}),
+            },
+    });
+
+    const std::shared_ptr<UIComponent> button = UI::UIButton({
+        .child = UI::Text("Add Todo", {.color = Color::White(), .fontSize = 16}),
+        .insets = UIEdgeInsets::horizontal(10) + UIEdgeInsets::vertical(10),
+        .fillColor = Color::Blue(),
+        .onTap = [&](const UITapEvent &e) { fmt::println("Add Todo"); },
+    });
+
+    return UI::UIView({
+        // .insets = UIEdgeInsets::horizontal(20) + UIEdgeInsets::vertical(30),
+        .child = UI::Flex::column({
+            .crossAxisAlignment = CrossAxisAlignment::START,
+            .childGap = 20,
+            .children =
+                {
+                    header,
+                    // UI::UIView({.insets = UIEdgeInsets::all(10), .child = itemList()}),
+
+                    // makeTextField(),
+                    button,
+                },
+
+        }),
+    });
+  }
+
   std::shared_ptr<UIComponent> body() override {
-    auto header = UI::VFlexBox({
+    auto header = UI::Flex::column({
         .children =
             {
                 UI::Text("My Todo List", {.color = Color::Black(), .fontSize = 30, .weight = FontWeight::Bold}),
@@ -55,9 +88,9 @@ class TodoListWidget : public StatefulComponent {
 
     return UI::UIView({
         .insets = UIEdgeInsets::horizontal(20) + UIEdgeInsets::vertical(30),
-        .child = UI::VFlexBox({
-            .spacing = 20,
+        .child = UI::Flex::column({
             .crossAxisAlignment = CrossAxisAlignment::START,
+            .childGap = 20,
             .children =
                 {
                     header,
@@ -76,21 +109,22 @@ class TodoListWidget : public StatefulComponent {
   std::string textFieldValue = "";
 
   const std::shared_ptr<UIComponent> makeTodoItem(int index, const std::string &label, bool done) {
-    return UI::UIFlexBox({
-        .spacing = 12,
-        .axis = Axis::HORIZONTAL,
+    const auto &checkBox = UI::UICheckBox({
+        .checked = done,
+        .size = {24, 24},
+        .onTap =
+            [&, index, done](const UITapEvent &e) {
+              data.markDone(index, !done);
+              markDirty();
+            },
+    });
+
+    return UI::Flex::row({
+        .childGap = 12,
         .crossAxisAlignment = CrossAxisAlignment::CENTER,
         .children =
             {
-                UI::UICheckBox({
-                    .enable = done,
-                    .size = {24, 24},
-                    .onTap =
-                        [&, index, done](const UITapEvent &e) {
-                          data.markDone(index, !done);
-                          markDirty();
-                        },
-                }),
+                checkBox,
                 UI::Text(label,
                          {
                              .color = Color::Black(),
@@ -101,7 +135,7 @@ class TodoListWidget : public StatefulComponent {
     });
   }
 
-  const std::shared_ptr<FlexBox> itemList() {
+  const std::shared_ptr<UIComponent> itemList() {
     auto buildChildren = [this]() {
       std::vector<std::shared_ptr<UIComponent>> children;
       for (int i = 0; i < data.getItems().size(); i++) {
@@ -111,7 +145,7 @@ class TodoListWidget : public StatefulComponent {
       return children;
     };
 
-    return UI::UIFlexBox({.spacing = 12, .axis = Axis::VERTICAL, .children = buildChildren()});
+    return UI::Flex::column({.childGap = 12, .children = buildChildren()});
   }
 
   const std::shared_ptr<UIComponent> button = UI::UIButton({
@@ -134,7 +168,7 @@ class TodoListWidget : public StatefulComponent {
   }
   const std::shared_ptr<UIComponent> makeTextField() {
     return UI::UITextField(UITextFieldParams{
-        .width = 0,
+        // .width = 0,
         .onChanged = [this](std::string value) { onTextFieldChanged(value); },
     });
   }

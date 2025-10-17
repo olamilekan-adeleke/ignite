@@ -13,7 +13,7 @@ class UIRenderObject : public Diagnosable {
   virtual ~UIRenderObject() = default;
 
   // Required overrides for concrete implementations
-  virtual void layout(UISize availableSize) = 0;
+  virtual void layout(UIConstraints availableSize) = 0;
   virtual void draw(SkCanvas* canvas) = 0;
 
   // New intrinsic size method - returns preferred size without constraints
@@ -28,15 +28,31 @@ class UIRenderObject : public Diagnosable {
     bounds_.width = w;
     bounds_.height = h;
   }
+  void setSize(const UISize& size) {
+    bounds_.width = size.width;
+    bounds_.height = size.height;
+  }
+
+  UISizing getSize() const noexcept { return UISizing::Fixed(bounds_.width, bounds_.height); }
 
   UIKey key() const { return key_; }
   void setKey(UIKey key) { key_ = std::move(key); }
 
   virtual bool wantsToFillMainAxis() const { return false; }
   virtual bool wantsToFillCrossAxis() const { return false; }
+  virtual bool wantsToFill() const { return wantsToFillMainAxis() && wantsToFillCrossAxis(); }
+
+  const Offset& getGlobalOffset() const { return globalOffset_; }
+  void setGlobalOffset(const Offset& offset) { globalOffset_ = offset; }
+
+  UIRect getGobalBounds() const {
+    return UIRect{.x = globalOffset_.x, .y = globalOffset_.y, .width = bounds_.width, .height = bounds_.height};
+  }
 
  private:
   void initializeDebugPaint();
+
+  Offset globalOffset_{0.0f, 0.0f};
 
  protected:
   UIRect bounds_{0, 0, 0, 0};

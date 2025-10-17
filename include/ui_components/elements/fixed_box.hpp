@@ -5,10 +5,12 @@
 #include <utility>
 
 #include "basic/ui_component.hpp"
+#include "size.hpp"
+#include "tap_event.hpp"
 #include "ui_alignment.hpp"
 
 struct FixedBoxParam {
-  UISize size = {-1.f, -1.f};
+  UISizing size = UISizing::Fixed(0, 0);
   std::shared_ptr<UIComponent> child = nullptr;
   UIAlignment alignment = UIAlignment::Center;
 };
@@ -17,10 +19,8 @@ class FixedBox : public UIComponent {
  public:
   FixedBox(FixedBoxParam param = {}) : params_(std::move(param)) {};
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
-
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
 
@@ -28,9 +28,21 @@ class FixedBox : public UIComponent {
   void debugFillProperties(std::ostringstream &os, int indent) const override;
 
   bool processChildTaps(const UITapEvent &event) override {
-    if (params_.child) return params_.child->processTap(event);
+    if (params_.child) {
+      UITapEvent localEvent = event;
+      localEvent.x -= bounds_.x;
+      localEvent.y -= bounds_.y;
+
+      return params_.child->processTap(localEvent);
+    }
     return false;
   }
+
+  bool wantsToFillMainAxis() const override { return params_.size.isGrowHeight(); }
+  bool wantsToFillCrossAxis() const override { return params_.size.isGrowWidth(); }
+
+  float computeWidth() const noexcept;
+  float computeHeight() const noexcept;
 
  private:
   FixedBoxParam params_;
@@ -42,4 +54,5 @@ inline void FixedBox::debugFillProperties(std::ostringstream &os, int indent) co
   std::string pad(indent, ' ');
   os << pad << "size: " << params_.size << "\n";
   os << pad << "hasChild: " << (params_.child ? "true" : "false") << "\n";
+  os << pad << "alignment: " << params_.alignment << "\n";
 }

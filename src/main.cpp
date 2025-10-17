@@ -6,12 +6,14 @@
 #include <memory>
 
 #include "../example/counnter_app.cpp"
+#include "../example/layout/fitted_boxes.hpp"
 #include "../example/nav_test.cpp"
 #include "../example/paragraph_test.cpp"
 #include "../example/test_scroll.cpp"
 #include "../example/todo_list.cpp"
 #include "debug/debug_log_server.hpp"
 #include "debug/fps_tracker.hpp"
+#include "logger.hpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
@@ -48,19 +50,24 @@ int main() {
 
     bool needsResize = false;
     bool needsLayout = true;
-    bool needsRedraw = true;  // New flag for redraw
+    bool needsRedraw = true;
 
-    auto counter_example = std::make_shared<CounterComponent>();
+    // auto counter_example = std::make_shared<CounterComponent>();
     auto todoList = std::make_shared<TodoListWidget>();
     auto paragraphTest = std::make_shared<ParagraphTestWidget>();
     auto scrollTest = std::make_shared<TestScrollWidget>();
     auto navText = std::make_shared<NavTestWidget>();
+
     // std::shared_ptr<UIComponent> rootUI = counter_example;
     // std::shared_ptr<UIComponent> rootUI = todoList;
     // std::shared_ptr<UIComponent> rootUI = scrollTest;
     // std::shared_ptr<UIComponent> rootUI = paragraphTest;
     // std::shared_ptr<UIComponent> rootUI = rootApp;
     std::shared_ptr<UIComponent> rootUI = navText;
+    // std::shared_ptr<UIComponent> rootUI = TodoListWidget::bodyy();
+    // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::body();
+    // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::flexibleBody();
+    // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::sizingBody();
 
     // FPS tracking variables
     FpsTracker fpsTracker;
@@ -72,7 +79,7 @@ int main() {
       height = newHeight;
       needsResize = true;
       needsLayout = true;
-      needsRedraw = true;  // Redraw needed after resize
+      needsRedraw = true;
     });
 
     static std::string lastLog;
@@ -85,13 +92,10 @@ int main() {
         needsResize = false;
       }
 
-      // if (needsLayout) {
       uiManager.setTree(rootUI, width, height, needsResize);
       needsLayout = false;
-      needsRedraw = true;  // Redraw needed after layout
-                           // }
+      needsRedraw = true;
 
-      // if (needsRedraw) {
       skiaRenderer.beginFrame();
       auto canvas = skiaRenderer.getCanvas();
 
@@ -99,11 +103,10 @@ int main() {
 
       skiaRenderer.endFrame();
       needsRedraw = false;
-      // }
 
       const std::string logs = rootUI->toString(0);
       if (logs != lastLog) lastLog = logs;
-      // Logger::logToFile(logs);
+      Logger::logToFile(logs);
       // std::this_thread::sleep_for(std::chrono::milliseconds(16));
     });
 

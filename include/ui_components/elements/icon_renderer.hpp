@@ -6,8 +6,7 @@
 
 #include "basic/ui_component.hpp"
 #include "color.hpp"
-#include "icons/icon_types.hpp"
-#include "ui_manager.hpp"
+#include "icons/icon_data.hpp"
 
 struct IconParam {
   IconData icon;
@@ -21,7 +20,7 @@ class IconRenderer : public UIComponent {
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
 
  protected:

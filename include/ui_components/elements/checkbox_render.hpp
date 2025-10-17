@@ -10,7 +10,7 @@
 #include "size.hpp"
 
 struct CheckBoxParams {
-  bool enable = false;
+  bool checked = false;
   UISize size{18, 18};
   float radius = 4.0f;
   Color fillColor = Color::Blue();
@@ -24,7 +24,8 @@ struct CheckBoxParams {
   }
 
   uint64_t drawHashCode() const noexcept {
-    const auto key = fmt::format("{}-{}-{}-{}-{}", enable, fillColor.toString(), checkColor.toString(), inactiveBorderColor.toString(), radius);
+    const auto key = fmt::format(
+        "{}-{}-{}-{}-{}", checked, fillColor.toString(), checkColor.toString(), inactiveBorderColor.toString(), radius);
     return fnv1a(key);
   }
 };
@@ -35,7 +36,7 @@ class CheckBoxRender : public UIComponent {
     if (params_.onTap != nullptr) setTapListener(params_.onTap);
   }
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
@@ -55,13 +56,17 @@ class CheckBoxRender : public UIComponent {
 
 inline bool CheckBoxRender::processChildTaps(const UITapEvent &event) {
   if (params_.onTap == nullptr) return false;
-  return onTap(event, bounds_);
+
+  UITapEvent localEvent = event;
+  localEvent.x -= bounds_.x;
+  localEvent.y -= bounds_.y;
+  return onTap(localEvent, bounds_);
 }
 
 inline void CheckBoxRender::debugFillProperties(std::ostringstream &os, int indent) const {
   UIComponent::debugFillProperties(os, indent);
   std::string pad(indent, ' ');
-  os << pad << "enable: " << (params_.enable ? "true" : "false") << "\n";
+  os << pad << "enable: " << (params_.checked ? "true" : "false") << "\n";
   os << pad << "fillColor: " << params_.fillColor.toString() << "\n";
   os << pad << "checkColor: " << params_.checkColor.toString() << "\n";
   os << pad << "onTap: " << (params_.onTap ? "true" : "false") << "\n";

@@ -1,18 +1,25 @@
 #pragma once
 
 #include <fmt/format.h>
+
 #include "basic/ui_component.hpp"
 #include "color.hpp"
 #include "hash_helper.hpp"
-#include "layout/flex_box.hpp"
+#include "rect.hpp"
 
 struct SeparatorParams {
   Axis axis = Axis::VERTICAL;
   float thinkness = 1.0f;
   Color backgroundColor = Color::Gray();
 
-  uint64_t layoutHashCode() const noexcept {
-    const auto key = fmt::format("{}-{}", axisToString(axis), thinkness);
+  uint64_t layoutHashCode(const UIConstraints& constraints) const noexcept {
+    const auto key = fmt::format("{}-{}-{}-{}-{}-{}",
+                                 axisToString(axis),
+                                 thinkness,
+                                 constraints.minWidth,
+                                 constraints.maxWidth,
+                                 constraints.minHeight,
+                                 constraints.maxHeight);
     return fnv1a(key);
   }
 
@@ -26,10 +33,8 @@ class Separator : public UIComponent {
  public:
   Separator(const SeparatorParams& param = {}) : params_(param) {}
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas* canvas) override;
-
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
   void markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller& caller) noexcept override;
 

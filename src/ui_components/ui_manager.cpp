@@ -8,6 +8,7 @@
 #include "core/logger.hpp"
 #include "keyboard_key_event.hpp"
 #include "offset.hpp"
+#include "rect.hpp"
 #include "tap_event.hpp"
 
 #if defined(SK_BUILD_FOR_MAC)
@@ -85,7 +86,7 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   width_ = w;
   height_ = h;
 
-  currentTreeRoot_->layout({w, h});
+  currentTreeRoot_->layout(UIConstraints{0, w, 0, h});
   currentTreeRoot_->updateGlobalOffset({0.0f, 0.0f});
 
   diffAndRebuild(previousTreeRoot_, currentTreeRoot_, w, h, needsResize);
@@ -97,10 +98,6 @@ void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
                                float w,
                                float h,
                                bool needsResize) {
-  if (!oldNode) {
-    // newNode->layout({w, h});
-  }
-
   auto oldChildren = oldNode ? oldNode->children() : std::vector<std::shared_ptr<UIComponent>>{};
   auto newChildren = newNode->children();
 

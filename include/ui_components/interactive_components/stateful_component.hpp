@@ -16,14 +16,10 @@ class StatefulComponent : public UIComponent {
 
   std::shared_ptr<UIComponent> getChild();
 
-  void layout(UISize size) override;
+  void layout(UIConstraints size) override;
   void draw(SkCanvas *canvas) override;
 
   const std::vector<std::shared_ptr<UIComponent>> &children() const override;
-
-  virtual bool processChildTaps(const UITapEvent &event) override;
-
-  UISize getIntrinsicSize(UIConstraints constraints) noexcept override;
 
   std::string toString(int indent = 0) const override;
 
@@ -42,16 +38,4 @@ inline const std::vector<std::shared_ptr<UIComponent>> &StatefulComponent::child
     return childrenCache_;
   }
   return UIComponent::children();
-}
-
-inline bool StatefulComponent::processChildTaps(const UITapEvent &event) {
-  const auto child = getChild();
-  if (child) {
-    UITapEvent localEvent = event;
-    localEvent.x -= bounds_.x;
-    localEvent.y -= bounds_.y;
-
-    return child->processTap(localEvent);
-  }
-  return false;
 }

@@ -34,5 +34,6 @@ void UIRenderObject::debugFillProperties(std::ostringstream& os, int indent) con
   std::string pad(indent, ' ');
   os << pad << "key: " << key_.toString() << "\n";
   os << pad << "offset: { x: " << bounds_.x << ", y: " << bounds_.y << " }\n";
+  os << pad << "globalOffset { x: " << globalOffset_.x << ", y: " << globalOffset_.y << " }\n";
   os << pad << "size: { w: " << bounds_.width << ", h: " << bounds_.height << " }\n";
 }

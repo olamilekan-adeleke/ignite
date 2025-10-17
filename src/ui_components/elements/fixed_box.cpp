@@ -2,6 +2,9 @@
 
 #include <fmt/base.h>
 
+#include <algorithm>
+#include <cmath>
+
 #include "rect.hpp"
 #include "ui_alignment.hpp"
 
@@ -18,43 +21,34 @@ const std::vector<std::shared_ptr<UIComponent>>& FixedBox::children() const {
   return UIComponent::children();
 }
 
-UISize FixedBox::getIntrinsicSize(UIConstraints constraints) noexcept {
-  UISize size{};
-
-  UIConstraints preferredConstraint = constraints;
-  if (params_.size.width >= 0) {
-    preferredConstraint.minWidth = preferredConstraint.minWidth = params_.size.width;
-  }
-  if (params_.size.height >= 0) {
-    preferredConstraint.minHeight = preferredConstraint.minWidth = params_.size.height;
-  }
-
-  if (params_.child) {
-    size = params_.child->getIntrinsicSize(preferredConstraint);
-  } else {
-    size.width = preferredConstraint.minWidth;
-    size.height = preferredConstraint.minHeight;
-  }
-
-  return size;
+float FixedBox::computeWidth() const noexcept {
+  if (params_.size.isGrowWidth() && params_.size.width <= 0) return INFINITY;
+  return params_.size.width;
 }
 
-void FixedBox::layout(UISize size) {
-  float width = params_.size.width >= 0 ? params_.size.width : size.width;
-  float height = params_.size.height >= 0 ? params_.size.height : size.height;
+float FixedBox::computeHeight() const noexcept {
+  if (params_.size.isGrowHeight() && params_.size.height <= 0) return INFINITY;
+  return params_.size.height;
+}
+
+void FixedBox::layout(UIConstraints size) {
+  float width = std::clamp(computeWidth(), size.minWidth, size.maxWidth);
+  float height = std::clamp(computeHeight(), size.minHeight, size.maxHeight);
 
   const auto& child = params_.child;
   if (child) {
-    child->layout({width, height});
+    child->layout(UIConstraints::maxSize(width, height));
+    const auto& childSize = child->getSize();
 
-    const auto& childBounds = child->getBounds();
-
-    auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childBounds.width, childBounds.height);
+    auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childSize.width, childSize.height);
     child->setPosition(x, y);
-  }
 
-  bounds_.width = width;
-  bounds_.height = height;
+    child->updateGlobalOffset({
+        getGlobalOffset().x + x,
+        getGlobalOffset().y + y,
+    });
+  }
+  setSize(width, height);
 }
 
 void FixedBox::draw(SkCanvas* canvas) {
