@@ -9,7 +9,7 @@
 
 class UIRenderObject : public Diagnosable {
  public:
-  UIRenderObject() : key_(UIKey()) {}
+  UIRenderObject() : key_(std::move(UIKey())) {}
   virtual ~UIRenderObject() = default;
 
   // Required overrides for concrete implementations
