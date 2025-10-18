@@ -24,7 +24,8 @@ class NavTestWidget : public StatefulComponent {
   NavTestWidget() {
     items_.push_back(NavigationItem{
         .sidebarItem = makeSideBar(IconTypes::check(), "Todo List"),
-        .view = std::make_shared<TodoListWidget>(),
+        // .view = std::make_shared<TodoListWidget>(),
+        .view = UI::UIView({.child = TodoListWidget().body()}),
     });
 
     items_.push_back(NavigationItem{

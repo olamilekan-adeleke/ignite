@@ -32,12 +32,14 @@ class TodoItemData {
   void markDone(int index, bool value) { items[index].updateDone(value); }
 };
 
+inline TodoItemData data = TodoItemData();
+
 class TodoListWidget : public StatefulComponent {
  public:
   TodoListWidget() {
-    data.addTodoItem(
-        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    // data.addTodoItem(
+    //     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    //     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     data.addTodoItem("Buy more coffee and monster");
     data.addTodoItem("Finish C++ project");
     data.addTodoItem("Call dad");
@@ -104,7 +106,6 @@ class TodoListWidget : public StatefulComponent {
   }
 
  private:
-  TodoItemData data = TodoItemData();
   std::string textFieldValue = "";
 
   const std::shared_ptr<UIComponent> makeTodoItem(int index, const std::string &label, bool done) {
