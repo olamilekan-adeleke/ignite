@@ -1,8 +1,9 @@
 #pragma once
 
 #include <sstream>
-#include "size.hpp"
+
 #include "basic/ui_component.hpp"
+#include "foundation/foundation.hpp"
 
 struct OpacityParams {
   float opacity = 1.0f;

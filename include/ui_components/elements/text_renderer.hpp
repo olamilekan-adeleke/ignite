@@ -3,9 +3,8 @@
 #include <string>
 
 #include "basic/ui_component.hpp"
-#include "core/text_style.hpp"
 #include "elements/paragraph_builder.hpp"
-#include "hash_helper.hpp"
+#include "foundation/foundation.hpp"
 
 class TextRenderer : public UIComponent {
  public:

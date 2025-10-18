@@ -3,9 +3,7 @@
 #include <include/core/SkCanvas.h>
 
 #include "basic/diagnosable.hpp"
-#include "key.hpp"
-#include "rect.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 
 class UIRenderObject : public Diagnosable {
  public:

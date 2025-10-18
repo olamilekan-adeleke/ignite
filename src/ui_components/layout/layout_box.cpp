@@ -7,10 +7,7 @@
 #include <cassert>
 #include <cstdint>
 
-#include "axis.hpp"
-#include "rect.hpp"
-#include "size.hpp"
-#include "ui_alignment.hpp"
+#include "foundation/foundation.hpp"
 
 const std::vector<std::shared_ptr<UIComponent>> &LayoutBox::children() const { return params_.children; }
 

@@ -10,8 +10,7 @@
 #include "basic/ui_render_object.hpp"
 #include "basic/ui_tap_handler.hpp"
 #include "basic/ui_text_input_handler.hpp"
-#include "offset.hpp"
-#include "tap_event.hpp"
+#include "foundation/foundation.hpp"
 
 enum class UIMarkDirtyType : uint8_t { LAYOUT, DRAW };
 

@@ -5,11 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "core/logger.hpp"
-#include "keyboard_key_event.hpp"
-#include "offset.hpp"
-#include "rect.hpp"
-#include "tap_event.hpp"
+#include "foundation/foundation.hpp"
 
 #if defined(SK_BUILD_FOR_MAC)
 #include <include/ports/SkFontMgr_mac_ct.h>
@@ -97,8 +93,8 @@ void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
                                float h,
                                bool needsResize) {
   if (!oldNode || !newNode) return;
-  auto& oldChildren = oldNode->children();
-  const auto& newChildren = newNode->children();
+  auto &oldChildren = oldNode->children();
+  const auto &newChildren = newNode->children();
   // oldChildren.resize(newChildren.size());
 
   for (size_t i = 0; i < newChildren.size(); ++i) {

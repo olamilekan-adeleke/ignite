@@ -1,3 +1,4 @@
+#pragma once
 #include <fmt/base.h>
 
 #include <memory>
@@ -10,14 +11,11 @@
 #include "../example/test_scroll.cpp"
 #include "../example/todo_list.cpp"
 #include "basic/ui_component.hpp"
-#include "color.hpp"
 #include "elements/icon_renderer.hpp"
-#include "icons/icon_types.hpp"
+#include "foundation/foundation.hpp"
 #include "interactive_components/stateful_component.hpp"
 #include "navigation/navigataion_view.hpp"
 #include "ui.hpp"
-#include "ui_alignment.hpp"
-#include "ui_edge_insets.hpp"
 
 class NavTestWidget : public StatefulComponent {
  public:

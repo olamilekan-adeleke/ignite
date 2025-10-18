@@ -4,11 +4,9 @@
 #include <memory>
 #include <vector>
 
+#include "foundation/foundation.hpp"
 #include "interactive_components/stateful_component.hpp"
-#include "text_style.hpp"
 #include "ui.hpp"
-#include "ui_alignment.hpp"
-#include "ui_edge_insets.hpp"
 
 struct Todo {
   std::string text;

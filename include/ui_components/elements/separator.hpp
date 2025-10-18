@@ -3,9 +3,7 @@
 #include <fmt/format.h>
 
 #include "basic/ui_component.hpp"
-#include "color.hpp"
-#include "hash_helper.hpp"
-#include "rect.hpp"
+#include "foundation/foundation.hpp"
 
 struct SeparatorParams {
   Axis axis = Axis::VERTICAL;

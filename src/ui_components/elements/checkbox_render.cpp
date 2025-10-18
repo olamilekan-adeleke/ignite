@@ -9,7 +9,7 @@
 #include <cstdint>
 
 #include "basic/ui_component.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 #include "ui_manager.hpp"
 
 UISize CheckBoxRender::getIntrinsicSize(UIConstraints constraints) noexcept { return params_.size; }

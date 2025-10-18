@@ -5,9 +5,7 @@
 #include <sstream>
 
 #include "basic/ui_component.hpp"
-#include "color.hpp"
-#include "hash_helper.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 
 struct CheckBoxParams {
   bool checked = false;

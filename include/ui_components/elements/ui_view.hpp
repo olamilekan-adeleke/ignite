@@ -3,8 +3,7 @@
 #include <sstream>
 
 #include "basic/ui_component.hpp"
-#include "color.hpp"
-#include "ui_edge_insets.hpp"
+#include "foundation/foundation.hpp"
 
 struct ViewParams {
   UIEdgeInsets insets = {0.0f, 0.0f, 0.0f, 0.0f};

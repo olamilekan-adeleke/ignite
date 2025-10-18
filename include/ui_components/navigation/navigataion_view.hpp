@@ -1,11 +1,9 @@
 #include <memory>
 #include <vector>
 
+#include "foundation/foundation.hpp"
 #include "interactive_components/stateful_component.hpp"
-#include "size.hpp"
 #include "ui.hpp"
-#include "ui_alignment.hpp"
-#include "ui_edge_insets.hpp"
 
 struct NavigationItem {
   std::shared_ptr<UIComponent> sidebarItem;

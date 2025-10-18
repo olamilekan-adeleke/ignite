@@ -6,8 +6,7 @@
 
 #include <algorithm>
 
-#include "rect.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 
 void View::layout(UIConstraints size) {
   const bool wantsToFillMainAxis = this->wantsToFillMainAxis();

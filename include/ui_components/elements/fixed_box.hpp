@@ -5,9 +5,9 @@
 #include <utility>
 
 #include "basic/ui_component.hpp"
-#include "size.hpp"
-#include "tap_event.hpp"
-#include "ui_alignment.hpp"
+#include "foundation/foundation.hpp"
+// #include "tap_event.hpp"
+// #include "ui_alignment.hpp"
 
 struct FixedBoxParam {
   UISizing size = UISizing::Fixed(0, 0);

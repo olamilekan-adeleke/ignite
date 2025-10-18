@@ -3,8 +3,7 @@
 #include <fmt/base.h>
 #include <modules/skparagraph/include/ParagraphBuilder.h>
 
-#include "rect.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 #include "ui_manager.hpp"
 
 ParagraphBuilder::ParagraphBuilder(const std::string& text, const TextStyle& params) : text_(text), params_(params) {

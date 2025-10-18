@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "color.hpp"
+#include "color/color.hpp"
 
 /**
  * @brief The FontWeight enum represents the font weight of a Text element.

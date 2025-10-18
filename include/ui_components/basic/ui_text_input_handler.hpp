@@ -1,7 +1,8 @@
 #pragma once
 
 #include <functional>
-#include "keyboard_key_event.hpp"
+
+#include "foundation/inputs/keyboard_key_event.hpp"
 
 using KeyCallback = std::function<void(int, int, int, int)>;
 using CharCallback = std::function<void(unsigned int)>;

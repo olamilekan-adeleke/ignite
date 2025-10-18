@@ -8,13 +8,8 @@
 #include <vector>
 
 #include "basic/ui_component.hpp"
-#include "color.hpp"
 #include "elements/paragraph_builder.hpp"
-#include "keyboard_key_event.hpp"
-#include "size.hpp"
-#include "text_style.hpp"
-#include "ui_edge_insets.hpp"
-#include "utils_helper.hpp"
+#include "foundation/foundation.hpp"
 
 struct UITextFieldParams {
   UIEdgeInsets padding{8.0f, 12.0f, 8.0f, 12.0f};

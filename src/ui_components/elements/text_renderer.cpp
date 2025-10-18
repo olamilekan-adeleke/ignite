@@ -9,7 +9,7 @@
 #include <string>
 
 #include "elements/paragraph_builder.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 #include "surface_cache_helper.hpp"
 
 TextRenderer::TextRenderer(const std::string &text, const TextStyle &style)

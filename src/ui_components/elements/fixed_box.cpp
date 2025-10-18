@@ -5,8 +5,7 @@
 #include <algorithm>
 #include <cmath>
 
-#include "rect.hpp"
-#include "ui_alignment.hpp"
+#include "foundation/foundation.hpp"
 
 const std::vector<std::shared_ptr<UIComponent>>& FixedBox::children() const {
   if (params_.child) {

@@ -4,8 +4,7 @@
 #include <vector>
 
 #include "basic/ui_component.hpp"
-#include "size.hpp"
-#include "ui_alignment.hpp"
+#include "foundation/foundation.hpp"
 
 struct LayoutBoxParam {
   Axis axis = Axis::VERTICAL;

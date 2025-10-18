@@ -4,7 +4,7 @@
 
 #include <functional>
 
-#include "offset.hpp"
+#include "foundation/geometry/offset.hpp"
 
 using CursorPosCallback = std::function<void(double, double)>;
 

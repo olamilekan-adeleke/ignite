@@ -6,7 +6,7 @@
 #include <cstdint>
 
 #include "basic/ui_component.hpp"
-#include "rect.hpp"
+#include "foundation/foundation.hpp"
 #include "ui_manager.hpp"
 
 void Separator::markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller& caller) noexcept {

@@ -5,7 +5,6 @@
 #include <iostream>
 #include <memory>
 
-#include "../example/counnter_app.cpp"
 #include "../example/counter_app.cpp"
 #include "../example/layout/fitted_boxes.hpp"
 #include "../example/nav_test.cpp"
@@ -14,7 +13,7 @@
 #include "../example/todo_list.cpp"
 #include "debug/debug_log_server.hpp"
 #include "debug/fps_tracker.hpp"
-#include "logger.hpp"
+#include "foundation/foundation.hpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
