@@ -18,7 +18,7 @@
 #include "tap_event.hpp"
 
 namespace Debug {
-inline bool ui_debug_mode = false;
+inline bool ui_debug_mode = true;
 }
 
 // just to maanger some UI Shit

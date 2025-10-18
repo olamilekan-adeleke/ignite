@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fmt/base.h>
+
 #include "basic/ui_component.hpp"
 
 enum class ScrollDirection { Vertical, Horizontal };
@@ -22,6 +24,7 @@ class ScrollView : public UIComponent {
   void update();
 
   void onHoverMove(Offset& mousePosition) noexcept override;
+  void onHoverExit() noexcept override;
   void setCursorPosCallback(Offset offset) noexcept override;
 
   bool processChildTaps(const UITapEvent& event) override {
@@ -50,19 +53,28 @@ inline void ScrollView::update() {
   scrollOffset_.y += (targetScrollOffset_.y - scrollOffset_.y) * smoothness_;
 }
 
+inline void ScrollView::onHoverExit() noexcept {
+  fmt::println("ScrollView::onHoverExit");
+  setIsHovered(false);
+}
+
 inline void ScrollView::onHoverMove(Offset& mousePosition) noexcept {
   if (!this->shouldHandleHover()) return;
 
   UIRect boundsUIRect{getGobalBounds()};
+  bool isInside = hitTest(mousePosition, boundsUIRect);
+
   if (hitTest(mousePosition, boundsUIRect)) {
-    onHoverEnter();
+    if (!isHovered()) onHoverEnter();
+    fmt::println("onHoverEnter");
   } else {
-    onHoverExit();
+    if (isHovered()) onHoverExit();
   }
 }
 
 inline void ScrollView::setCursorPosCallback(Offset offset) noexcept {
-  if (!this->shouldHandleHover()) return;
+  if (!isHovered() || !this->shouldHandleHover()) return;
+  fmt::println("setCursorPosCallback: {}", isHovered());
 
   if (params_.direction == ScrollDirection::Vertical) {
     float delta = offset.y * scrollSpeed_;

@@ -99,7 +99,6 @@ class TodoListWidget : public StatefulComponent {
                     makeTextField(),
                     button,
                 },
-
         }),
     });
   }

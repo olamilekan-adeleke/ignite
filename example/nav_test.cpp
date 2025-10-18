@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "../example/counter_app.cpp"
 #include "../example/layout/fitted_boxes.hpp"
 #include "../example/paragraph_test.cpp"
 #include "../example/test_scroll.cpp"
@@ -34,6 +35,11 @@ class NavTestWidget : public StatefulComponent {
     items_.push_back(NavigationItem{
         .sidebarItem = makeSideBar(IconTypes::notifications(), "Scroll View Test"),
         .view = std::make_shared<TestScrollWidget>(),
+    });
+
+    items_.push_back(NavigationItem{
+        .sidebarItem = makeSideBar(IconTypes::person(), "Counter"),
+        .view = std::make_shared<CounterWidget>(),
     });
 
     items_.push_back(NavigationItem{

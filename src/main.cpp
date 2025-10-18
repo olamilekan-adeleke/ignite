@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "../example/counnter_app.cpp"
+#include "../example/counter_app.cpp"
 #include "../example/layout/fitted_boxes.hpp"
 #include "../example/nav_test.cpp"
 #include "../example/paragraph_test.cpp"
@@ -52,7 +53,7 @@ int main() {
     bool needsLayout = true;
     bool needsRedraw = true;
 
-    // auto counter_example = std::make_shared<CounterComponent>();
+    auto counter_example = std::make_shared<CounterWidget>();
     auto todoList = std::make_shared<TodoListWidget>();
     auto paragraphTest = std::make_shared<ParagraphTestWidget>();
     auto scrollTest = std::make_shared<TestScrollWidget>();
@@ -97,10 +98,7 @@ int main() {
       needsRedraw = true;
 
       skiaRenderer.beginFrame();
-      auto canvas = skiaRenderer.getCanvas();
-
-      rootUI->draw(canvas);
-
+      rootUI->draw(skiaRenderer.getCanvas());
       skiaRenderer.endFrame();
       needsRedraw = false;
 
