@@ -1,0 +1,7 @@
+CompileFlags:
+  Add: [-std=c++17]
+Diagnostics:
+  ClangTidy:
+    Add: modernize*,performance*,bugprone*,clang-analyzer*
+    Remove: modernize-use-trailing-return-type
+

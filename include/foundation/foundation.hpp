@@ -1,19 +1,5 @@
 #pragma once
-
-// ============================================================================
-// Foundation Umbrella Header
-// Exposes all core foundational types used throughout the engine.
-// ============================================================================
-//
-// This header deliberately avoids including anything that depends on
-// higher layers (e.g., ui_components, render, etc.).
-//
-// Each included header should be self-contained and have its own
-// include guards or #pragma once directive.
-//
-// Usage:
-//   #include "foundation/foundation.hpp"
-// ============================================================================
+// NOLINTBEGIN(bugprone-unused-include)
 
 // Geometry -------------------------------------------------------------------
 #include "foundation/geometry/axis.hpp"
@@ -42,3 +28,5 @@
 
 // Other stand-alone foundation types ----------------------------------------
 #include "text_style.hpp"
+
+// NOLINTEND(bugprone-unused-include)
