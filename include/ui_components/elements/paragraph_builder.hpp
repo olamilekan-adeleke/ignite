@@ -18,6 +18,9 @@ class ParagraphBuilder {
 
   UISize getIntrinsicSize(UIConstraints constraints) noexcept;
 
+  float getHeight() const;
+  float getWidth() const;
+
   void debugFillProperties(std::ostringstream& os, int indent) const;
 
   std::vector<skia::textlayout::TextBox> getRectsForRange(unsigned start,
@@ -27,11 +30,15 @@ class ParagraphBuilder {
 
   void setText(const std::string& newText);
 
+  void setStyle(const TextStyle& newStyle);
+
  private:
   std::string text_;
   TextStyle params_;
   sk_sp<skia::textlayout::FontCollection> fontCollection_;
   std::unique_ptr<skia::textlayout::Paragraph> paragraph_;
+
+  float lastLayoutWidth_ = -1.0f;
 
   void buildParagraph();
 };
