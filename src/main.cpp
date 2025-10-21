@@ -11,9 +11,12 @@
 #include "../example/paragraph_test.cpp"
 #include "../example/test_scroll.cpp"
 #include "../example/todo_list.cpp"
+#include "../example/v2/app_host.cpp"
 #include "debug/debug_log_server.hpp"
 #include "debug/fps_tracker.hpp"
+#include "debug_assert.hpp"
 #include "foundation/foundation.hpp"
+#include "foundation/geometry/rect.hpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
@@ -69,6 +72,11 @@ int main() {
     // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::flexibleBody();
     // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::sizingBody();
 
+    auto app = std::make_shared<Counter>();
+    // auto app = std::make_shared<AlignmentBox>(std::make_shared<Text>("Count: "));
+    UIElementPtr rootElement = std::make_shared<AppHost>(app)->createElement();
+    rootElement->mount(nullptr);
+
     // FPS tracking variables
     FpsTracker fpsTracker;
 
@@ -92,12 +100,28 @@ int main() {
         needsResize = false;
       }
 
-      uiManager.setTree(rootUI, width, height, needsResize);
+      // uiManager.setTree(rootUI, width, height, needsResize);
       needsLayout = false;
       needsRedraw = true;
 
       skiaRenderer.beginFrame();
-      rootUI->draw(skiaRenderer.getCanvas());
+
+      KeyPool::instance().reset();
+      UILogger::instance().updateLogs();
+      if (rootElement && rootElement->getRenderObject()) {
+        const UIConstraints& constraints = UIConstraints::maxSize(width, height);
+        auto ro = rootElement->getRenderObject();
+
+        // fmt::println("\n=== Render Tree ===");
+        // printRenderTree(rootElement->getRenderObject());
+        // fmt::println("\n");
+
+        ro->performLayout(constraints);
+        ro->paint(skiaRenderer.getCanvas());
+      }
+
+      // rootUI->draw(skiaRenderer.getCanvas());
+
       skiaRenderer.endFrame();
       needsRedraw = false;
 

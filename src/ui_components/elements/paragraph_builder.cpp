@@ -17,6 +17,16 @@ ParagraphBuilder::ParagraphBuilder(const std::string& text, const TextStyle& par
 void ParagraphBuilder::setText(const std::string& newText) {
   if (text_ != newText) {
     text_ = newText;
+    lastLayoutWidth_ = -1.0f;
+    paragraph_.reset();
+    buildParagraph();
+  }
+}
+
+void ParagraphBuilder::setStyle(const TextStyle& newStyle) {
+  if (params_ != newStyle) {
+    params_ = newStyle;
+    lastLayoutWidth_ = -1.0f;
     paragraph_.reset();
     buildParagraph();
   }
@@ -34,12 +44,33 @@ UISize ParagraphBuilder::getIntrinsicSize(UIConstraints constraints) noexcept {
   return UISize{.width = layoutWidth, .height = layoutHeight};
 }
 
+float ParagraphBuilder::getHeight() const {
+  if (!paragraph_) return 0.0f;
+  return paragraph_->getHeight();
+}
+
+float ParagraphBuilder::getWidth() const {
+  if (!paragraph_) return 0.0f;
+  if (lastLayoutWidth_ == -1.0f) {
+    return paragraph_->getMaxIntrinsicWidth() + 1.0f;
+  }
+  return lastLayoutWidth_;
+}
+
 void ParagraphBuilder::layout(float width) {
   if (!paragraph_) buildParagraph();
-  paragraph_->layout(width);
+
+  // Skip redundant layout calls - only layout if width actually changed
+  if (lastLayoutWidth_ != width) {
+    paragraph_->layout(width);
+    // lastLayoutWidth_ = width;
+    lastLayoutWidth_ = paragraph_->getMaxIntrinsicWidth() + 1.0f;
+  }
 }
 
 void ParagraphBuilder::draw(SkCanvas* canvas, SkPoint point) {
+  if (!paragraph_) return;
+
   canvas->save();
   canvas->translate(point.x(), point.y());
   paragraph_->paint(canvas, 0, 0);
