@@ -18,7 +18,7 @@ enum class UIMarkDirtyCaller : uint8_t { PARENT_TO_ChILD, NONE };
 
 class UIComponent : public UIRenderObject, public UITapHandler, public UITextInputHandler, public UIHoverHandler {
  public:
-  UIComponent() {}
+  UIComponent() = default;
   virtual ~UIComponent() = default;
 
   virtual const std::vector<std::shared_ptr<UIComponent>> &children() const {

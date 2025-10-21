@@ -1,12 +1,12 @@
-Checks: >
-  clang-analyzer-*,
-  modernize-use-equals-default,
-  modernize-use-nodiscard,
-  -modernize-use-trailing-return-type
-WarningsAsErrors: ''
-HeaderFilterRegex: '.*'
-FormatStyle: none
-CheckOptions:
-  - key: modernize-use-trailing-return-type.IgnoreMacros
-    value: 'true'
-
+# Checks: >
+#   clang-analyzer-*,
+#   modernize-use-equals-default,
+#   modernize-use-nodiscard,
+#   -modernize-use-trailing-return-type
+# WarningsAsErrors: ''
+# HeaderFilterRegex: '.*'
+# FormatStyle: none
+# CheckOptions:
+#   - key: modernize-use-trailing-return-type.IgnoreMacros
+#     value: 'true'
+#

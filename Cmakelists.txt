@@ -58,6 +58,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
 find_package(Boost REQUIRED COMPONENTS asio)
 target_link_libraries(${PROJECT_NAME} PRIVATE Boost::asio)
 
+target_compile_options(Ignite PRIVATE -Wno-ignored-attributes)
 
 # Optional: Install and testing
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

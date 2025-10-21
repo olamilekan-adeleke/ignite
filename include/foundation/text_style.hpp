@@ -41,6 +41,7 @@ struct FontWeight {
     }
   }
 };
+inline bool operator==(const FontWeight& a, const FontWeight& b) { return a.value == b.value; }
 
 inline std::ostream& operator<<(std::ostream& os, const FontWeight& weight) {
   switch (weight.value) {
@@ -89,6 +90,8 @@ struct TextAlignment {
   }
 };
 
+inline bool operator==(const TextAlignment& a, const TextAlignment& b) { return a.value == b.value; }
+
 inline std::ostream& operator<<(std::ostream& os, const TextAlignment& alignment) {
   switch (alignment.value) {
     case TextAlignment::left:
@@ -123,6 +126,8 @@ struct TextDecoration {
     }
   }
 };
+
+inline bool operator==(const TextDecoration& a, const TextDecoration& b) { return a.value == b.value; }
 
 inline std::ostream& operator<<(std::ostream& os, const TextDecoration& decoration) {
   switch (decoration.value) {
@@ -161,4 +166,17 @@ struct TextStyle {
     os << "}";
     return os.str();
   }
+
+  // bool operator==(const TextStyle& other) const {
+  //   return color == other.color && fontSize == other.fontSize && weight == other.weight &&
+  //          decoration == other.decoration && maxLines == other.maxLines && textAlignment == other.textAlignment;
+  // }
 };
+
+// == operator
+inline bool operator==(const TextStyle& a, const TextStyle& b) {
+  return a.color == b.color && a.fontSize == b.fontSize && a.weight == b.weight && a.decoration == b.decoration &&
+         a.italic == b.italic && a.textAlignment == b.textAlignment && a.maxLines == b.maxLines;
+}
+
+inline bool operator!=(const TextStyle& a, const TextStyle& b) { return !(a == b); }
