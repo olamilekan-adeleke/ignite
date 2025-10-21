@@ -4,7 +4,7 @@
 #include <include/core/SkRect.h>
 
 #include "debug_assert.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 
 Opacity::Opacity(const OpacityParams& param) : param_(param) {
   if (param_.opacity < 0.0f) param_.opacity = 0.0f;

@@ -1,9 +1,9 @@
-#include "color.hpp"
-
 #include <include/core/SkColor.h>
 
 #include <random>
 #include <sstream>
+
+#include "foundation/foundation.hpp"
 
 Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : value(SkColorSetARGB(a, r, g, b)) {}
 

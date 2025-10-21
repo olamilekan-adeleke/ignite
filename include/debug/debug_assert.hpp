@@ -12,10 +12,45 @@
 #include <string>
 #include <vector>
 
+#include "component/component.hpp"
+#include "render/render_object.hpp"
+
 #ifdef __APPLE__
 #include <libproc.h>
 #include <mach-o/dyld.h>
 #endif
+
+inline void printRenderTree(const RenderObjectPtr& ro, int indent = 0) {
+  if (!ro) return;
+
+  std::string pad(indent * 2, ' ');
+  fmt::println("{}├─ {}", pad, typeid(*ro).name());
+
+  // Assuming RenderObject has a way to get children
+  // Adjust based on your actual RenderObject API
+  for (int i = 0; i < ro->getChildren().size(); ++i) {
+    if (auto child = ro->getChild(i)) {
+      printRenderTree(child, indent + 1);
+    }
+  }
+}
+
+// Print the element tree
+inline void printElementTree(const UIElementPtr& elem, int indent = 0) {
+  if (!elem) return;
+
+  std::string pad(indent * 2, ' ');
+  auto comp = elem->getComponont();
+  auto ro = elem->getRenderObject();
+
+  fmt::println("{}├─ Element: {} | Component: {} | RenderObject: {}",
+               pad,
+               typeid(*elem).name(),
+               comp ? typeid(*comp).name() : "null",
+               ro ? typeid(*ro).name() : "null");
+
+  // Print children (you may need to expose children vector or add a getter)
+}
 
 inline void printStackTraceTT() {
   void* callstack[128];

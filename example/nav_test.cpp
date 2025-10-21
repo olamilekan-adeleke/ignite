@@ -1,29 +1,29 @@
+#pragma once
 #include <fmt/base.h>
 
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "../example/counter_app.cpp"
 #include "../example/layout/fitted_boxes.hpp"
 #include "../example/paragraph_test.cpp"
 #include "../example/test_scroll.cpp"
 #include "../example/todo_list.cpp"
 #include "basic/ui_component.hpp"
-#include "color.hpp"
 #include "elements/icon_renderer.hpp"
-#include "icons/icon_types.hpp"
+#include "foundation/foundation.hpp"
 #include "interactive_components/stateful_component.hpp"
 #include "navigation/navigataion_view.hpp"
 #include "ui.hpp"
-#include "ui_alignment.hpp"
-#include "ui_edge_insets.hpp"
 
 class NavTestWidget : public StatefulComponent {
  public:
   NavTestWidget() {
     items_.push_back(NavigationItem{
         .sidebarItem = makeSideBar(IconTypes::check(), "Todo List"),
-        .view = std::make_shared<TodoListWidget>(),
+        // .view = std::make_shared<TodoListWidget>(),
+        .view = UI::UIView({.child = TodoListWidget().body()}),
     });
 
     items_.push_back(NavigationItem{
@@ -34,6 +34,11 @@ class NavTestWidget : public StatefulComponent {
     items_.push_back(NavigationItem{
         .sidebarItem = makeSideBar(IconTypes::notifications(), "Scroll View Test"),
         .view = std::make_shared<TestScrollWidget>(),
+    });
+
+    items_.push_back(NavigationItem{
+        .sidebarItem = makeSideBar(IconTypes::person(), "Counter"),
+        .view = std::make_shared<CounterWidget>(),
     });
 
     items_.push_back(NavigationItem{

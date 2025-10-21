@@ -1,28 +1,12 @@
 # Checks: >
 #   clang-analyzer-*,
-#   cppcoreguidelines-*,
-#   modernize-*,
-#   performance-*,
-#   readability-*,
-#   bugprone-*,
-#   -modernize-use-trailing-return-type,
-#   -cppcoreguidelines-pro-type-vararg,
-#   -cppcoreguidelines-owning-memory,
-#   -cppcoreguidelines-avoid-magic-numbers
-#   -readability-magic-numbers
-#   -cppcoreguidelines-non-private-member-variables-in-classes
-#
-#
+#   modernize-use-equals-default,
+#   modernize-use-nodiscard,
+#   -modernize-use-trailing-return-type
 # WarningsAsErrors: ''
 # HeaderFilterRegex: '.*'
-# FormatStyle: file
+# FormatStyle: none
 # CheckOptions:
-#   - key:             modernize-use-nullptr.NullMacros
-#     value:           'NULL'
-#   - key:             modernize-use-nullptr.NullptrTweak
-#     value:           'use_nullptr'
-#   - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredValues
-#     value:           '0,1,-1,2'
-#   - key:             readability-magic-numbers.IgnoredValues
-#     value:           '0,1,2,2.0,2.0F'
+#   - key: modernize-use-trailing-return-type.IgnoreMacros
+#     value: 'true'
 #

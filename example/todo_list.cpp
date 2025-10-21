@@ -4,11 +4,9 @@
 #include <memory>
 #include <vector>
 
+#include "foundation/foundation.hpp"
 #include "interactive_components/stateful_component.hpp"
-#include "text_style.hpp"
 #include "ui.hpp"
-#include "ui_alignment.hpp"
-#include "ui_edge_insets.hpp"
 
 struct Todo {
   std::string text;
@@ -32,12 +30,14 @@ class TodoItemData {
   void markDone(int index, bool value) { items[index].updateDone(value); }
 };
 
+inline TodoItemData data = TodoItemData();
+
 class TodoListWidget : public StatefulComponent {
  public:
   TodoListWidget() {
-    data.addTodoItem(
-        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    // data.addTodoItem(
+    //     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    //     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     data.addTodoItem("Buy more coffee and monster");
     data.addTodoItem("Finish C++ project");
     data.addTodoItem("Call dad");
@@ -99,13 +99,11 @@ class TodoListWidget : public StatefulComponent {
                     makeTextField(),
                     button,
                 },
-
         }),
     });
   }
 
  private:
-  TodoItemData data = TodoItemData();
   std::string textFieldValue = "";
 
   const std::shared_ptr<UIComponent> makeTodoItem(int index, const std::string &label, bool done) {

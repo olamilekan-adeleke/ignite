@@ -1,9 +1,9 @@
-#include "key.hpp"
+#include "foundation/utils/key.hpp"
 
 #include <random>
 #include <sstream>
 
-UIKey::UIKey() : value_(gererateRandomKey()) {}
+UIKey::UIKey() : value_(std::move(gererateRandomKey())) {}
 
 std::string UIKey::value() const { return value_; }
 

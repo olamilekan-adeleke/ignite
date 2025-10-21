@@ -4,9 +4,8 @@
 #include <memory>
 
 #include "basic/ui_component.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 #include "ui.hpp"
-#include "ui_alignment.hpp"
 
 class LayoutBoxFixedBoxes {
  public:

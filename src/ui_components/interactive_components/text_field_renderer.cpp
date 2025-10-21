@@ -5,8 +5,7 @@
 
 #include <algorithm>
 
-#include "rect.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 #include "ui_manager.hpp"
 
 void TextFieldRenderer::onTextFieldTap() noexcept { UIManager::instance().requestFocus(*this); }

@@ -5,8 +5,7 @@
 #include <sstream>
 
 #include "basic/ui_component.hpp"
-#include "color.hpp"
-#include "icons/icon_data.hpp"
+#include "foundation/foundation.hpp"
 
 struct IconParam {
   IconData icon;

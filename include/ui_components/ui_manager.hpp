@@ -11,14 +11,14 @@
 #include <memory>
 
 #include "basic/ui_component.hpp"
+#include "foundation/geometry/offset.hpp"
+#include "foundation/geometry/rect.hpp"
+#include "foundation/inputs/tap_event.hpp"
 #include "include/core/SkFontMgr.h"
 #include "include/core/SkTypeface.h"
-#include "offset.hpp"
-#include "rect.hpp"
-#include "tap_event.hpp"
 
 namespace Debug {
-inline bool ui_debug_mode = false;
+inline bool ui_debug_mode = true;
 }
 
 // just to maanger some UI Shit

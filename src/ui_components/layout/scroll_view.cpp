@@ -6,8 +6,7 @@
 #include <limits>
 
 #include "basic/ui_component.hpp"
-#include "rect.hpp"
-#include "size.hpp"
+#include "foundation/foundation.hpp"
 
 const std::vector<std::shared_ptr<UIComponent>>& ScrollView::children() const {
   if (params_.child) {

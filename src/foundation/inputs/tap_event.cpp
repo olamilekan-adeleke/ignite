@@ -1,8 +1,6 @@
-
-#include "tap_event.hpp"
-
 #include <GLFW/glfw3.h>
 
+#include "foundation/foundation.hpp"
 #include "ui_manager.hpp"
 
 void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {

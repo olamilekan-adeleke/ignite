@@ -1,15 +1,13 @@
 #pragma once
-
 #include <fmt/base.h>
 
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "foundation/foundation.hpp"
 #include "layout/scroll_view.hpp"
-#include "size.hpp"
 #include "ui.hpp"
-#include "ui_edge_insets.hpp"
 
 class TestScrollWidget : public StatefulComponent {
  public:

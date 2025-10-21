@@ -2,10 +2,10 @@
 
 #include <functional>
 
-#include "offset.hpp"
-#include "rect.hpp"
-#include "size.hpp"
-#include "tap_event.hpp"
+#include "foundation/geometry/offset.hpp"
+#include "foundation/geometry/rect.hpp"
+#include "foundation/geometry/size.hpp"
+#include "foundation/inputs/tap_event.hpp"
 
 using TapListener = std::function<void(const UITapEvent& event)>;
 using VoidCallBack = std::function<void()>;

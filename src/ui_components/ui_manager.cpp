@@ -5,11 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "core/logger.hpp"
-#include "keyboard_key_event.hpp"
-#include "offset.hpp"
-#include "rect.hpp"
-#include "tap_event.hpp"
+#include "foundation/foundation.hpp"
 
 #if defined(SK_BUILD_FOR_MAC)
 #include <include/ports/SkFontMgr_mac_ct.h>
@@ -86,10 +82,8 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   width_ = w;
   height_ = h;
 
+  // diffAndRebuild(previousTreeRoot_, currentTreeRoot_, w, h, needsResize);
   currentTreeRoot_->layout(UIConstraints{0, w, 0, h});
-  currentTreeRoot_->updateGlobalOffset({0.0f, 0.0f});
-
-  diffAndRebuild(previousTreeRoot_, currentTreeRoot_, w, h, needsResize);
   previousTreeRoot_ = currentTreeRoot_;
 }
 
@@ -98,14 +92,14 @@ void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
                                float w,
                                float h,
                                bool needsResize) {
-  auto oldChildren = oldNode ? oldNode->children() : std::vector<std::shared_ptr<UIComponent>>{};
-  auto newChildren = newNode->children();
+  if (!oldNode || !newNode) return;
+  auto &oldChildren = oldNode->children();
+  const auto &newChildren = newNode->children();
+  // oldChildren.resize(newChildren.size());
 
   for (size_t i = 0; i < newChildren.size(); ++i) {
-    const auto &newChild = newChildren[i];
-    const std::shared_ptr<UIComponent> oldChild = (i < oldChildren.size()) ? oldChildren[i] : nullptr;
-
-    diffAndRebuild(oldChild, newChild, 0, 0, needsResize);
+    // oldChildren[i] = newChildren[i];
+    diffAndRebuild(oldChildren[i], newChildren[i], 0, 0, needsResize);
   }
 }
 

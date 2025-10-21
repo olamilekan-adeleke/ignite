@@ -3,10 +3,12 @@
 #include <fmt/base.h>
 #include <include/core/SkImage.h>
 #include <include/core/SkSurface.h>
+
 #include <cstdint>
 #include <string>
+
 #include "basic/ui_component.hpp"
-#include "hash_helper.hpp"
+#include "foundation/foundation.hpp"
 
 struct ImageParams {
   std::string path;
