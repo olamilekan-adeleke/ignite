@@ -10,6 +10,10 @@ class StatelessUIElement : public UIElement {
   void unmount() noexcept override;
   void update(ComponentPtr newComp) noexcept override;
   void performRebuild() noexcept override;
+
+  void debugFillProperties(std::ostringstream& os, int indent) const noexcept {
+    UIElement::debugFillProperties(os, indent);
+  }
 };
 
 class StatefulUIElement : public UIElement {

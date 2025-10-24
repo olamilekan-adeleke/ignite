@@ -82,25 +82,8 @@ void UIManager::setTree(const std::shared_ptr<UIComponent> tree, float w, float 
   width_ = w;
   height_ = h;
 
-  // diffAndRebuild(previousTreeRoot_, currentTreeRoot_, w, h, needsResize);
   currentTreeRoot_->layout(UIConstraints{0, w, 0, h});
   previousTreeRoot_ = currentTreeRoot_;
-}
-
-void UIManager::diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
-                               const std::shared_ptr<UIComponent> &newNode,
-                               float w,
-                               float h,
-                               bool needsResize) {
-  if (!oldNode || !newNode) return;
-  auto &oldChildren = oldNode->children();
-  const auto &newChildren = newNode->children();
-  // oldChildren.resize(newChildren.size());
-
-  for (size_t i = 0; i < newChildren.size(); ++i) {
-    // oldChildren[i] = newChildren[i];
-    diffAndRebuild(oldChildren[i], newChildren[i], 0, 0, needsResize);
-  }
 }
 
 void UIManager::sendKeyEvent(int key, int scancode, int action, int mods) {

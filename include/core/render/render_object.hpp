@@ -38,9 +38,6 @@ class RenderObject : public std::enable_shared_from_this<RenderObject> {
   void setChildren(const std::vector<RenderObjectPtr>& children) noexcept { this->children = children; }
   void clearChildren() noexcept { children.clear(); }
 
-  Offset getGlobalOffset() const noexcept { return globalOffset_; }
-  void setGlobalOffset(const Offset& offset) noexcept { globalOffset_ = offset; }
-
   void addChild(RenderObjectPtr child) noexcept {
     if (!child) return;
 
@@ -59,7 +56,6 @@ class RenderObject : public std::enable_shared_from_this<RenderObject> {
   std::vector<RenderObjectPtr> children;
 
   UIRect bounds_{0, 0, 0, 0};
-  Offset globalOffset_{0.0f, 0.0f};
 
   static SkPaint debug_border_paint_;
   static bool debug_paint_initialized_;

@@ -28,11 +28,6 @@ class UIManager {
   static UIManager &instance();
 
   void setTree(const std::shared_ptr<UIComponent> tree, float w, float h, bool needsResize);
-  void diffAndRebuild(const std::shared_ptr<UIComponent> &oldNode,
-                      const std::shared_ptr<UIComponent> &newNode,
-                      float w,
-                      float h,
-                      bool needsResize);
 
   const SkFont &defaultFont() const;
   const sk_sp<SkTypeface> &typeface() const;

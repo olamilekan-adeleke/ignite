@@ -39,6 +39,8 @@ class Component : public std::enable_shared_from_this<Component> {
   virtual bool wantsToFillCrossAxis() const noexcept { return false; }
   virtual bool wantsToFill() const noexcept { return wantsToFillMainAxis() && wantsToFillCrossAxis(); }
 
+  virtual void debugFillProperties(std::ostringstream& os, int indent) const noexcept {}
+
  private:
   UIKey key_;
 };
@@ -70,6 +72,30 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
   virtual void update(ComponentPtr newComp) noexcept {
     widget_ = std::move(newComp);
     if (renderObject_) widget_->updateRenderObject(renderObject_);
+  }
+
+  std::string toString(int indent = 0) const noexcept {
+    std::ostringstream os;
+    std::string pad(indent, ' ');
+
+    os << pad << typeid(*this).name() << " {\n";
+    debugFillProperties(os, indent + 1);
+
+    auto kids = children;
+    if (!kids.empty()) {
+      os << pad << "  children: [\n";
+      for (const auto& child : kids) {
+        os << child->toString(indent + 4) << "\n";
+      }
+      os << pad << "  ]\n";
+      // } else if (kids.empty() && this->getChild()) {
+      //   os << pad << "  child {\n";
+      //   os << this->getChild()->toString(indent + 4) << "\n";
+      //   os << pad << "  }\n";
+    }
+
+    os << pad << "}";
+    return os.str();
   }
 
  protected:
@@ -126,6 +152,20 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
     }
     printf("Finished updateChildren\n");
     return newChildren;
+  }
+
+  void debugFillProperties(std::ostringstream& os, int indent) const noexcept {
+    const auto& ro = getRenderObject();
+    const auto& component = getComponont();
+
+    if (!ro || !component) return;
+
+    std::string pad(indent, ' ');
+    os << pad << "key: " << component->key().toString() << "\n";
+    os << pad << "offset: { x: " << ro->getBounds().x << ", y: " << ro->getBounds().y << " }\n";
+    os << pad << "size: { w: " << ro->getBounds().width << ", h: " << ro->getBounds().height << " }\n";
+    os << pad << "wantsToFillParent: " << component->wantsToFill() << "\n";
+    component->debugFillProperties(os, indent);
   }
 
  private:

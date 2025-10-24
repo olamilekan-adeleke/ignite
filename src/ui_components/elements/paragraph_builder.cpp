@@ -59,11 +59,11 @@ float ParagraphBuilder::getWidth() const {
 
 void ParagraphBuilder::layout(float width) {
   if (!paragraph_) buildParagraph();
+  if (!paragraph_) return;
 
   // Skip redundant layout calls - only layout if width actually changed
   if (lastLayoutWidth_ != width) {
     paragraph_->layout(width);
-    // lastLayoutWidth_ = width;
     lastLayoutWidth_ = paragraph_->getMaxIntrinsicWidth() + 1.0f;
   }
 }
