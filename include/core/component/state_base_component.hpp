@@ -27,6 +27,8 @@ class StatelessComponent : public Component {
 
   UIElementPtr createElement() override;
 
+  RenderObjectPtr createRenderObject() const noexcept override = 0;
+
   virtual ComponentPtr build() = 0;
 };
 

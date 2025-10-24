@@ -26,7 +26,7 @@ class Component : public std::enable_shared_from_this<Component> {
   virtual UIElementPtr createElement() = 0;
 
   virtual RenderObjectPtr createRenderObject() const noexcept { return nullptr; }
-  virtual void updateRenderObject(RenderObjectPtr object) noexcept {}
+  virtual void updateRenderObject(RenderObjectPtr ro) noexcept {}
 
   static bool canUpdate(const ComponentPtr& oldComp, const ComponentPtr& newComp) noexcept {
     if (!oldComp || !newComp) return false;
