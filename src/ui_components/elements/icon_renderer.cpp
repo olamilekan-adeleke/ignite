@@ -2,16 +2,13 @@
 
 #include <fmt/base.h>
 
-#include "foundation/foundation.hpp"
 #include "include/core/SkFontMgr.h"
 #include "include/core/SkTypeface.h"
 #include "ui_manager.hpp"
 
-UISize IconRenderer::getIntrinsicSize(UIConstraints constraints) noexcept { return {params_.size, params_.size}; }
+void IconRenderObject::performLayout(UIConstraints size) noexcept { setSize(params_.size, params_.size); }
 
-void IconRenderer::layout(UIConstraints size) { setSize(params_.size, params_.size); }
-
-void IconRenderer::draw(SkCanvas* canvas) {
+void IconRenderObject::paint(SkCanvas* canvas) noexcept {
   sk_sp<SkTypeface> iconTypeface = UIFontManager::instance().getTypeface();
   if (!iconTypeface) return;
 
@@ -25,13 +22,14 @@ void IconRenderer::draw(SkCanvas* canvas) {
     SkFontMetrics metrics;
     font.getMetrics(&metrics);
 
-    float x = bounds_.x;
-    float y = bounds_.y - metrics.fAscent;
+    const auto& bounds = getBounds();
+    float x = bounds.x;
+    float y = bounds.y - metrics.fAscent;
 
     canvas->drawSimpleText(&glyphId, sizeof(SkGlyphID), SkTextEncoding::kGlyphID, x, y, font, paint);
   } else {
     fmt::println("Cannot draw - glyph not found! \"{}\"", params_.icon.unicode);
   }
 
-  UIComponent::draw(canvas);
+  RenderObject::paint(canvas);
 }

@@ -5,8 +5,10 @@
 
 #include "basic/ui_component.hpp"
 #include "component/component.hpp"
+#include "elements/alignment_box.hpp"
 #include "elements/checkbox_render.hpp"
 #include "elements/fixed_box.hpp"
+#include "elements/icon_renderer.hpp"
 #include "elements/image.hpp"
 #include "elements/opacity.hpp"
 #include "elements/separator.hpp"
@@ -74,5 +76,11 @@ namespace Paragraphs {
 inline ComponentPtr text(const std::string &text, const TextStyle &params = {}, const UIKey &key = AUTO_KEY) {
   return std::make_shared<Text>(text, params);
 }
+
+inline ComponentPtr icon(const IconParam &param) { return std::make_shared<Icon>(param); }
 }  // namespace Paragraphs
+
+namespace Position {
+inline ComponentPtr center(const ComponentPtr child) { return std::make_shared<AlignmentBox>(child); }
+}  // namespace Position
 }  // namespace IgniteUI
