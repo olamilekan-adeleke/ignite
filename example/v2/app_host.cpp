@@ -6,9 +6,9 @@
 #include "component/component.hpp"
 #include "component/state_base_component.hpp"
 #include "elements/alignment_box.hpp"
-#include "elements/text_renderer.hpp"
+#include "foundation/icons/icon_types.hpp"
 #include "foundation/utils/key.hpp"
-#include "render/render_viewport.hpp"
+#include "ui.hpp"
 
 struct CounterState : public StateBase {
   ~CounterState() { dispose(); }
@@ -45,12 +45,17 @@ struct CounterState : public StateBase {
     // text = std::make_shared<Text>(string + "\n\nCount: " + std::to_string(count), );
     ComponentPtr text;
     if (count % 2 == 0) {
-      text = std::make_shared<Text>(fmt::format("The number {} is even", count), style, UIKey{"counter-even"});
+      text = IgniteUI::Paragraphs::text(fmt::format("The number {} is even", count), style, UIKey{"counter-even"});
     } else {
-      text = std::make_shared<Text>(fmt::format("The number {} is odd", count), style, UIKey{"counter-odd"});
+      text = IgniteUI::Paragraphs::text(fmt::format("The number {} is odd", count), style, UIKey{"counter-odd"});
     }
 
-    return std::make_shared<AlignmentBox>(text);
+    const auto& icon = IgniteUI::Paragraphs::icon(IconParam{
+        .icon = IconTypes::person(),
+        .size = 40,
+    });
+    return IgniteUI::Position::center(icon);
+    // return std::make_shared<AlignmentBox>(text);
   }
 };
 
@@ -59,14 +64,4 @@ class Counter : public StatefullyComponent {
   Counter() : StatefullyComponent() {}
 
   std::shared_ptr<StateBase> createState() override { return std::make_shared<CounterState>(); }
-};
-
-class AppHost : public StatelessComponent {
- public:
-  ComponentPtr child;
-  AppHost(ComponentPtr c) : child(std::move(c)), StatelessComponent() {}
-
-  ComponentPtr build() override { return child; }
-
-  RenderObjectPtr createRenderObject() const noexcept override { return std::make_shared<RenderViewport>(); }
 };

@@ -5,16 +5,13 @@
 #include <iostream>
 #include <memory>
 
-#include "../example/counter_app.cpp"
-#include "../example/layout/fitted_boxes.hpp"
 #include "../example/nav_test.cpp"
 #include "../example/paragraph_test.cpp"
 #include "../example/test_scroll.cpp"
-#include "../example/todo_list.cpp"
 #include "../example/v2/app_host.cpp"
+#include "../example/v2/render_viewport.hpp"
 #include "debug/debug_log_server.hpp"
 #include "debug/fps_tracker.hpp"
-#include "debug_assert.hpp"
 #include "foundation/foundation.hpp"
 #include "foundation/geometry/rect.hpp"
 #include "skia/SkiaRenderer.hpp"
@@ -55,25 +52,7 @@ int main() {
     bool needsLayout = true;
     bool needsRedraw = true;
 
-    auto counter_example = std::make_shared<CounterWidget>();
-    auto todoList = std::make_shared<TodoListWidget>();
-    auto paragraphTest = std::make_shared<ParagraphTestWidget>();
-    auto scrollTest = std::make_shared<TestScrollWidget>();
-    auto navText = std::make_shared<NavTestWidget>();
-
-    // std::shared_ptr<UIComponent> rootUI = counter_example;
-    // std::shared_ptr<UIComponent> rootUI = todoList;
-    // std::shared_ptr<UIComponent> rootUI = scrollTest;
-    // std::shared_ptr<UIComponent> rootUI = paragraphTest;
-    // std::shared_ptr<UIComponent> rootUI = rootApp;
-    std::shared_ptr<UIComponent> rootUI = navText;
-    // std::shared_ptr<UIComponent> rootUI = TodoListWidget::bodyy();
-    // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::body();
-    // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::flexibleBody();
-    // std::shared_ptr<UIComponent> rootUI = LayoutBoxFixedBoxes::sizingBody();
-
     auto app = std::make_shared<Counter>();
-    // auto app = std::make_shared<AlignmentBox>(std::make_shared<Text>("Count: "));
     UIElementPtr rootElement = std::make_shared<AppHost>(app)->createElement();
     rootElement->mount(nullptr);
 
@@ -107,7 +86,7 @@ int main() {
       skiaRenderer.beginFrame();
 
       KeyPool::instance().reset();
-      UILogger::instance().updateLogs();
+      UILogger::instance().update();
       if (rootElement && rootElement->getRenderObject()) {
         const UIConstraints& constraints = UIConstraints::maxSize(width, height);
         auto ro = rootElement->getRenderObject();
@@ -125,7 +104,8 @@ int main() {
       skiaRenderer.endFrame();
       needsRedraw = false;
 
-      const std::string logs = rootUI->toString(0);
+      // const std::string logs = rootUI->toString(0);
+      const std::string logs = rootElement->toString(0);
       if (logs != lastLog) lastLog = logs;
       Logger::logToFile(logs);
       // std::this_thread::sleep_for(std::chrono::milliseconds(16));
