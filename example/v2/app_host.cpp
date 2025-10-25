@@ -5,17 +5,15 @@
 
 #include "component/component.hpp"
 #include "component/state_base_component.hpp"
-#include "elements/alignment_box.hpp"
+#include "foundation/geometry/axis.hpp"
 #include "foundation/icons/icon_types.hpp"
 #include "foundation/utils/key.hpp"
 #include "ui.hpp"
 
 struct CounterState : public StateBase {
-  ~CounterState() { dispose(); }
+  ~CounterState() { cleanupResources(); }
 
   int count = 0;
-  std::thread timerThread_;
-  std::atomic<bool> stopTimer_{false};
 
   void initState() override {
     count = 0;
@@ -29,20 +27,11 @@ struct CounterState : public StateBase {
     });
   }
 
-  void dispose() override {
-    stopTimer_ = true;
-    if (timerThread_.joinable()) timerThread_.join();
-  }
+  void dispose() override { cleanupResources(); }
 
   ComponentPtr build() override {
-    std::string string = R"(Hello, world! 🙂🚀🔥🍕❤️🎉🐱🌍✨ This is a long test string)";
+    const auto& style = TextStyle{.fontSize = 24};
 
-    const auto& style = TextStyle{
-        .fontSize = 24,
-        // .textAlignment = TextAlignment::center,
-    };
-
-    // text = std::make_shared<Text>(string + "\n\nCount: " + std::to_string(count), );
     ComponentPtr text;
     if (count % 2 == 0) {
       text = IgniteUI::Paragraphs::text(fmt::format("The number {} is even", count), style, UIKey{"counter-even"});
@@ -50,12 +39,29 @@ struct CounterState : public StateBase {
       text = IgniteUI::Paragraphs::text(fmt::format("The number {} is odd", count), style, UIKey{"counter-odd"});
     }
 
-    const auto& icon = IgniteUI::Paragraphs::icon(IconParam{
-        .icon = IconTypes::person(),
-        .size = 40,
+    return IgniteUI::Box({.size = UISizing::Fixed(400, 400), .alignment = UIAlignment::Center})({
+        IgniteUI::Separator({.axis = Axis::HORIZONTAL, .thinkness = 4, .backgroundColor = Color::Teal()}),
+
+        IgniteUI::Image({.path = "assets/test_one.jpeg", .width = 200, .height = 200}),
+
+        IgniteUI::Opacity({.opacity = 0.3})({
+            IgniteUI::Paragraphs::icon({.icon = IconTypes::person(), .size = 40, .color = Color::Teal()}),
+        }),
+
+        IgniteUI::Paragraphs::text("Hello World"),
     });
-    return IgniteUI::Position::center(icon);
-    // return std::make_shared<AlignmentBox>(text);
+  }
+
+ private:
+  std::thread timerThread_;
+  std::atomic<bool> stopTimer_{false};
+  bool disposed_ = false;
+
+  void cleanupResources() {
+    if (disposed_) return;
+    stopTimer_ = true;
+    if (timerThread_.joinable()) timerThread_.join();
+    disposed_ = true;
   }
 };
 
