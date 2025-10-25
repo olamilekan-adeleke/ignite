@@ -1,50 +1,50 @@
 #pragma once
 
-#include <fmt/format.h>
-
-#include "basic/ui_component.hpp"
+#include "component/component.hpp"
 #include "foundation/foundation.hpp"
+#include "ui_element/state_base_element.hpp"
 
 struct SeparatorParams {
   Axis axis = Axis::VERTICAL;
   float thinkness = 1.0f;
   Color backgroundColor = Color::Gray();
-
-  uint64_t layoutHashCode(const UIConstraints& constraints) const noexcept {
-    const auto key = fmt::format("{}-{}-{}-{}-{}-{}",
-                                 axisToString(axis),
-                                 thinkness,
-                                 constraints.minWidth,
-                                 constraints.maxWidth,
-                                 constraints.minHeight,
-                                 constraints.maxHeight);
-    return fnv1a(key);
-  }
-
-  uint64_t drawHashCode() const noexcept {
-    const auto key = fmt::format("{}-{}-{}", axisToString(axis), thinkness, backgroundColor.toString());
-    return fnv1a(key);
-  }
 };
 
-class Separator : public UIComponent {
+class SeparatorRenderObject : public RenderObject {
  public:
-  Separator(const SeparatorParams& param = {}) : params_(param) {}
+  SeparatorRenderObject(const SeparatorParams& params) : params_(params) {}
 
-  void layout(UIConstraints size) override;
-  void draw(SkCanvas* canvas) override;
+  void performLayout(UIConstraints constraints) noexcept override;
 
-  void markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller& caller) noexcept override;
+  void paint(SkCanvas* canvas) noexcept override;
 
- protected:
-  void debugFillProperties(std::ostringstream& os, int indent) const override;
+  void update(const SeparatorParams& params) noexcept { params_ = std::move(params); }
 
  private:
   SeparatorParams params_;
 };
 
-inline void Separator::debugFillProperties(std::ostringstream& os, int indent) const {
-  UIComponent::debugFillProperties(os, indent);
-  std::string pad(indent, ' ');
-  os << pad << "axis: " << params_.axis << "\n";
-}
+class SeparatorComponent : public Component {
+ public:
+  SeparatorComponent(const SeparatorParams& param = {}, const UIKey key = {}) : params_(param), Component(key) {}
+
+  UIElementPtr createElement() noexcept override { return std::make_shared<LeafUIElement>(shared_from_this()); }
+
+  RenderObjectPtr createRenderObject() const noexcept override {
+    return std::make_shared<SeparatorRenderObject>(params_);
+  }
+
+  void updateRenderObject(RenderObjectPtr ro) noexcept override {
+    std::dynamic_pointer_cast<SeparatorRenderObject>(ro)->update(params_);
+  }
+
+ protected:
+  void debugFillProperties(std::ostringstream& os, int indent) const noexcept override {
+    Component::debugFillProperties(os, indent);
+    std::string pad(indent, ' ');
+    os << pad << "axis: " << params_.axis << "\n";
+  }
+
+ private:
+  SeparatorParams params_;
+};
