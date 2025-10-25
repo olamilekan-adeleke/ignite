@@ -6,57 +6,47 @@
 #include <cmath>
 
 #include "foundation/foundation.hpp"
+#include "render/render_object.hpp"
 
-const std::vector<std::shared_ptr<UIComponent>>& FixedBox::children() const {
-  if (params_.child) {
-    if (cached_children_.empty() || cached_children_[0] != params_.child) {
-      cached_children_.clear();
-      cached_children_.push_back(params_.child);
-    }
-    return cached_children_;
-  }
-
-  if (!cached_children_.empty()) cached_children_.clear();
-  return UIComponent::children();
-}
-
-float FixedBox::computeWidth() const noexcept {
+float FixedBoxRenderObject::computeWidth() const noexcept {
   if (params_.size.isGrowWidth() && params_.size.width <= 0) return INFINITY;
   return params_.size.width;
 }
 
-float FixedBox::computeHeight() const noexcept {
+float FixedBoxRenderObject::computeHeight() const noexcept {
   if (params_.size.isGrowHeight() && params_.size.height <= 0) return INFINITY;
   return params_.size.height;
 }
 
-void FixedBox::layout(UIConstraints size) {
+void FixedBoxRenderObject::performLayout(UIConstraints size) noexcept {
   float width = std::clamp(computeWidth(), size.minWidth, size.maxWidth);
   float height = std::clamp(computeHeight(), size.minHeight, size.maxHeight);
 
-  const auto& child = params_.child;
+  const auto& child = children_.empty() ? nullptr : children_.front();
   if (child) {
-    child->layout(UIConstraints::maxSize(width, height));
+    child->performLayout(UIConstraints::maxSize(width, height));
     const auto& childSize = child->getSize();
 
     auto [x, y] = computeAlignedPosition(params_.alignment, width, height, childSize.width, childSize.height);
     child->setPosition(x, y);
 
-    child->updateGlobalOffset({
-        getGlobalOffset().x + x,
-        getGlobalOffset().y + y,
-    });
+    // child->updateGlobalOffset({
+    //     getGlobalOffset().x + x,
+    //     getGlobalOffset().y + y,
+    // });
   }
   setSize(width, height);
 }
 
-void FixedBox::draw(SkCanvas* canvas) {
-  if (params_.child) {
+void FixedBoxRenderObject::paint(SkCanvas* canvas) noexcept {
+  const auto& child = children_.empty() ? nullptr : children_.front();
+  if (child) {
     canvas->save();
-    canvas->translate(bounds_.x, bounds_.y);
-    params_.child->draw(canvas);
+    const auto& bounds = getBounds();
+    canvas->translate(bounds.x, bounds.y);
+    child->paint(canvas);
     canvas->restore();
   }
 
-  UIComponent::draw(canvas);
+  RenderObject::paint(canvas);
 }
