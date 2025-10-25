@@ -6,6 +6,7 @@
 #include "component/component.hpp"
 #include "component/state_base_component.hpp"
 #include "foundation/geometry/ui_alignment.hpp"
+#include "foundation/utils/utils_helper.hpp"
 #include "render/render_object.hpp"
 
 class AlignmentBoxRenderer : public RenderObject {
@@ -17,7 +18,7 @@ class AlignmentBoxRenderer : public RenderObject {
 
 class AlignmentBox : public StatelessComponent {
  public:
-  AlignmentBox(ComponentPtr child, const UIKey& key = AUTO_KEY) : child_(std::move(child)), StatelessComponent(key) {}
+  AlignmentBox(ComponentPtr child, const UIKey& key = {}) : child_(std::move(child)), StatelessComponent(key) {}
 
   ComponentPtr build() override { return child_; }
 
@@ -26,7 +27,7 @@ class AlignmentBox : public StatelessComponent {
   void debugFillProperties(std::ostringstream& os, int indent) const noexcept override {
     StatelessComponent::debugFillProperties(os, indent);
     std::string pad(indent, ' ');
-    os << pad << "child: " << typeid(*child_).name() << "\n";
+    os << pad << "child: " << Helper::to_string(child_) << "\n";
     os << pad << "alignment: " << UIAlignment::Center << "\n";
   }
 

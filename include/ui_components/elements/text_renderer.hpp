@@ -83,7 +83,7 @@ class RenderText : public RenderObject {
 
 class Text : public Component {
  public:
-  Text(const std::string &text, const TextStyle &style = {}, const UIKey &key = AUTO_KEY)
+  Text(const std::string &text, const TextStyle &style = {}, const UIKey &key = {})
       : text_(text), style_(style), Component(key) {};
 
   UIElementPtr createElement() override;
