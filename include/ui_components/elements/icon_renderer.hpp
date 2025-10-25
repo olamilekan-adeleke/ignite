@@ -32,7 +32,7 @@ class IconRenderObject : public RenderObject {
 
 class Icon : public Component {
  public:
-  Icon(const IconParam &param) : params_(param) {}
+  Icon(const IconParam &param, const UIKey &key = {}) : params_(param), Component(key) {}
 
   UIElementPtr createElement() override { return std::make_shared<LeafUIElement>(shared_from_this()); }
 

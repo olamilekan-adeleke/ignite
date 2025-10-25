@@ -10,10 +10,11 @@
 #include <algorithm>
 #include <cstdint>
 #include <filesystem>
-#include <sstream>
 #include <string>
 
 #include "foundation/foundation.hpp"
+#include "foundation/geometry/rect.hpp"
+#include "render/render_object.hpp"
 #include "surface_cache_helper.hpp"
 #include "ui_manager.hpp"
 
@@ -32,22 +33,7 @@ struct ImageCacheManager {
   ImageCacheManager& operator=(const ImageCacheManager&) = delete;
 };
 
-UIImage::UIImage(const ImageParams& param) : params_(param) { loadImage(); }
-
-void UIImage::markHasDirty(const UIMarkDirtyType& type, const UIMarkDirtyCaller& caller) noexcept {
-  const auto currentLayoutHash{params_.layoutHashCode()};
-  const auto currentDrawHash{params_.drawHashCode()};
-
-  if (type == UIMarkDirtyType::DRAW) {
-    UICacheManager::instance().removeCachedSurface(currentDrawHash);
-    return;
-  }
-
-  UICacheManager::instance().removeCachedSurface(currentDrawHash);
-  UICacheManager::instance().removeLayoutCached(currentLayoutHash);
-};
-
-bool UIImage::loadImage() noexcept {
+bool ImageRenderObject::loadImage() noexcept {
   // Check if image is already cached
   const auto pathHash = toHex(fnv1a(params_.path));
   auto cacheIt = ImageCacheManager::getInstance().imageCache_.find(pathHash);
@@ -78,63 +64,34 @@ bool UIImage::loadImage() noexcept {
   return imageData_ != nullptr;
 }
 
-UISize UIImage::getIntrinsicSize(UIConstraints constraints) noexcept {
+void ImageRenderObject::performLayout(UIConstraints size) noexcept {
   if (!imageData_) {
-    return UISize{.width = params_.width, .height = params_.height};
-  }
-
-  float width = params_.width > 0 ? params_.width : imageData_->width();
-  float height = params_.height > 0 ? params_.height : imageData_->height();
-  return UISize{.width = width, .height = height};
-}
-
-void UIImage::layout(UIConstraints size) {
-  const uint64_t currentLayoutHash{params_.layoutHashCode()};
-  const auto cacheIt = UICacheManager::instance().getLayoutCached(currentLayoutHash);
-  if (cacheIt.has_value()) {
-    bounds_ = *cacheIt;
+    setSize(std::clamp(0.0f, size.minWidth, size.maxWidth), std::clamp(0.0f, size.minHeight, size.maxHeight));
     return;
   }
 
-  if (!imageData_) return;
-  // fmt::println("layouting image: {} [currentLayoutHash: {}]", params_.path, currentLayoutHash);
-  bounds_.width = params_.width > 0 ? params_.width : imageData_->width();
-  bounds_.height = params_.height > 0 ? params_.height : imageData_->height();
+  float imgWidth = imageData_->width();
+  float imgHeight = imageData_->height();
+  float width = params_.width > 0 ? params_.width : imgWidth;
+  float height = params_.height > 0 ? params_.height : imgHeight;
 
-  UICacheManager::instance().setLayoutCached(currentLayoutHash, bounds_);
-  markHasDirty(UIMarkDirtyType::DRAW, UIMarkDirtyCaller::NONE);
+  // Option: Maintain aspect ratio if only one dimension is specified
+  if (params_.width > 0 && params_.height <= 0) {
+    height = (params_.width / imgWidth) * imgHeight;
+  } else if (params_.height > 0 && params_.width <= 0) {
+    width = (params_.height / imgHeight) * imgWidth;
+  }
+
+  width = std::clamp(width, size.minWidth, size.maxWidth);
+  height = std::clamp(height, size.minHeight, size.maxHeight);
+  setSize(width, height);
 }
 
-// void UIImage::draw(SkCanvas* canvas) {
-//   const uint64_t currentDrawHash{params_.drawHashCode()};
-//   sk_sp<SkSurface> cachedSurface = UICacheManager::instance().getCachedSurface(currentDrawHash);
-//
-//   if (cachedSurface) {
-//     canvas->drawImage(cachedSurface->makeImageSnapshot(), bounds_.x, bounds_.y);
-//     UIComponent::draw(canvas);
-//     return;
-//   }
-//
-//   if (!imageData_) return;
-//   SkImageInfo info = SkImageInfo::Make(bounds_.width, bounds_.height, kRGBA_8888_SkColorType, kOpaque_SkAlphaType);
-//   sk_sp<SkSurface> newSurface = SkSurfaces::Raster(info);
-//   if (!newSurface) return;
-//
-//   SkCanvas* surfaceCanvas = newSurface->getCanvas();
-//   SkPaint paint;
-//   paint.setAlphaf(params_.opacity);
-//
-//   SkRect dest = SkRect::MakeXYWH(0, 0, bounds_.width, bounds_.height);
-//   surfaceCanvas->drawImageRect(imageData_, dest, SkSamplingOptions(), &paint);
-//
-//   UICacheManager::instance().setCachedSurface(currentDrawHash, newSurface);
-//   canvas->drawImage(newSurface->makeImageSnapshot(), bounds_.x, bounds_.y);
-//   UIComponent::draw(canvas);
-// }
-void UIImage::draw(SkCanvas* canvas) {
+void ImageRenderObject::paint(SkCanvas* canvas) noexcept {
   if (!imageData_) return;
 
   const uint64_t drawHash{params_.drawHashCode()};
+  const UIRect& bounds_ = getBounds();
   SkRect bounds = SkRect::MakeXYWH(bounds_.x, bounds_.y, bounds_.width, bounds_.height);
 
   SurfaceCacheHelper::drawCached(canvas, drawHash, bounds, [&](SkCanvas* surfaceCanvas) {
@@ -144,14 +101,5 @@ void UIImage::draw(SkCanvas* canvas) {
     surfaceCanvas->drawImageRect(imageData_, dest, SkSamplingOptions(), &paint);
   });
 
-  UIComponent::draw(canvas);
+  RenderObject::paint(canvas);
 }
-
-void UIImage::debugFillProperties(std::ostringstream& os, int indent) const {
-  UIComponent::debugFillProperties(os, indent);
-  std::string pad(indent, ' ');
-  os << pad << "height: " << params_.height << "\n";
-  os << pad << "width: " << params_.width << "\n";
-  os << pad << "opacity: " << params_.opacity << "\n";
-  os << pad << fmt::format("path: \"{}\"", params_.path) << "\n";
-};
