@@ -2,8 +2,10 @@
 #include <fmt/base.h>
 
 #include <memory>
+#include <vector>
 
 #include "foundation/foundation.hpp"
+#include "foundation/utils/utils_helper.hpp"
 #include "render/render_object.hpp"
 
 class Component;
@@ -23,6 +25,10 @@ class Component : public std::enable_shared_from_this<Component> {
 
   void setKey(UIKey key) { key_ = std::move(key); }
 
+  void addChild(ComponentPtr child) { children_.push_back(std::move(child)); }
+  ComponentPtr getChild() { return children_.front(); }
+  const std::vector<ComponentPtr>& getChildren() const noexcept { return children_; }
+
   virtual UIElementPtr createElement() = 0;
 
   virtual RenderObjectPtr createRenderObject() const noexcept { return nullptr; }
@@ -31,7 +37,7 @@ class Component : public std::enable_shared_from_this<Component> {
   static bool canUpdate(const ComponentPtr& oldComp, const ComponentPtr& newComp) noexcept {
     if (!oldComp || !newComp) return false;
 
-    const bool sameType = typeid(*oldComp) == typeid(*newComp);
+    const bool sameType = Helper::to_type_info(oldComp) == Helper::to_type_info(newComp);
     return sameType && oldComp->key() == newComp->key();
   };
 
@@ -39,7 +45,17 @@ class Component : public std::enable_shared_from_this<Component> {
   virtual bool wantsToFillCrossAxis() const noexcept { return false; }
   virtual bool wantsToFill() const noexcept { return wantsToFillMainAxis() && wantsToFillCrossAxis(); }
 
-  virtual void debugFillProperties(std::ostringstream& os, int indent) const noexcept {}
+  virtual void debugFillProperties(std::ostringstream& os, int indent) const noexcept {
+    std::string pad(indent, ' ');
+    if (children_.empty()) return;
+    if (auto& child = children_.front()) {
+      os << pad << "hasChild: " << (child ? "true" : "false") << "\n";
+      os << pad << "type: " << Helper::to_string(shared_from_this()) << "\n";
+    }
+  }
+
+ protected:
+  std::vector<ComponentPtr> children_{};
 
  private:
   UIKey key_;
@@ -136,7 +152,7 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
         oldChild->update(newComponent);
         newChild = oldChild;
       } else {
-        fmt::println("  └─ cannotUpdate: {} -> {}", newComponent->key().value(), typeid(*newComponent).name());
+        fmt::println("  └─ cannotUpdate: {} -> {}", newComponent->key().value(), Helper::to_string(newComponent));
         if (oldChild) oldChild->unmount();
         newChild = newComponent->createElement();
         newChild->mount(shared_from_this());

@@ -26,34 +26,36 @@ class RenderObject : public std::enable_shared_from_this<RenderObject> {
   RenderObjectPtr getParent() const noexcept { return parent; }
   void setParent(RenderObjectPtr parent) noexcept { this->parent = parent; }
 
-  const std::vector<RenderObjectPtr>& getChildren() const noexcept { return children; }
+  const std::vector<RenderObjectPtr>& getChildren() const noexcept { return children_; }
   const RenderObjectPtr& getChild(int index) const noexcept {
-    if (index < 0 || index >= children.size()) {
+    if (index < 0 || index >= children_.size()) {
       static RenderObjectPtr null_ptr = nullptr;
       return null_ptr;
     }
 
-    return children[index];
+    return children_[index];
   }
-  void setChildren(const std::vector<RenderObjectPtr>& children) noexcept { this->children = children; }
-  void clearChildren() noexcept { children.clear(); }
+  void setChildren(const std::vector<RenderObjectPtr>& children) noexcept { this->children_ = children; }
+  void clearChildren() noexcept { children_.clear(); }
 
   void addChild(RenderObjectPtr child) noexcept {
     if (!child) return;
 
-    children.push_back(child);
+    children_.push_back(child);
     child->setParent(shared_from_this());
   }
 
   void removeChild(RenderObjectPtr child) noexcept {
-    auto it = std::find(children.begin(), children.end(), child);
-    if (it != children.end()) children.erase(it);
+    auto it = std::find(children_.begin(), children_.end(), child);
+    if (it != children_.end()) children_.erase(it);
     child->setParent(nullptr);
   }
 
+ protected:
+  std::vector<RenderObjectPtr> children_;
+
  private:
   RenderObjectPtr parent;
-  std::vector<RenderObjectPtr> children;
 
   UIRect bounds_{0, 0, 0, 0};
 

@@ -20,3 +20,17 @@ inline std::string extractUtf8Char(const std::string& input, size_t& pos) noexce
   pos += charLen;
   return result;
 }
+
+namespace Helper {
+
+template <typename T>
+std::string to_string(const std::shared_ptr<T>& ptr) {
+  if (!ptr) return "nullptr";
+  return typeid(*ptr).name();
+}
+
+template <typename T>
+const std::type_info& to_type_info(const T& obj) {
+  return typeid(obj);
+}
+}  // namespace Helper

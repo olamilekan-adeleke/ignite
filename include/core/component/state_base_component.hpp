@@ -29,6 +29,8 @@ class StatelessComponent : public Component {
 
   RenderObjectPtr createRenderObject() const noexcept override = 0;
 
+  void updateRenderObject(RenderObjectPtr ro) noexcept override {};
+
   virtual ComponentPtr build() = 0;
 };
 

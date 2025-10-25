@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "component/component.hpp"
+#include "foundation/utils/utils_helper.hpp"
 #include "render/render_object.hpp"
 
 #ifdef __APPLE__
@@ -24,7 +25,7 @@ inline void printRenderTree(const RenderObjectPtr& ro, int indent = 0) {
   if (!ro) return;
 
   std::string pad(indent * 2, ' ');
-  fmt::println("{}├─ {}", pad, typeid(*ro).name());
+  fmt::println("{}├─ {}", pad, Helper::to_string(ro));
 
   // Assuming RenderObject has a way to get children
   // Adjust based on your actual RenderObject API
@@ -45,9 +46,9 @@ inline void printElementTree(const UIElementPtr& elem, int indent = 0) {
 
   fmt::println("{}├─ Element: {} | Component: {} | RenderObject: {}",
                pad,
-               typeid(*elem).name(),
-               comp ? typeid(*comp).name() : "null",
-               ro ? typeid(*ro).name() : "null");
+               Helper::to_string(elem),
+               comp ? Helper::to_string(comp) : "null",
+               ro ? Helper::to_string(ro) : "null");
 
   // Print children (you may need to expose children vector or add a getter)
 }
@@ -215,4 +216,17 @@ inline void print_stacktrace_atos() {
     if (condition) {                                                                           \
       std::cerr << "WARNING UI: " << message << " at " << __FILE__ << ":" << __LINE__ << "\n"; \
     }                                                                                          \
+  } while (0)
+
+#define ASSERT_CHILD_COUNT(name, mode, count)                                                                          \
+  do {                                                                                                                 \
+    if ((mode) == ChildMode::Single && (count) != 1) {                                                                 \
+      assert(                                                                                                          \
+          false &&                                                                                                     \
+          fmt::format(                                                                                                 \
+              "[UI Warning] {} only accepts ONE child, got {}. Only the first child will be added to the widget tree", \
+              (name),                                                                                                  \
+              (count))                                                                                                 \
+              .c_str());                                                                                               \
+    }                                                                                                                  \
   } while (0)

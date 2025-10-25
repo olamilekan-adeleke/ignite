@@ -11,6 +11,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer")
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
 set(CMAKE_STRIP_FLAGS "")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
 
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 
