@@ -2,13 +2,12 @@
 
 #include "layout/layout_box.hpp"
 
-LayoutBox HFlexBox::create(const HFlexParam& param) {
+LayoutBox HFlexBox::create(const HFlexParam& param, const UIKey& key) {
   LayoutBoxParam flexParam{
       .axis = Axis::HORIZONTAL,
       .crossAxisAlignment = param.crossAxisAlignment,
       .sizing = param.sizing,
       .childGap = param.childGap,
-      .children = std::move(param.children),
   };
-  return LayoutBox(flexParam);
+  return LayoutBox(flexParam, key);
 }

@@ -1,23 +1,14 @@
 #include "layout/layout_box.hpp"
 
-#include <fmt/base.h>
-#include <fmt/format.h>
-
-#include <algorithm>
-#include <cassert>
-#include <cstdint>
-
 #include "foundation/foundation.hpp"
 
-const std::vector<std::shared_ptr<UIComponent>> &LayoutBox::children() const { return params_.children; }
-
-inline float LayoutBox::distributeFlexSpace(float availableSize,
-                                            uint numChildren,
-                                            std::shared_ptr<UIComponent> child) const noexcept {
+inline float LayoutRenderObject::distributeFlexSpace(float availableSize,
+                                                     uint numChildren,
+                                                     RenderObjectPtr child) const noexcept {
   return availableSize / numChildren;
 }
 
-inline float LayoutBox::getMainAxisSize(const UISizing &size) const noexcept {
+inline float LayoutRenderObject::getMainAxisSize(const UISizing &size) const noexcept {
   switch (params_.axis) {
     case Axis::HORIZONTAL:
       return size.width;
@@ -27,7 +18,7 @@ inline float LayoutBox::getMainAxisSize(const UISizing &size) const noexcept {
   assert(false);
 }
 
-inline float LayoutBox::getCrossAxisSize(const UISizing &size) const noexcept {
+inline float LayoutRenderObject::getCrossAxisSize(const UISizing &size) const noexcept {
   switch (params_.axis) {
     case Axis::HORIZONTAL:
       return size.height;
@@ -37,7 +28,7 @@ inline float LayoutBox::getCrossAxisSize(const UISizing &size) const noexcept {
   assert(false);
 }
 
-inline float LayoutBox::getCrossAxisPosition(const UISizing &size) const noexcept {
+inline float LayoutRenderObject::getCrossAxisPosition(const UISizing &size) const noexcept {
   const auto crossAxisSize = getCrossAxisSize(getSize());
   const auto childCrossAxisSize = getCrossAxisSize(size);
 
@@ -52,20 +43,22 @@ inline float LayoutBox::getCrossAxisPosition(const UISizing &size) const noexcep
   return 0.0f;
 }
 
-void LayoutBox::layout(UIConstraints constraints) {
-  if (params_.children.empty()) {
+void LayoutRenderObject::performLayout(UIConstraints constraints) noexcept {
+  const auto &children = children_;
+
+  if (children.empty()) {
     setSize(constraints.minWidth, constraints.minHeight);
     return;
   }
 
   // first pass - get size for fitted children
-  const float totalSpacing = params_.childGap * (params_.children.size() - 1);
+  const float totalSpacing = params_.childGap * (children.size() - 1);
   float usedMainAxis = 0;
   float maxChildCrossAxis = 0;
   uint32_t flexibleChildrenCount = 0;
 
-  for (size_t i = 0; i < params_.children.size(); ++i) {
-    auto &child = params_.children[i];
+  for (size_t i = 0; i < children.size(); ++i) {
+    auto &child = children[i];
 
     const auto wantsToFillMainAxis =
         params_.axis == Axis::VERTICAL ? child->wantsToFillMainAxis() : child->wantsToFillCrossAxis();
@@ -81,9 +74,9 @@ void LayoutBox::layout(UIConstraints constraints) {
       childConstraints = UIConstraints::maxSize(constraints.maxWidth, constraints.maxHeight - usedMainAxis);
     }
 
-    child->layout(childConstraints);
+    child->performLayout(childConstraints);
     UISizing childSize = child->getSize();
-    usedMainAxis += getMainAxisSize(childSize) + (i + 1 == params_.children.size() ? 0 : params_.childGap);
+    usedMainAxis += getMainAxisSize(childSize) + (i + 1 == children.size() ? 0 : params_.childGap);
     maxChildCrossAxis = std::max(maxChildCrossAxis, getCrossAxisSize(childSize));
   }
 
@@ -95,8 +88,8 @@ void LayoutBox::layout(UIConstraints constraints) {
   const float mainAxisSizeLeftAvailable = std::max(0.0f, maxMain - usedMainAxis);
   const auto &[_, crossAxisSizeAvailable] = constraints.crossAxisSize(params_.axis);
 
-  for (size_t i = 0; i < params_.children.size(); ++i) {
-    auto &child = params_.children[i];
+  for (size_t i = 0; i < children.size(); ++i) {
+    auto &child = children[i];
 
     const auto wantsToFillMainAxis =
         params_.axis == Axis::VERTICAL ? child->wantsToFillMainAxis() : child->wantsToFillCrossAxis();
@@ -112,8 +105,7 @@ void LayoutBox::layout(UIConstraints constraints) {
       childConstraints = UIConstraints::maxSize(crossAxisSizeAvailable, mainAxisSizePerChild);
     }
 
-    child->layout(childConstraints);
-    UISizing childSize = child->getSize();
+    child->performLayout(childConstraints);
   }
 
   // Set size for Layout Box
@@ -123,7 +115,7 @@ void LayoutBox::layout(UIConstraints constraints) {
     totalMainAxisSize = maxMain;
   }
 
-  for (auto &child : params_.children) {
+  for (auto &child : children) {
     const auto &childSize = child->getSize();
     if (params_.sizing == MainAxisSize::FIT) totalMainAxisSize += getMainAxisSize(childSize);
     totalCrossAxisSize = std::max(totalCrossAxisSize, getCrossAxisSize(childSize));
@@ -141,12 +133,12 @@ void LayoutBox::layout(UIConstraints constraints) {
   // Position children
   float mainAxisStartPosition = 0;
   float spacing = params_.childGap;
-  const Offset &parentGlobalOffset = getGlobalOffset();
 
-  float containerGlobalX = getGlobalOffset().x;
-  float containerGlobalY = getGlobalOffset().y;
-  for (size_t i = 0; i < params_.children.size(); ++i) {
-    const auto &child = params_.children[i];
+  // const Offset &parentGlobalOffset = getGlobalOffset();
+  // float containerGlobalX = getGlobalOffset().x;
+  // float containerGlobalY = getGlobalOffset().y;
+  for (size_t i = 0; i < children.size(); ++i) {
+    const auto &child = children[i];
     const auto &childSize = child->getSize();
     const float mainAdvance = getMainAxisSize(childSize);
     const float crossAxisPosition = getCrossAxisPosition(childSize);
@@ -161,28 +153,30 @@ void LayoutBox::layout(UIConstraints constraints) {
     }
 
     child->setPosition(childRelativeX, childRelativeY);
-    // child->updateGlobalOffset(parentGlobalOffset);
-    child->updateGlobalOffset({
-        parentGlobalOffset.x + childRelativeX,
-        parentGlobalOffset.y + childRelativeY,
-    });
+
+    // child->updateGlobalOffset({
+    //     parentGlobalOffset.x + childRelativeX,
+    //     parentGlobalOffset.y + childRelativeY,
+    // });
     mainAxisStartPosition += mainAdvance;
-    if (i + 1 != params_.children.size()) mainAxisStartPosition += spacing;
+    if (i + 1 != children.size()) mainAxisStartPosition += spacing;
   }
 }
 
-void LayoutBox::draw(SkCanvas *canvas) {
+void LayoutRenderObject::paint(SkCanvas *canvas) noexcept {
   canvas->save();
+  const UIRect &bounds_ = getBounds();
   canvas->translate(bounds_.x, bounds_.y);
 
   SkRect clipRect = SkRect::MakeWH(bounds_.width, bounds_.height);
   canvas->clipRect(clipRect, SkClipOp::kIntersect);
 
-  for (size_t i = 0; i < params_.children.size(); ++i) {
-    auto &child = params_.children[i];
-    child->draw(canvas);
+  const auto &children = children_;
+  for (size_t i = 0; i < children.size(); ++i) {
+    auto &child = children[i];
+    child->paint(canvas);
   }
 
   canvas->restore();
-  UIComponent::draw(canvas);
+  RenderObject::paint(canvas);
 }

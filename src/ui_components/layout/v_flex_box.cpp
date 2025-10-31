@@ -2,13 +2,13 @@
 
 #include "layout/layout_box.hpp"
 
-LayoutBox VFlexBox::create(const VFlexParam& param) {
+LayoutBox VFlexBox::create(const VFlexParam& param, const UIKey& key) {
   LayoutBoxParam flexParam{
       .axis = Axis::VERTICAL,
       .crossAxisAlignment = param.crossAxisAlignment,
       .sizing = param.sizing,
       .childGap = param.childGap,
-      .children = std::move(param.children),
+      // .children = std::move(param.children),
   };
-  return LayoutBox(flexParam);
+  return LayoutBox(flexParam, key);
 }
