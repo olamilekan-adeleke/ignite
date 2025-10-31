@@ -8,7 +8,6 @@ LayoutBox VFlexBox::create(const VFlexParam& param, const UIKey& key) {
       .crossAxisAlignment = param.crossAxisAlignment,
       .sizing = param.sizing,
       .childGap = param.childGap,
-      // .children = std::move(param.children),
   };
   return LayoutBox(flexParam, key);
 }

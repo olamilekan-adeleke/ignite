@@ -11,11 +11,13 @@
 #include <memory>
 
 #include "basic/ui_component.hpp"
+#include "component/component.hpp"
 #include "foundation/geometry/offset.hpp"
 #include "foundation/geometry/rect.hpp"
 #include "foundation/inputs/tap_event.hpp"
 #include "include/core/SkFontMgr.h"
 #include "include/core/SkTypeface.h"
+#include "render/render_object.hpp"
 
 namespace Debug {
 inline bool ui_debug_mode = true;
@@ -23,11 +25,34 @@ inline bool ui_debug_mode = true;
 
 // just to maanger some UI Shit
 class UIManager {
+ private:
+  sk_sp<SkFontMgr> fontMgr_;
+  sk_sp<SkTypeface> defaultTypeface_;
+  SkFont font_;
+
+  UIElementPtr currentElementTreeRoot_ = nullptr;
+  UIElementPtr previousElementTreeRoot_ = nullptr;
+
+  // deprecated
+  [[deprecated]]
+  std::shared_ptr<UIComponent> currentTreeRoot_ = nullptr;
+  [[deprecated]]
+  std::shared_ptr<UIComponent> previousTreeRoot_ = nullptr;
+  float width_ = 0;
+  float height_ = 0;
+  bool dirty_ = false;
+
+  std::shared_ptr<UIComponent> currentHoveredComponent_ = nullptr;
+  std::shared_ptr<UIComponent> currentFocusedComponent_ = nullptr;
+
+  std::queue<std::function<void()>> mainThreadTasks_;
+  std::mutex taskMutex_;
+
  public:
   UIManager();
   static UIManager &instance();
 
-  void setTree(const std::shared_ptr<UIComponent> tree, float w, float h, bool needsResize);
+  void setTree(const UIElementPtr rootElement, SkCanvas *canvas, float w, float h, bool needsResize);
 
   const SkFont &defaultFont() const;
   const sk_sp<SkTypeface> &typeface() const;
@@ -40,23 +65,22 @@ class UIManager {
   void sendMouseEvent(double xpos, double ypos);
   void sendCharEvent(unsigned int codepoint);
 
-  void requestFocus(UIComponent &component);
-  void releaseFocus(UIComponent &component);
-  void releaseAllFocus(std::optional<std::shared_ptr<UIComponent>> component = std::nullopt);
+  void requestFocus(const RenderObjectPtr &ro);
+  void releaseFocus(const RenderObjectPtr &ro);
+  void releaseAllFocus(std::optional<RenderObjectPtr> component = std::nullopt);
 
- private:
-  sk_sp<SkFontMgr> fontMgr_;
-  sk_sp<SkTypeface> defaultTypeface_;
-  SkFont font_;
+  void scheduleMainThreadTask(std::function<void()> task) {
+    std::lock_guard<std::mutex> lock(taskMutex_);
+    mainThreadTasks_.push(task);
+  }
 
-  std::shared_ptr<UIComponent> currentTreeRoot_ = nullptr;
-  std::shared_ptr<UIComponent> previousTreeRoot_ = nullptr;
-  float width_ = 0;
-  float height_ = 0;
-  bool dirty_ = false;
-
-  std::shared_ptr<UIComponent> currentHoveredComponent_ = nullptr;
-  std::shared_ptr<UIComponent> currentFocusedComponent_ = nullptr;
+  void processPendingTasks() {
+    std::lock_guard<std::mutex> lock(taskMutex_);
+    while (!mainThreadTasks_.empty()) {
+      mainThreadTasks_.front()();
+      mainThreadTasks_.pop();
+    }
+  }
 };
 
 class UICacheManager {

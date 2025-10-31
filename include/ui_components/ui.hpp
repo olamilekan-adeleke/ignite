@@ -18,59 +18,11 @@
 #include "elements/text_renderer.hpp"
 #include "elements/ui_view.hpp"
 #include "foundation/utils/key.hpp"
-#include "interactive_components/button.hpp"
 #include "interactive_components/checkbox.hpp"
 #include "interactive_components/text_field_renderer.hpp"
 #include "layout/h_flex_box.hpp"
 #include "layout/layout_box.hpp"
 #include "layout/v_flex_box.hpp"
-
-namespace UI {
-
-inline std::shared_ptr<TextRenderer> Text(const std::string &str, const TextStyle &style = TextStyle()) {
-  return std::make_shared<TextRenderer>(str, style);
-}
-
-inline std::shared_ptr<View> UIView(const ViewParams &params = {}) { return std::make_shared<View>(params); }
-
-// inline std::shared_ptr<UIComponent> FixedBoxView(const FixedBoxParam &params = {}) {
-//   return std::make_shared<FixedBox>(params);
-// }
-
-inline std::shared_ptr<OpacityComponent> OpacityView(const OpacityParams &params = {}) {
-  return std::make_shared<OpacityComponent>(params);
-}
-
-// inline std::shared_ptr<UIComponent> UIImageView(const ImageParams &params = {}) {
-//   return std::make_shared<UIImage>(params);
-// }
-
-// inline std::shared_ptr<UIComponent> UISeparator(const SeparatorParams &params = {}) {
-//   return std::make_shared<Separator>(params);
-// }
-
-inline std::shared_ptr<UIComponent> UICheckBox(const CheckBoxParams &params = {}) {
-  return std::make_shared<CheckBox>(params);
-}
-
-inline std::shared_ptr<UIComponent> UIButton(const ButtonParams &params = {}) {
-  return std::make_shared<Button>(params);
-}
-
-inline std::shared_ptr<UIComponent> UITextField(const UITextFieldParams &params = {}) {
-  return std::make_shared<TextFieldRenderer>(params);
-}
-
-namespace Flex {
-inline std::shared_ptr<UIComponent> column(const VFlexParam &params = {}) {
-  return std::make_shared<LayoutBox>(VFlexBox::create(params));
-}
-
-inline std::shared_ptr<LayoutBox> row(const HFlexParam &params = {}) {
-  return std::make_shared<LayoutBox>(HFlexBox::create(params));
-}
-}  // namespace Flex
-}  // namespace UI
 
 namespace IgniteUI {
 
@@ -103,10 +55,14 @@ inline ComponentPtr icon(const IconParam &param, const UIKey &key = AUTO_KEY) {
 }
 }  // namespace Paragraphs
 
-inline ComponentPtr center(const ComponentPtr child) { return std::make_shared<AlignmentBox>(child); }
+inline Tag center(const UIKey &key = AUTO_KEY) { return Tag(std::make_shared<AlignmentBox>(key), ChildMode::Single); }
 
 inline Tag Box(const FixedBoxParam &param, const UIKey &key = AUTO_KEY) {
   return Tag(std::make_shared<FixedBox>(param, key), ChildMode::Single);
+}
+
+inline Tag View(const ViewParams &param, const UIKey &key = AUTO_KEY) {
+  return Tag(std::make_shared<UIView>(param, key), ChildMode::Single);
 }
 
 inline Tag Opacity(const OpacityParams &param, const UIKey &key = AUTO_KEY) {
@@ -121,4 +77,23 @@ inline ComponentPtr Separator(const SeparatorParams &params = {}, const UIKey ke
   return std::make_shared<SeparatorComponent>(params, key);
 }
 
+namespace Flex {
+inline Tag column(const VFlexParam &params = {}, const UIKey &key = AUTO_KEY) {
+  return Tag(std::make_shared<LayoutBox>(VFlexBox::create(params, key)), ChildMode::Multiple);
+}
+
+inline Tag row(const HFlexParam &params = {}, const UIKey &key = AUTO_KEY) {
+  return Tag(std::make_shared<LayoutBox>(HFlexBox::create(params, key)), ChildMode::Multiple);
+}
+}  // namespace Flex
+
+inline ComponentPtr CheckBox(const CheckBoxParams &param, const UIKey &key = AUTO_KEY) {
+  return std::make_shared<UICheckBox>(param, key);
+}
+
+inline ComponentPtr TextField(const UITextFieldParams &param, const UIKey &key = AUTO_KEY) {
+  return std::make_shared<TextFieldComponent>(param, key);
+}
+
+// namespace Flex
 }  // namespace IgniteUI

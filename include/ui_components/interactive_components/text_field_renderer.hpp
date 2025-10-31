@@ -142,10 +142,6 @@ class TextFieldComponent : public Component {
 
   void updateRenderObject(RenderObjectPtr ro) noexcept override {}
 
- protected:
-  // void handleCharEvent(std::string letter) noexcept override;
-  // void handleKeyEvent(KeyEvent& key) noexcept override;
-
   void debugFillProperties(std::ostringstream& os, int indent) const noexcept override {
     Component::debugFillProperties(os, indent);
     std::string pad(indent, ' ');
