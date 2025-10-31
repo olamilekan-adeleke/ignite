@@ -1,12 +1,7 @@
 #pragma once
 #include <fmt/base.h>
 
-#include <utility>
-
-#include "component/component.hpp"
 #include "component/state_base_component.hpp"
-#include "foundation/geometry/ui_alignment.hpp"
-#include "foundation/utils/utils_helper.hpp"
 #include "render/render_object.hpp"
 
 class AlignmentBoxRenderer : public RenderObject {
@@ -18,19 +13,18 @@ class AlignmentBoxRenderer : public RenderObject {
 
 class AlignmentBox : public StatelessComponent {
  public:
-  AlignmentBox(ComponentPtr child, const UIKey& key = {}) : child_(std::move(child)), StatelessComponent(key) {}
+  AlignmentBox(const UIKey& key = {}) : StatelessComponent(key) {}
+  AlignmentBox(ComponentPtr child, const UIKey& key = {}) : StatelessComponent(key) {
+    if (child) addChild(child);
+  }
 
-  ComponentPtr build() override { return child_; }
+  ComponentPtr build() override { return getChild(); }
 
   RenderObjectPtr createRenderObject() const noexcept override { return std::make_shared<AlignmentBoxRenderer>(); }
 
   void debugFillProperties(std::ostringstream& os, int indent) const noexcept override {
     StatelessComponent::debugFillProperties(os, indent);
     std::string pad(indent, ' ');
-    os << pad << "child: " << Helper::to_string(child_) << "\n";
     os << pad << "alignment: " << UIAlignment::Center << "\n";
   }
-
- private:
-  ComponentPtr child_;
 };

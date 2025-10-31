@@ -1,7 +1,5 @@
 #include "ui_components/elements/alignment_box.hpp"
 
-#include <fmt/base.h>
-
 #include "foundation/foundation.hpp"
 
 void AlignmentBoxRenderer::performLayout(UIConstraints constraints) noexcept {
