@@ -1,5 +1,6 @@
 #include "elements/ui_view.hpp"
 
+#include <fmt/base.h>
 #include <include/core/SkPaint.h>
 #include <include/core/SkRRect.h>
 #include <include/core/SkRect.h>
@@ -7,47 +8,49 @@
 #include <algorithm>
 
 #include "foundation/foundation.hpp"
+#include "foundation/geometry/rect.hpp"
 
-void View::layout(UIConstraints size) {
+void ViewRenderObject::performLayout(UIConstraints size) noexcept {
   const bool wantsToFillMainAxis = this->wantsToFillMainAxis();
 
-  const auto& margin = params_.margin;
   const auto& insets = params_.insets;
-  const float horizonalSpace = margin.horizonal() + insets.horizonal();
-  const float verticalSpace = margin.vertical() + insets.vertical();
+  const float horizonalSpace = insets.horizonal();
+  const float verticalSpace = insets.vertical();
 
-  const auto& child = params_.child;
+  const auto& child = children_.size() ? children_.front() : nullptr;
+
   if (child) {
     float availableChildWidth = std::max(0.0f, size.maxWidth - horizonalSpace);
     float availableChildHeight = std::max(0.0f, size.maxHeight - verticalSpace);
 
-    child->layout(UIConstraints::maxSize(availableChildWidth, availableChildHeight));
+    child->performLayout(UIConstraints::maxSize(availableChildWidth, availableChildHeight));
     const auto childSize = child->getSize();
 
     float finalWidth = std::clamp(childSize.width + horizonalSpace, size.minWidth, size.maxWidth);
     float finalHeight = std::clamp(childSize.height + verticalSpace, size.minHeight, size.maxHeight);
     setSize(finalWidth, finalHeight);
 
-    float childX = margin.left + insets.left;
-    float childY = margin.top + insets.top;
-    params_.child->setPosition(childX, childY);
-    params_.child->updateGlobalOffset({getGlobalOffset().x + childX, getGlobalOffset().y + childY});
+    float childX = insets.left;
+    float childY = insets.top;
+    child->setPosition(childX, childY);
+    // child->updateGlobalOffset({getGlobalOffset().x + childX, getGlobalOffset().y + childY});
   } else {
     if (wantsToFillMainAxis) {
-      bounds_.width = size.width;
-      bounds_.height = size.height;
+      setSize(size.width, size.height);
     } else {
-      bounds_.width = horizonalSpace;
-      bounds_.height = verticalSpace;
+      setSize(horizonalSpace, verticalSpace);
     }
   }
 
-  bounds_.width = std::clamp(bounds_.width, size.minWidth, size.maxWidth);
-  bounds_.height = std::clamp(bounds_.height, size.minHeight, size.maxHeight);
+  // fmt::println(
+  //     "ViewRenderObject::performLayout {} {} | has child", bounds_.width, bounds_.height, child ? "true" : "false");
 }
 
-void View::draw(SkCanvas* canvas) {
-  if (params_.child) {
+void ViewRenderObject::paint(SkCanvas* canvas) noexcept {
+  const auto& child = children_.size() ? children_.front() : nullptr;
+  const UIRect bounds_{getBounds()};
+
+  if (child) {
     // set up paint stuff and all
     SkPaint paint;
     paint.setColor(params_.backgroundColor);
@@ -55,10 +58,10 @@ void View::draw(SkCanvas* canvas) {
     paint.setAntiAlias(params_.antiAlias);
 
     // center the background within the margin area
-    float backgroundX = bounds_.x + params_.margin.left;
-    float backgroundY = bounds_.y + params_.margin.top;
-    float backgroundWidth = bounds_.width - params_.margin.horizonal();
-    float backgroundHeight = bounds_.height - params_.margin.vertical();
+    float backgroundX = bounds_.x;
+    float backgroundY = bounds_.y;
+    float backgroundWidth = bounds_.width;
+    float backgroundHeight = bounds_.height;
 
     SkRect rect = SkRect::MakeXYWH(backgroundX, backgroundY, backgroundWidth, backgroundHeight);
 
@@ -79,7 +82,7 @@ void View::draw(SkCanvas* canvas) {
 
     // Position child - they're already positioned correctly in layout()
     canvas->translate(bounds_.x, bounds_.y);
-    params_.child->draw(canvas);
+    child->paint(canvas);
     canvas->restore();
   } else {
     if (params_.insets.vertical() > 0 || params_.insets.horizonal() > 0) {
@@ -89,11 +92,10 @@ void View::draw(SkCanvas* canvas) {
       paint.setStyle(SkPaint::kFill_Style);
       paint.setAntiAlias(params_.antiAlias);
 
-      // Calculate available space after margins
-      float backgroundX = bounds_.x + params_.margin.left;
-      float backgroundY = bounds_.y + params_.margin.top;
-      float backgroundWidth = bounds_.width - params_.margin.horizonal();
-      float backgroundHeight = bounds_.height - params_.margin.vertical();
+      float backgroundX = bounds_.x;
+      float backgroundY = bounds_.y;
+      float backgroundWidth = bounds_.width;
+      float backgroundHeight = bounds_.height;
 
       SkRect rect = SkRect::MakeXYWH(backgroundX, backgroundY, backgroundWidth, backgroundHeight);
       if (params_.borderRadius > 0) {
@@ -105,5 +107,6 @@ void View::draw(SkCanvas* canvas) {
       }
     }
   }
-  UIComponent::draw(canvas);
+
+  RenderObject::paint(canvas);
 }
