@@ -12,8 +12,6 @@
 #include "../example/v2/render_viewport.hpp"
 #include "debug/debug_log_server.hpp"
 #include "debug/fps_tracker.hpp"
-#include "foundation/foundation.hpp"
-#include "foundation/geometry/rect.hpp"
 #include "skia/SkiaRenderer.hpp"
 #include "ui_components/ui_manager.hpp"
 #include "window/GLFWWindowManager.hpp"
@@ -72,6 +70,7 @@ int main() {
     static std::string lastLog;
     windowManager.setRenderCallback([&]() {
       fpsTracker.updateAndLogFps();
+      UIManager::instance().processPendingTasks();
 
       if (needsResize) {
         skiaRenderer.resize(width, height);
@@ -79,29 +78,13 @@ int main() {
         needsResize = false;
       }
 
-      // uiManager.setTree(rootUI, width, height, needsResize);
       needsLayout = false;
       needsRedraw = true;
 
       skiaRenderer.beginFrame();
-
-      KeyPool::instance().reset();
-      UILogger::instance().update();
-      if (rootElement && rootElement->getRenderObject()) {
-        const UIConstraints& constraints = UIConstraints::maxSize(width, height);
-        auto ro = rootElement->getRenderObject();
-
-        // fmt::println("\n=== Render Tree ===");
-        // printRenderTree(rootElement->getRenderObject());
-        // fmt::println("\n");
-
-        ro->performLayout(constraints);
-        ro->paint(skiaRenderer.getCanvas());
-      }
-
-      // rootUI->draw(skiaRenderer.getCanvas());
-
+      uiManager.setTree(rootElement, skiaRenderer.getCanvas(), width, height, needsResize);
       skiaRenderer.endFrame();
+
       needsRedraw = false;
 
       // const std::string logs = rootUI->toString(0);
