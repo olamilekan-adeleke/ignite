@@ -89,3 +89,18 @@ class UILogger {
     }
   }
 };
+
+// // First frame
+// logger.time("Frame took 16.7ms");
+//
+// // Next frame updates same log (not duplicate)
+// logger.time("Frame took 17.1ms");
+//
+// // New info
+// logger.info("Mouse: (120, 85)");
+//
+// // Mouse moved — updates instead of adding new
+// logger.info("Mouse: (125, 88)");
+//
+// // Persistent event
+// logger.permanent("User logged in");
