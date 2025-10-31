@@ -9,11 +9,7 @@
 #include <string>
 #include <utility>
 
-#include "component/component.hpp"
-#include "component/state_base_component.hpp"
 #include "foundation/foundation.hpp"
-#include "foundation/utils/key.hpp"
-#include "render/render_object.hpp"
 #include "ui_element/state_base_element.hpp"
 
 struct ImageParams {

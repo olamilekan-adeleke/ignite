@@ -24,8 +24,18 @@ class FixedBoxRenderObject : public RenderObject {
 
   void update(const FixedBoxParam &params) noexcept { params_ = std::move(params); }
 
-  float computeWidth() const noexcept;
-  float computeHeight() const noexcept;
+  float computeWidth() const noexcept {
+    if (params_.size.isGrowWidth() && params_.size.width <= 0) return INFINITY;
+    return params_.size.width;
+  }
+
+  float computeHeight() const noexcept {
+    if (params_.size.isGrowHeight() && params_.size.height <= 0) return INFINITY;
+    return params_.size.height;
+  }
+
+  bool wantsToFillMainAxis() const noexcept override { return params_.size.isGrowHeight(); }
+  bool wantsToFillCrossAxis() const noexcept override { return params_.size.isGrowWidth(); }
 
  private:
   FixedBoxParam params_;
@@ -52,9 +62,6 @@ class FixedBox : public StatelessComponent {
 
   ComponentPtr build() override { return getChild(); }
 
-  bool wantsToFillMainAxis() const noexcept override { return params_.size.isGrowHeight(); }
-  bool wantsToFillCrossAxis() const noexcept override { return params_.size.isGrowWidth(); }
-
   // bool processChildTaps(const UITapEvent &event) override {
   //   if (params_.child) {
   //     UITapEvent localEvent = event;
@@ -71,11 +78,6 @@ class FixedBox : public StatelessComponent {
     std::string pad(indent, ' ');
     os << pad << "size: " << params_.size << "\n";
     os << pad << "alignment: " << params_.alignment << "\n";
-
-    // if (auto &child = children_.front()) {
-    //   os << pad << "hasChild: " << (child ? "true" : "false") << "\n";
-    //   os << pad << "type: " << Helper::to_string(child) << "\n";
-    // }
   }
 
  private:
