@@ -1,47 +1,20 @@
 #include "interactive_components/text_field_renderer.hpp"
 
-#include <fmt/base.h>
 #include <include/core/SkRRect.h>
 
 #include <algorithm>
+#include <memory>
 
 #include "foundation/foundation.hpp"
+#include "render/render_object.hpp"
 #include "ui_manager.hpp"
 
-void TextFieldRenderer::onTextFieldTap() noexcept { UIManager::instance().requestFocus(*this); }
+void TextFieldRenderer::onTextFieldTap() noexcept {
+  auto self = std::static_pointer_cast<RenderObject>(shared_from_this());
+  UIManager::instance().requestFocus(self);
+}
 
-// void TextFieldRenderer::layout(UIConstraints constraints) {
-//   float contentWidth = 0.0f;
-//
-//   if (params_.size.width > 0.0f) {
-//     contentWidth = params_.size.width - params_.padding.horizonal();
-//   } else {
-//     contentWidth = constraints.maxWidth - params_.padding.horizonal();
-//   }
-//
-//   UIConstraints contentConstraints{
-//       .minWidth = 0.0f,
-//       .maxWidth = constraints.maxWidth - params_.padding.horizonal(),
-//   };
-//
-//   const UISize& placeHolderSize = placeholderParagraph_.getIntrinsicSize(contentConstraints);
-//   const UISize& valueSize = textValueParagraph_.getIntrinsicSize(contentConstraints);
-//
-//   float finalWidth = std::max(placeHolderSize.width, valueSize.width) + params_.padding.horizonal();
-//   contentConstraints.minWidth = finalWidth;
-//
-//   float contentHeight;
-//   if (params_.multiline) {
-//     contentHeight = valueSize.height;
-//   } else {
-//     contentHeight = std::max(params_.size.height, std::max(placeHolderSize.height, valueSize.height));
-//   }
-//
-//   lastTextFieldHeight_ = std::max(placeHolderSize.height, valueSize.height);
-//   setSize(constraints.maxWidth, contentHeight + params_.padding.vertical());
-// }
-
-void TextFieldRenderer::layout(UIConstraints constraints) {
+void TextFieldRenderer::performLayout(UIConstraints constraints) noexcept {
   float contentWidth = 0.0f;
 
   if (params_.size.width > 0.0f) {
@@ -82,7 +55,7 @@ void TextFieldRenderer::layout(UIConstraints constraints) {
   setSize(finalWidth, contentHeight + params_.padding.vertical());
 }
 
-void TextFieldRenderer::draw(SkCanvas* canvas) {
+void TextFieldRenderer::paint(SkCanvas* canvas) noexcept {
   SkPaint backgroundPaint;
   backgroundPaint.setColor(params_.backgroundColor);
   backgroundPaint.setStyle(SkPaint::kFill_Style);
@@ -95,6 +68,7 @@ void TextFieldRenderer::draw(SkCanvas* canvas) {
   borderPaint.setStrokeJoin(SkPaint::kRound_Join);
   borderPaint.setStrokeWidth(1.0f);
 
+  const auto& bounds_{getBounds()};
   SkRect rect = SkRect::MakeXYWH(bounds_.x, bounds_.y, bounds_.width, bounds_.height);
   SkRRect rrect;
   rrect.setRectXY(rect, params_.radius, params_.radius);
@@ -171,5 +145,5 @@ void TextFieldRenderer::draw(SkCanvas* canvas) {
 
   canvas->restore();
 
-  UIComponent::draw(canvas);
+  RenderObject::paint(canvas);
 }
