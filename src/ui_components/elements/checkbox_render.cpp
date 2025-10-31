@@ -1,48 +1,22 @@
 #include "elements/checkbox_render.hpp"
 
-#include <fmt/base.h>
-#include <include/core/SkCanvas.h>
-#include <include/core/SkPaint.h>
 #include <include/core/SkPath.h>
 #include <include/core/SkRRect.h>
 
-#include <cstdint>
-
-#include "basic/ui_component.hpp"
 #include "foundation/foundation.hpp"
 #include "ui_manager.hpp"
 
-UISize CheckBoxRender::getIntrinsicSize(UIConstraints constraints) noexcept { return params_.size; }
-
-void CheckBoxRender::markHasDirty(const UIMarkDirtyType &type, const UIMarkDirtyCaller &caller) noexcept {
-  const uint64_t drawHash{params_.drawHashCode()};
-
-  if (type == UIMarkDirtyType::DRAW) {
-    UICacheManager::instance().removeCachedSurface(drawHash);
-    return;
-  }
-}
-
-void CheckBoxRender::layout(UIConstraints constraints) {
+void CheckBoxRender::performLayout(UIConstraints constraints) noexcept {
   const float width = std::clamp(params_.size.width, 0.0f, constraints.maxWidth);
   const float height = std::clamp(params_.size.height, 0.0f, constraints.maxHeight);
   setSize(width, height);
 }
 
-void CheckBoxRender::draw(SkCanvas *canvas) {
-  const uint64_t drawHash{params_.drawHashCode()};
-  const sk_sp<SkSurface> cacheSurface = UICacheManager::instance().getCachedSurface(drawHash);
-  if (cacheSurface) {
-    canvas->drawImage(cacheSurface->makeImageSnapshot(), bounds_.x, bounds_.y);
-    UIComponent::draw(canvas);
-    return;
-  }
+void CheckBoxRender::paint(SkCanvas *canvas) noexcept {
+  const UIRect bounds_{getBounds()};
 
   const int w = static_cast<int>(bounds_.width);
   const int h = static_cast<int>(bounds_.height);
-
-  SkImageInfo info = SkImageInfo::Make(w, h, kRGBA_8888_SkColorType, kPremul_SkAlphaType);
-  sk_sp<SkSurface> surface = SkSurfaces::Raster(info);
 
   auto drawBoxAndCheck = [&](SkCanvas *canvas) {
     SkPaint boxPaint;
@@ -58,18 +32,11 @@ void CheckBoxRender::draw(SkCanvas *canvas) {
     if (params_.checked) drawCheckBox(canvas);
   };
 
-  if (surface) {
-    SkCanvas *surfaceCanvas = surface->getCanvas();
-    drawBoxAndCheck(surfaceCanvas);
-    UICacheManager::instance().setCachedSurface(drawHash, surface);
-    canvas->drawImage(surface->makeImageSnapshot(), bounds_.x, bounds_.y);
-  } else {
-    SkAutoCanvasRestore acr(canvas, true);
-    canvas->translate(bounds_.x, bounds_.y);
-    drawBoxAndCheck(canvas);
-  }
+  SkAutoCanvasRestore acr(canvas, true);
+  canvas->translate(bounds_.x, bounds_.y);
+  drawBoxAndCheck(canvas);
 
-  UIComponent::draw(canvas);
+  RenderObject::paint(canvas);
 }
 
 void CheckBoxRender::drawCheckBox(SkCanvas *canvas) const {
@@ -81,6 +48,7 @@ void CheckBoxRender::drawCheckBox(SkCanvas *canvas) const {
   strokePaint.setStrokeWidth(2.0f);
 
   SkPath checkPath;
+  const UIRect bounds_{getBounds()};
   const SkScalar w = static_cast<SkScalar>(bounds_.width);
   const SkScalar h = static_cast<SkScalar>(bounds_.height);
 
