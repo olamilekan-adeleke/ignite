@@ -100,14 +100,8 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
     auto kids = children;
     if (!kids.empty()) {
       os << pad << "  children: [\n";
-      for (const auto& child : kids) {
-        os << child->toString(indent + 4) << "\n";
-      }
+      for (const auto& child : kids) os << child->toString(indent + 4) << "\n";
       os << pad << "  ]\n";
-      // } else if (kids.empty() && this->getChild()) {
-      //   os << pad << "  child {\n";
-      //   os << this->getChild()->toString(indent + 4) << "\n";
-      //   os << pad << "  }\n";
     }
 
     os << pad << "}";
@@ -167,7 +161,34 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
       children[i]->unmount();
     }
     printf("Finished updateChildren\n");
+
+    // Reorder render objects to match element order
+    if (renderObject_) {
+      const auto& roChildren = renderObject_->getChildren();
+      std::vector<RenderObjectPtr> orderedROs;
+      orderedROs.reserve(newChildren.size());
+
+      for (const auto& elem : newChildren) {
+        if (auto ro = elem->getRenderObject()) {
+          orderedROs.push_back(ro);
+        } else {
+          _collectRenderObjects(elem, orderedROs);
+        }
+      }
+
+      renderObject_->setChildren({});
+      for (const auto& ro : orderedROs) renderObject_->addChild(ro);
+    }
+
     return newChildren;
+  }
+
+  void _collectRenderObjects(const UIElementPtr& elem, std::vector<RenderObjectPtr>& result) const {
+    if (auto ro = elem->getRenderObject()) {
+      result.push_back(ro);
+    } else {
+      for (const auto& child : elem->children) _collectRenderObjects(child, result);
+    }
   }
 
   void debugFillProperties(std::ostringstream& os, int indent) const noexcept {

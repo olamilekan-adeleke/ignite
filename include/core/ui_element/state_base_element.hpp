@@ -16,6 +16,20 @@ class StatelessUIElement : public UIElement {
   }
 };
 
+class MultiChildStatelessUIElement : public UIElement {
+ public:
+  explicit MultiChildStatelessUIElement(ComponentPtr c);
+
+  void mount(UIElementPtr element) noexcept override;
+  void unmount() noexcept override;
+  void update(ComponentPtr newComp) noexcept override;
+  void performRebuild() noexcept override;
+
+  void debugFillProperties(std::ostringstream& os, int indent) const noexcept {
+    UIElement::debugFillProperties(os, indent);
+  }
+};
+
 class StatefulUIElement : public UIElement {
  public:
   explicit StatefulUIElement(ComponentPtr c);
@@ -24,6 +38,10 @@ class StatefulUIElement : public UIElement {
   void unmount() noexcept override;
   void update(ComponentPtr newComp) noexcept override;
   void performRebuild() noexcept override;
+
+  void debugFillProperties(std::ostringstream& os, int indent) const noexcept {
+    UIElement::debugFillProperties(os, indent);
+  }
 };
 
 class LeafUIElement : public UIElement {

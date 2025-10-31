@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "component/component.hpp"
 #include "ui_element/state_base_element.hpp"
@@ -32,6 +33,19 @@ class StatelessComponent : public Component {
   void updateRenderObject(RenderObjectPtr ro) noexcept override {};
 
   virtual ComponentPtr build() = 0;
+};
+
+class MultiChildStatelessComponent : public Component {
+ public:
+  MultiChildStatelessComponent(const UIKey& key = AUTO_KEY) : Component(key) {}
+
+  UIElementPtr createElement() override { return std::make_shared<MultiChildStatelessUIElement>(shared_from_this()); };
+
+  RenderObjectPtr createRenderObject() const noexcept override = 0;
+
+  void updateRenderObject(RenderObjectPtr ro) noexcept override {};
+
+  virtual std::vector<ComponentPtr> build() = 0;
 };
 
 // STATE FULLY COMPONENT

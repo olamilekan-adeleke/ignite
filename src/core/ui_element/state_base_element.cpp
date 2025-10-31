@@ -28,6 +28,29 @@ void StatelessUIElement::update(ComponentPtr newComp) noexcept {
   performRebuild();
 }
 
+// -- MultiChildStatelessUIElement Implementation --
+MultiChildStatelessUIElement::MultiChildStatelessUIElement(ComponentPtr c) : UIElement(c) {}
+
+void MultiChildStatelessUIElement::mount(UIElementPtr element) noexcept {
+  UIElement::mount(element);
+  performRebuild();
+}
+
+void MultiChildStatelessUIElement::unmount() noexcept { UIElement::unmount(); }
+
+void MultiChildStatelessUIElement::performRebuild() noexcept {
+  auto sc = std::dynamic_pointer_cast<MultiChildStatelessComponent>(getComponont());
+  if (sc) {
+    auto children = sc->build();
+    this->setElementChildren(updateChildren(children));
+  }
+}
+
+void MultiChildStatelessUIElement::update(ComponentPtr newComp) noexcept {
+  UIElement::update(newComp);
+  performRebuild();
+}
+
 // -- StatefulUIElement Implementation --
 StatefulUIElement::StatefulUIElement(ComponentPtr c) : UIElement(c) {}
 
