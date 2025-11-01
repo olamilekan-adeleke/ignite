@@ -33,11 +33,6 @@ class UIManager {
   UIElementPtr currentElementTreeRoot_ = nullptr;
   UIElementPtr previousElementTreeRoot_ = nullptr;
 
-  // deprecated
-  [[deprecated]]
-  std::shared_ptr<UIComponent> currentTreeRoot_ = nullptr;
-  [[deprecated]]
-  std::shared_ptr<UIComponent> previousTreeRoot_ = nullptr;
   float width_ = 0;
   float height_ = 0;
   bool dirty_ = false;

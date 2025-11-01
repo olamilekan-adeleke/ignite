@@ -5,9 +5,6 @@
 #include <iostream>
 #include <memory>
 
-#include "../example/nav_test.cpp"
-#include "../example/paragraph_test.cpp"
-#include "../example/test_scroll.cpp"
 #include "../example/v2/app_host.cpp"
 #include "../example/v2/render_viewport.hpp"
 #include "debug/debug_log_server.hpp"

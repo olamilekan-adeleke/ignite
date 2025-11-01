@@ -56,11 +56,6 @@ class LayoutBox : public MultiChildStatelessComponent {
   LayoutBox(const LayoutBoxParam &param = {}, const UIKey &key = {})
       : params_(std::move(param)), MultiChildStatelessComponent(key) {};
 
-  // void layout(UIConstraints size) override;
-  // void draw(SkCanvas *canvas) override;
-
-  // const std::vector<std::shared_ptr<UIComponent>> &children() const override;
-
   std::vector<ComponentPtr> build() override { return children_; }
 
   RenderObjectPtr createRenderObject() const noexcept override { return std::make_shared<LayoutRenderObject>(params_); }
@@ -77,17 +72,6 @@ class LayoutBox : public MultiChildStatelessComponent {
     os << pad << "children: " << children_.size() << "\n";
     os << pad << "childGap: " << params_.childGap << "\n";
   }
-
-  // bool wantsToFillMainAxis() const override { return false; }
-  // bool wantsToFillCrossAxis() const override { return false; }
-  //
-  // float distributeFlexSpace(float availableSize, uint numChildren, std::shared_ptr<UIComponent> child) const
-  // noexcept;
-  //
-  // float getMainAxisSize(const UISizing &size) const noexcept;
-  // float getCrossAxisSize(const UISizing &size) const noexcept;
-  //
-  // float getCrossAxisPosition(const UISizing &size) const noexcept;
 
  private:
   LayoutBoxParam params_;
