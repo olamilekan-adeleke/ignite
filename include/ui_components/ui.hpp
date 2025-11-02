@@ -22,6 +22,7 @@
 #include "interactive_components/text_field_renderer.hpp"
 #include "layout/h_flex_box.hpp"
 #include "layout/layout_box.hpp"
+#include "layout/scroll_view.hpp"
 #include "layout/v_flex_box.hpp"
 
 namespace IgniteUI {
@@ -84,6 +85,10 @@ inline Tag column(const VFlexParam &params = {}, const UIKey &key = AUTO_KEY) {
 
 inline Tag row(const HFlexParam &params = {}, const UIKey &key = AUTO_KEY) {
   return Tag(std::make_shared<LayoutBox>(HFlexBox::create(params, key)), ChildMode::Multiple);
+}
+
+inline Tag scroll(const ScrollViewParam &params = {}, const UIKey &key = AUTO_KEY) {
+  return Tag(std::make_shared<ScrollView>(params, key), ChildMode::Multiple);
 }
 }  // namespace Flex
 
