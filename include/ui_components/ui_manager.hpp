@@ -37,8 +37,8 @@ class UIManager {
   float height_ = 0;
   bool dirty_ = false;
 
-  std::shared_ptr<UIComponent> currentHoveredComponent_ = nullptr;
-  std::shared_ptr<UIComponent> currentFocusedComponent_ = nullptr;
+  // std::shared_ptr<UIComponent> currentHoveredComponent_ = nullptr;
+  // std::shared_ptr<UIComponent> currentFocusedComponent_ = nullptr;
 
   std::queue<std::function<void()>> mainThreadTasks_;
   std::mutex taskMutex_;
