@@ -79,3 +79,22 @@ struct Color {
  private:
   SkColor value;
 };
+
+namespace IgniteAnimation {
+
+inline Color lerp(const Color& a, const Color& b, double t) {
+  const double factor = std::clamp(t, 0.0, 1.0);
+
+  auto lerp_channel = [&](uint8_t start, uint8_t end) -> uint8_t {
+    double f_start = static_cast<double>(start);
+    double f_end = static_cast<double>(end);
+
+    double result = f_start + (f_end - f_start) * factor;
+    return static_cast<uint8_t>(std::clamp(result, 0.0, 255.0));
+  };
+
+  return Color(
+      lerp_channel(a.r(), b.r()), lerp_channel(a.g(), b.g()), lerp_channel(a.b(), b.b()), lerp_channel(a.a(), b.a()));
+}
+
+}  // namespace IgniteAnimation

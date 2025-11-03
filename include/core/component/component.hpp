@@ -135,18 +135,29 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
     size_t oldSize = children.size();
     size_t newSize = newComponents.size();
 
-    fmt::println("Starting updateChildren: {} -> {}", oldSize, newSize);
+    if (enableLogging_) fmt::println("Starting updateChildren: {} -> {}", oldSize, newSize);
     for (size_t i = 0; i < newSize; ++i) {
       ComponentPtr newComponent = newComponents[i];
+
+      if (!newComponent) {
+        if (enableLogging_) fmt::println("ERROR: newComponent is null at index {}", i);
+        continue;
+      }
+
       UIElementPtr oldChild = (i < oldSize) ? children[i] : nullptr;
       UIElementPtr newChild = nullptr;
 
       if (oldSize && Component::canUpdate(oldChild->getComponont(), newComponent)) {
-        fmt::println("  └─ canUpdate: {} -> {}", oldChild->getComponont()->key().value(), newComponent->key().value());
+        if (enableLogging_) {
+          fmt::println(
+              "  └─ canUpdate: {} -> {}", oldChild->getComponont()->key().value(), newComponent->key().value());
+        }
         oldChild->update(newComponent);
         newChild = oldChild;
       } else {
-        fmt::println("  └─ cannotUpdate: {} -> {}", newComponent->key().value(), Helper::to_string(newComponent));
+        if (enableLogging_) {
+          fmt::println("  └─ cannotUpdate: {} -> {}", newComponent->key().value(), Helper::to_string(newComponent));
+        }
         if (oldChild) oldChild->unmount();
         newChild = newComponent->createElement();
         newChild->mount(shared_from_this());
@@ -157,10 +168,12 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
 
     // discard any spare remaining
     for (size_t i = newSize; i < oldSize; ++i) {
-      fmt::println("  └─ unmounting: {}", children[i]->getComponont()->key().value());
+      if (enableLogging_) {
+        fmt::println("  └─ unmounting: {}", children[i]->getComponont()->key().value());
+      }
       children[i]->unmount();
     }
-    printf("Finished updateChildren\n");
+    if (enableLogging_) printf("Finished updateChildren\n");
 
     // Reorder render objects to match element order
     if (renderObject_) {
@@ -211,4 +224,6 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
   RenderObjectPtr renderObject_;
 
   std::vector<UIElementPtr> children;
+
+  static const bool enableLogging_ = false;
 };

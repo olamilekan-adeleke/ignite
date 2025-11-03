@@ -64,8 +64,7 @@ class RenderObject : public std::enable_shared_from_this<RenderObject>,
   virtual bool processTap(const UITapEvent& event) {
     if (!this->children_.empty()) {
       const auto child = this->children_.front();
-
-      fmt::println("processTap: {}", Helper::to_string(child));
+      // fmt::println("processTap: {}", Helper::to_string(child));
     }
     if (processChildTaps(event)) return true;
     return onTap(event, getBounds());

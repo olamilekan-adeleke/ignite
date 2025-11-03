@@ -5,6 +5,7 @@
 
 #include <memory>
 
+#include "core/animation/animation_manager.hpp"
 #include "foundation/skia_font_helper.hpp"
 #include "render/render_object.hpp"
 

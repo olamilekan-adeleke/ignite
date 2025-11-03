@@ -8,7 +8,6 @@
 
 #include <filesystem>
 #include <iostream>
-#include <memory>
 
 #include "basic/ui_component.hpp"
 #include "component/component.hpp"

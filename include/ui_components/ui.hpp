@@ -24,6 +24,7 @@
 #include "layout/layout_box.hpp"
 #include "layout/scroll_view.hpp"
 #include "layout/v_flex_box.hpp"
+#include "transformer/transformer.hpp"
 
 namespace IgniteUI {
 
@@ -98,6 +99,10 @@ inline ComponentPtr CheckBox(const CheckBoxParams &param, const UIKey &key = AUT
 
 inline ComponentPtr TextField(const UITextFieldParams &param, const UIKey &key = AUTO_KEY) {
   return std::make_shared<TextFieldComponent>(param, key);
+}
+
+inline Tag transform(const TransformParam &param, const UIKey &key = AUTO_KEY) {
+  return Tag(std::make_shared<TransformComponent>(param, key), ChildMode::Single);
 }
 
 // namespace Flex
