@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>
 
+#include "../example/v2/animation_example.cpp"
 #include "../example/v2/app_host.cpp"
 #include "../example/v2/render_viewport.hpp"
 #include "debug/debug_log_server.hpp"
@@ -47,7 +48,8 @@ int main() {
     bool needsLayout = true;
     bool needsRedraw = true;
 
-    auto app = std::make_shared<Counter>();
+    // auto app = std::make_shared<Counter>();
+    auto app = std::make_shared<AnimationExample>();
     UIElementPtr rootElement = std::make_shared<AppHost>(app)->createElement();
     rootElement->mount(nullptr);
 
@@ -67,6 +69,15 @@ int main() {
     static std::string lastLog;
     windowManager.setRenderCallback([&]() {
       fpsTracker.updateAndLogFps();
+
+      // UPDATE ANIMATIONS FIRST (before any UI rebuild)
+      static auto lastTime = std::chrono::high_resolution_clock::now();
+      auto now = std::chrono::high_resolution_clock::now();
+      double dt = std::chrono::duration<double>(now - lastTime).count();
+      lastTime = now;
+
+      IgniteAnimation::AnimationManager::instance().tick(dt);
+
       UIManager::instance().processPendingTasks();
 
       if (needsResize) {
@@ -84,11 +95,9 @@ int main() {
 
       needsRedraw = false;
 
-      // const std::string logs = rootUI->toString(0);
       const std::string logs = rootElement->toString(0);
       if (logs != lastLog) lastLog = logs;
       Logger::logToFile(logs);
-      // std::this_thread::sleep_for(std::chrono::milliseconds(16));
     });
 
     windowManager.setKeyCallback([&](int key, int scancode, int action, int mods) {
